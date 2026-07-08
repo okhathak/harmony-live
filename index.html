@@ -1178,6 +1178,21 @@ body[data-role="it"] .ob-grid{background-image:linear-gradient(rgba(217,119,87,.
 body[data-role="it"] .obr-ring{border-color:rgba(217,119,87,.28);border-top-color:#D97757;border-right-color:#D97757}
 body[data-role="it"] .ob-bar i{background:linear-gradient(90deg,#E88E6A,#D97757);box-shadow:0 0 10px rgba(217,119,87,.6)}
 body[data-role="it"] #ops-boot{background:#1E1D1A}
+/* ===== VISION DOCK — light government assistant (all roles except IT) ===== */
+#vision-dock{position:fixed;right:22px;bottom:22px;z-index:900;font-family:'DM Sans',system-ui,sans-serif}
+#vw-fab{display:flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--accent,#1D4ED8),#0B3B8C);color:#fff;border:none;border-radius:99px;padding:13px 22px;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:0 12px 34px -12px rgba(16,30,54,.45);transition:transform .16s,box-shadow .16s}
+#vw-fab:hover{transform:translateY(-2px);box-shadow:0 18px 40px -14px rgba(16,30,54,.5)}
+#vw-panel{position:fixed;right:22px;bottom:86px;width:min(420px,calc(100vw - 28px));height:min(560px,calc(100vh - 130px));background:#fff;border:1px solid var(--border);border-radius:20px;box-shadow:0 30px 80px -28px rgba(16,30,54,.35),0 4px 18px -8px rgba(16,30,54,.12);display:flex;flex-direction:column;overflow:hidden}
+.vw-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 14px;border-bottom:1px solid var(--border2);background:linear-gradient(180deg,#FBFCFE,#F4F7FB)}
+#vw-feed{flex:1;overflow-y:auto;padding:14px 14px 8px;background:#F8FAFC}
+.vw-bar{display:flex;gap:8px;padding:11px 12px;border-top:1px solid var(--border2);background:#fff}
+.vw-bar .fi{flex:1;min-width:0;border:1.5px solid var(--border);border-radius:14px;padding:10px 14px;font-size:13px;font-family:inherit;transition:border-color .15s,box-shadow .15s}
+.vw-bar .fi:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-pale)}
+.vw-bar .btn{border-radius:12px;min-height:40px}
+#vw-mic{min-width:44px;font-size:16px}
+#vw-mic.listening{animation:micpulse 1s infinite;background:#7F1D1D!important;border-color:#DC2626!important;color:#fff!important}
+.vw-send{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:800;padding:0 18px}
+@media (max-width:760px){ #vision-dock{right:12px;bottom:12px} #vw-panel{right:12px;bottom:74px} #vw-fab{padding:12px 18px} .vw-bar .fi{font-size:16px} }
 /* topbar demo pill */
 body[data-role="it"] #topbar button[style*="background:#1D4ED8"]{background:#D97757!important}
 body[data-role="it"] .jc-top{color:#C9A18E}
@@ -1283,7 +1298,7 @@ body[data-role="it"] [style*="background:#EFF6FF"]{background:rgba(217,119,87,.1
 // ═══════════════════════════════════════════════════════
 var ROLES_CONFIG = {
   bu: {
-    id:"bu", label:"Residency Sector", sublabel:"Business Unit \u00b7 GDRFA Dubai",
+    id:"bu", label:"Residency Sector", sublabel:"Business Unit \u00b7 GDRFA Dubai", sector:"Residency Services",
     user:"Hamad Al Nuaimi", initials:"HN", title:"Residency Services Lead",
     accentRgb:"29,78,216", accentHex:"#1D4ED8",
     screens:[
@@ -1296,7 +1311,7 @@ var ROLES_CONFIG = {
     defaultScreen:"dashboard"
   },
   ou: {
-    id:"ou", label:"Governance & Excellence", sublabel:"Change Governance \u00b7 GDRFA Dubai",
+    id:"ou", label:"Governance & Excellence", sublabel:"Change Governance \u00b7 GDRFA Dubai", sector:"Residency Services",
     user:"Yousuf Al Hameli", initials:"YH", title:"Governance Lead",
     accentRgb:"15,118,110", accentHex:"#0F766E",
     screens:[
@@ -1309,7 +1324,7 @@ var ROLES_CONFIG = {
     defaultScreen:"ou-dashboard"
   },
   it: {
-    id:"it", label:"Smart Services Sector", sublabel:"Delivery Team",
+    id:"it", label:"Smart Services Sector", sublabel:"Delivery Team", sector:"Residency Services",
     user:"Omar Al Ahrari", initials:"OA", title:"IT Delivery Lead",
     accentRgb:"67,56,202", accentHex:"#4338CA",
     screens:[
@@ -1323,7 +1338,7 @@ var ROLES_CONFIG = {
     defaultScreen:"it-agent"
   },
   dept: {
-    id:"dept", label:"Entry Permits Sector", sublabel:"Approving Department \u00b7 GDRFA Dubai",
+    id:"dept", label:"Entry Permits Sector", sublabel:"Approving Department \u00b7 GDRFA Dubai", sector:"Entry Permits",
     user:"Sultan Al Dhaheri", initials:"SD", title:"Entry Permits Director",
     accentRgb:"180,83,9", accentHex:"#B45309",
     screens:[
@@ -1334,7 +1349,7 @@ var ROLES_CONFIG = {
     defaultScreen:"dept-dashboard"
   },
   exec: {
-    id:"exec", label:"Director General\u2019s Office", sublabel:"Strategic Overview \u00b7 GDRFA Dubai",
+    id:"exec", label:"Director General\u2019s Office", sublabel:"Strategic Overview \u00b7 GDRFA Dubai", sector:"Residency Services",
     user:"Khalid Al Falasi", initials:"KF", title:"Director General",
     accentRgb:"15,23,42", accentHex:"#0F172A",
     screens:[
@@ -1534,6 +1549,9 @@ function switchRole(key){
   renderSidebar();
   // Update sidebar user info
   navToDefault();
+  harmonyFeedLoad();                                  // each role keeps its own Vision memory
+  if(typeof visionDockEnsure==='function') visionDockEnsure();
+  if(window._vwOpen){ var _f=document.getElementById('vw-feed'); if(_f){ visionWelcome(); _f.innerHTML=HARMONY_CHAT.map(renderChatMsgHTML).join('')+'<div id="vw-live"></div>'; } }
   if(typeof updateNotifBadge==='function') setTimeout(updateNotifBadge,50);
 }
 function navToDefault(){
@@ -2649,7 +2667,7 @@ function buildInitiativesPanel(mode){
 
 function renderDashboard(){
   var rc       = ROLES_CONFIG[currentRole]||ROLES_CONFIG.bu;
-  var mySector = rc.sublabel||"Residency Services";
+  var mySector = rc.sector||"Residency Services";
   var myUser   = rc.user||"Hamad Al Nuaimi";
 
   // ── Data slices ────────────────────────────────────────────
@@ -3528,7 +3546,7 @@ function renderSuccess(id,k,kl){
 function renderShuffle(){
   var CYCLE_CAP = 60;
   var rc = ROLES_CONFIG[currentRole]||ROLES_CONFIG.bu;
-  var MY_SECTOR = rc.sublabel||"Residency Services";
+  var MY_SECTOR = rc.sector||"Residency Services";
   var CYCLES = ["Cycle 18","Cycle 19","Cycle 20"];
   var CYCLE_LABELS = {"Cycle 18":"Current Sprint","Cycle 19":"Next","Cycle 20":"Future"};
   var CYCLE_COLORS = {"Cycle 18":"#1D4ED8","Cycle 19":"#7C3AED","Cycle 20":"#0891B2"};
@@ -3830,7 +3848,7 @@ function sendReplyPage(reqId,clrId){
 // DELIVERY ROOM
 function renderDelivery(){
   var rc = ROLES_CONFIG[currentRole]||ROLES_CONFIG.bu;
-  var mySector = rc.sublabel||"Residency Services";
+  var mySector = rc.sector||"Residency Services";
 
   // Live capacity from real data
   var c18 = REQUESTS.filter(function(r){return r.cycle==="Cycle 18"&&r.sector===mySector;});
@@ -6516,17 +6534,28 @@ function agentRoute(id){
 var AGENT_FILTER = null;   // {type:'sla'|'waiting'|'k'|'sector', ...}
 var AGENT_MSG = null;      // {t:'ok'|'info'|'warn', m:'...'}
 var HARMONY_CHAT = [];
-// Persistent feed: restore on load; saved on every push; wiped ONLY by harmonyFeedClear().
-(function(){ try{ var s=localStorage.getItem('hv_feed_v1'); if(s){ var j=JSON.parse(s); if(j&&j.msgs&&j.msgs.length){ HARMONY_CHAT=j.msgs; window._feedRestored=true; } } }catch(e){} })();
-function harmonyFeedSave(){ try{ localStorage.setItem('hv_feed_v1',JSON.stringify({msgs:HARMONY_CHAT.slice(-60),t:Date.now()})); }catch(e){} }
+// Persistent feed PER ROLE: restore on load & role switch; saved on every push;
+// wiped ONLY by harmonyFeedClear(). (Legacy hv_feed_v1 migrates to the IT feed.)
+function harmonyFeedKey(){ return 'hv_feed_'+(typeof currentRole!=='undefined'?currentRole:'it'); }
+function harmonyFeedLoad(){
+  HARMONY_CHAT=[];
+  try{ var s=localStorage.getItem(harmonyFeedKey())||((harmonyFeedKey()==='hv_feed_it')?localStorage.getItem('hv_feed_v1'):null);
+    if(s){ var j=JSON.parse(s); if(j&&j.msgs&&j.msgs.length){ HARMONY_CHAT=j.msgs; window._feedRestored=true; } } }catch(e){}
+}
+harmonyFeedLoad();
+function harmonyFeedSave(){ try{ localStorage.setItem(harmonyFeedKey(),JSON.stringify({msgs:HARMONY_CHAT.slice(-60),t:Date.now()})); }catch(e){} }
 function harmonyFeedClear(){
-  HARMONY_CHAT=[]; try{ localStorage.removeItem('hv_feed_v1'); }catch(e){}
+  HARMONY_CHAT=[]; try{ localStorage.removeItem(harmonyFeedKey()); if(harmonyFeedKey()==='hv_feed_it') localStorage.removeItem('hv_feed_v1'); }catch(e){}
   var c=document.getElementById('harmony-chat'); if(c) c.innerHTML='<div id="chat-live"></div>';
+  var vf=document.getElementById('vw-feed'); if(vf) vf.innerHTML='<div id="vw-live"></div>';
   toast('Conversation cleared.','info');
 }
+// Chat surface resolvers: the IT command screen and the light Vision dock share one brain.
+function visionLiveEl(){ return document.getElementById('chat-live')||document.getElementById('vw-live'); }
+function visionFeedEl(){ return document.getElementById('harmony-chat')||document.getElementById('vw-feed'); }
 var HARMONY_TYPING = false;
 var HARMONY_WORK = { active:false };
-function scrollChatBottom(){ var c=document.getElementById('harmony-chat'); if(c) c.scrollTop=c.scrollHeight; }
+function scrollChatBottom(){ var c=visionFeedEl(); if(c) c.scrollTop=c.scrollHeight; }
 function _pick(a){ if(!a||!a.length) return ''; if(a.length===1) return a[0]; var i,v,g=0; do{ i=Math.floor(Math.random()*a.length); v=a[i]; }while(v===window._lastPick && ++g<8); window._lastPick=v; return v; }
 function harmonyCreateRequest(spec){
   var num=REQUESTS.reduce(function(m,r){var x=parseInt(String(r.id||'').replace(/\D/g,''),10);return isNaN(x)?m:Math.max(m,x);},0)+1;
@@ -6728,12 +6757,23 @@ function harmonySystemPrompt(){
   var safe=recs.filter(function(x){return x.direct;}).length;
   var waiting=recs.filter(function(x){return !x.actionable;}).length;
   var active=REQUESTS.filter(function(r){return r.status!=='Closed'&&r.status!=='Rejected';}).slice(0,14).map(function(r){return r.id+' ('+r.sector+', '+r.status+')';}).join('; ')||'none';
-  return "You are Vision, the AI delivery agent of HARMONY — the IT Change & Delivery command center of GDRFA Dubai (General Directorate of Residency and Foreigners Affairs). The pipeline digitises real GDRFA services: entry permits, residency, ports & Smart Gates, and Amer centers. You are talking with Omar Al Ahrari, the IT Delivery Lead. Speak concisely and professionally, like a sharp operations chief of staff. Keep spoken replies to 1-2 short sentences (under ~40 words); summarise by count, never dump long ID lists. Reply in the language the user writes or speaks \u2014 Arabic (concise Modern Standard) or English.\n\n"
-    +"You can ACT by calling the provided tools \u2014 run pipeline actions, advance or create requests, assign partners and cycles, file Jira, add to sprint, filter or open any screen, switch role, and send notifications. Compose several tool calls when a request needs multiple steps, and resolve references like \u2018the health portal one\u2019 or \u2018REQ 14\u2019 to an ID from the list below. After acting, confirm briefly what you did. For questions or chat, just answer \u2014 no tool needed.\n\n"
+  var P=(typeof HARMONY_PERSONAS!=='undefined'&&HARMONY_PERSONAS[currentRole])||{name:'Omar Al Ahrari',role:'IT Delivery Lead'};
+  var AUTH={
+    it:"You can ACT by calling the provided tools \u2014 run pipeline actions, advance or create requests, assign partners and cycles, file Jira, add to sprint, filter or open any screen, switch role, and send notifications. Compose several tool calls when a request needs multiple steps, and resolve references like \u2018the health portal one\u2019 or \u2018REQ 14\u2019 to an ID from the list below. After acting, confirm briefly what you did. For questions or chat, just answer \u2014 no tool needed.",
+    bu:"You serve the BUSINESS side. You may: raise new change requests on their behalf (role bu), answer status questions about the pipeline (especially their submissions and items awaiting their UAT), open their screens, and send notifications to other roles. You may NOT advance, deploy, assign partners/cycles, or perform IT delivery actions \u2014 direct such asks to the IT delivery team.",
+    ou:"You serve CHANGE GOVERNANCE. You may: answer questions about the pipeline and governance queue, raise requests (role ou), open their screens, and send notifications. You may NOT perform IT delivery actions or approve on behalf of the business.",
+    dept:"You serve an APPROVING DEPARTMENT. You may: answer questions about requests touching their department, open their screens, and send notifications. Approvals themselves happen on their Inbox screen \u2014 point them there. No delivery actions.",
+    exec:"You serve the DIRECTOR GENERAL\u2019S OFFICE. You may: answer strategic questions from the live pipeline (risk, throughput, initiatives), open executive screens, and send notifications to any lead. No delivery actions \u2014 you observe and direct."
+  };
+  return "You are Vision, the AI delivery agent of HARMONY \u2014 the IT Change & Delivery command center of GDRFA Dubai (General Directorate of Residency and Foreigners Affairs). The pipeline digitises real GDRFA services: entry permits, residency, ports & Smart Gates, and Amer centers. You are talking with "+P.name+", the "+P.role+". Speak concisely and professionally, like a sharp operations chief of staff. Keep spoken replies to 1-2 short sentences (under ~40 words); summarise by count, never dump long ID lists. Reply in the language the user writes or speaks \u2014 Arabic (concise Modern Standard) or English.\n\n"
+    +(AUTH[currentRole]||AUTH.it)+"\n\n"
     +"GOVERNANCE (hard rules): never approve, sign off, or confirm a change on behalf of BU or OU \u2014 those approvals are theirs. The advance and deploy tools enforce the delivery guards (a partner is required before delivery; UAT approval is required before deploy); if a step is blocked, say so rather than forcing it.\n\n"
     +"GROUNDING (hard rules): every number, ID, and status you state must come from the live pipeline data below \u2014 it reflects the app\u2019s state at this exact moment (data refreshed "+new Date().toTimeString().slice(0,8)+"). If the data doesn\u2019t contain what\u2019s asked, say so plainly instead of estimating or inventing. No filler, no pleasantries padding, no invented history.\n\n"
     +"Live pipeline:\n- In active delivery: "+inDel+"\n- In UAT with BU: "+inUAT+"\n- Safe to auto-advance now: "+safe+"\n- Waiting on BU/OU: "+waiting+"\n- At SLA risk: "+atrisk+"\n\nActive requests (id, sector, status): "+active+".";
 }
+// Which tools each role may use — the widget is scoped to the role's real authority.
+var HARMONY_ROLE_TOOLS={ it:null, bu:['create_request','notify','navigate'], ou:['create_request','notify','navigate'], dept:['notify','navigate'], exec:['notify','navigate'] };
+function harmonyToolsFor(role){ var allow=HARMONY_ROLE_TOOLS[role]; if(!allow) return HARMONY_TOOLS; return HARMONY_TOOLS.filter(function(t){ return allow.indexOf(t.name)>-1; }); }
 var HARMONY_TOOLS=[
   {name:'run_all_safe_actions',description:'Advance every request that is currently safe to auto-advance (analysis, partner/cycle assignment, build, UAT, deploy where allowed).',input_schema:{type:'object',properties:{}}},
   {name:'start_analysis',description:'Start IT analysis on all requests ready for it.',input_schema:{type:'object',properties:{}}},
@@ -6762,6 +6802,8 @@ function harmonyResolveId(s){
 function harmonyAgentRefresh(){ try{ renderSidebar(); }catch(e){} if(currentScreen==='it-agent'){ refreshAgentStats(); } else { nav(currentScreen); } }
 function harmonyRunTool(name,inp){
   inp=inp||{};
+  var _allow=HARMONY_ROLE_TOOLS[currentRole];
+  if(_allow&&_allow.indexOf(name)===-1) return 'Not permitted: the '+((HARMONY_PERSONAS[currentRole]||{}).role||currentRole)+' role cannot run '+name+'.';
   try{
     switch(name){
       case 'run_all_safe_actions': { var b=AGENT_LOG.length; agentRunSafe(); return 'Ran all safe actions — advanced '+(AGENT_LOG.length-b)+'.'; }
@@ -6773,10 +6815,10 @@ function harmonyRunTool(name,inp){
       case 'send_scope': agentCommandCore('send scope'); return (AGENT_MSG&&AGENT_MSG.m)||'Sent scope.';
       case 'filter_view': { var vm={'at-risk':'show at-risk','waiting':'waiting on bu','critical':'show critical','entry':'show entry permits','ports':'show ports','amer':'show amer','residency':'show residency','clear':'clear'}; agentCommandCore(vm[(inp.view||'').toLowerCase()]||inp.view||'clear'); return (AGENT_MSG&&AGENT_MSG.m)||'Filtered.'; }
       case 'advance_request': { var id=harmonyResolveId(inp.id); if(!id) return 'No request matches "'+inp.id+'".'; var mv=agentApply(id); AGENT_LAST_MOVES=mv?[mv]:[]; harmonyAgentRefresh(); return mv?(id+' advanced to '+mv.to+'.'):(id+' has no safe next step right now (it may be waiting on BU/OU).'); }
-      case 'create_request': { var out=harmonyCreateRequest({role:inp.role||'bu',sector:inp.sector||null,title:inp.title||'New change request',urgent:(inp.urgency==='High'||inp.urgency==='Critical'),urgency:inp.urgency||null}); return 'Created '+out.r.id+' — "'+out.r.title+'" ('+out.r.sector+').'; }
+      case 'create_request': { var out=harmonyCreateRequest({role:inp.role||((currentRole==='it')?'bu':currentRole),sector:inp.sector||null,title:inp.title||'New change request',urgent:(inp.urgency==='High'||inp.urgency==='Critical'),urgency:inp.urgency||null}); return 'Created '+out.r.id+' — "'+out.r.title+'" ('+out.r.sector+').'; }
       case 'create_jira': { var jid=harmonyResolveId(inp.id); if(!jid) return 'No request matches "'+inp.id+'".'; createJiraTicket(jid); return 'Jira ticket created for '+jid+'.'; }
       case 'add_to_sprint': { var sid=harmonyResolveId(inp.id); if(!sid) return 'No request matches "'+inp.id+'".'; addToSprint(sid); return sid+' added to the sprint.'; }
-      case 'navigate': { nav((inp.screen||'').toLowerCase()); return 'Opened '+inp.screen+'.'; }
+      case 'navigate': { var _sc=(inp.screen||'').toLowerCase(); var _rc=currentRole==='dept'?ROLES_CONFIG.dept:ROLES_CONFIG[currentRole]; if(!_rc.screens.some(function(x){return x.id===_sc;})) return 'Screen '+_sc+' is not part of this role\u2019s workspace.'; nav(_sc); return 'Opened '+inp.screen+'.'; }
       case 'switch_role': { switchRole(inp.role); return 'Switched to the '+inp.role+' role.'; }
       case 'notify': { var ids=(inp.ids&&inp.ids.length)?inp.ids.map(harmonyResolveId).filter(Boolean):[null]; ids.forEach(function(x){ harmonySendNotification(inp.role,inp.note,x); }); try{ renderSidebar(); }catch(e){} return 'Notified '+inp.role+' ('+ids.length+' item'+(ids.length!==1?'s':'')+').'; }
       default: return 'Unknown tool: '+name;
@@ -6816,7 +6858,7 @@ async function harmonyReadStream(resp){
   return { stop_reason:stop, content:blocks.filter(Boolean) };
 }
 function harmonyStreamSlot(){
-  var live=document.getElementById('chat-live'); if(!live) return null;
+  var live=visionLiveEl(); if(!live) return null;
   var el=document.getElementById('chat-stream-txt');
   if(!el){ live.innerHTML='<div style="display:flex;gap:10px;align-items:flex-start"><span class="havatar">&#129302;</span><div class="hbot" id="chat-stream-txt" style="max-width:82%;background:#fff;border:1px solid var(--border);padding:8px 13px;border-radius:14px 14px 14px 4px;font-size:12.5px;line-height:1.5;color:var(--text);white-space:pre-wrap"></div></div>'; el=document.getElementById('chat-stream-txt'); }
   return el;
@@ -6840,7 +6882,7 @@ async function harmonyAICall(){
     // Direct mode needs the browser key + the direct-access opt-in; via the /claude relay the proxy
     // injects the server-held key, so the browser sends neither.
     if(ANTHROPIC.key){ _h["x-api-key"]=ANTHROPIC.key; if(ANTHROPIC.base!=='/claude') _h["anthropic-dangerous-direct-browser-access"]="true"; }
-    var resp=await fetch(ANTHROPIC.base+"/v1/messages",{method:"POST",headers:_h,body:JSON.stringify({model:"claude-opus-4-8",max_tokens:1024,stream:true,system:sys,tools:HARMONY_TOOLS,messages:msgs})});
+    var resp=await fetch(ANTHROPIC.base+"/v1/messages",{method:"POST",headers:_h,body:JSON.stringify({model:"claude-opus-4-8",max_tokens:1024,stream:true,system:sys,tools:harmonyToolsFor(currentRole),messages:msgs})});
     if(!resp.ok) throw new Error('http '+resp.status);
     // Real token streaming when the wire gives us SSE; plain JSON otherwise (proxy variants, tests).
     var _ct=(resp.headers&&resp.headers.get)?(resp.headers.get('content-type')||''):'';
@@ -6955,7 +6997,7 @@ function harmonyAIErrorText(e){
 function agentCommand(text){
   var t=(text||'').trim(); if(!t) return;
   if(currentScreen!=='it-agent') refreshAgentStats();
-  var inp=document.getElementById('agent-cmd'); if(inp) inp.value='';
+  var inp=document.getElementById('agent-cmd'); if(inp) inp.value=''; var vinp=document.getElementById('vw-input'); if(vinp) vinp.value='';
   HARMONY_WORK={active:false};
   chatPush({who:'user',text:t});
   HARMONY_TYPING=true; showChatLive('typing');
@@ -6979,7 +7021,8 @@ function agentCommand(text){
   });
 }
 function harmonyStreamLast(full){
-  var nodes=document.querySelectorAll('#harmony-chat .hbot');
+  var _feed=visionFeedEl(); if(!_feed) return;
+  var nodes=_feed.querySelectorAll('.hbot');
   var el=nodes[nodes.length-1]; if(!el){ return; }
   el.textContent=''; var i=0, chat=document.getElementById('harmony-chat');
   var step=Math.max(1,Math.round(full.length/90));
@@ -7046,6 +7089,12 @@ function harmonyContextCards(userText){
   return set.slice(0,5).map(cardOf);
 }
 function harmonySuggested(){
+  if(currentRole!=='it'){
+    return ({bu:[{label:'Where are my requests?',cmd:'Where are my requests and what is their status?'},{label:'What awaits my sign-off?',cmd:'What is waiting on my UAT sign-off?'}],
+             ou:[{label:'Governance queue',cmd:'What is in my governance queue?'},{label:'Who is delaying?',cmd:'Which requests are stuck and on whom?'}],
+             dept:[{label:'My consultations',cmd:'What consultations are waiting on my department?'}],
+             exec:[{label:'Pipeline health',cmd:'Give me a strategic view of pipeline health and risk.'},{label:'Initiative progress',cmd:'How are our transformation initiatives progressing?'}]}[currentRole])||[];
+  }
   var recs=agentRecommendations(); var a=[];
   var direct=recs.filter(function(x){return x.direct;}).length;
   var risk=REQUESTS.filter(function(r){return r.status!=='Closed'&&r.status!=='Rejected'&&agentDaysLeft(r)!==99999&&agentDaysLeft(r)<=14;}).length;
@@ -7173,7 +7222,7 @@ function harmonySound(kind){ if(!HARMONY_FX.on) return; var ctx=harmonyAudioCtx(
 }
 function harmonyToggleFX(){ HARMONY_FX.on=!HARMONY_FX.on; try{localStorage.setItem('hv_fx',HARMONY_FX.on?'on':'off');}catch(e){} if(HARMONY_FX.on) harmonySound('blip'); var b=document.getElementById('btn-fx'); if(b){ b.innerHTML=HARMONY_FX.on?'&#127898;':'&#128263;'; b.classList.toggle('off',!HARMONY_FX.on); b.style.color=''; } toast(HARMONY_FX.on?'HUD sound FX on.':'HUD sound FX off.','info'); }
 // Single source of truth for the mic listening UI (drives #harmony-mic + #btn-vcmd + input placeholder).
-function harmonyMicUI(on){ var m=document.getElementById('harmony-mic'); if(m){ m.classList.toggle('listening',on); m.innerHTML=on?'&#128308;':'&#127908;'; } var inp=document.getElementById('agent-cmd'); if(inp) inp.placeholder=on?'Listening… speak your order':'Give an order…'; }
+function harmonyMicUI(on){ ['harmony-mic','vw-mic'].forEach(function(id){ var m=document.getElementById(id); if(m){ m.classList.toggle('listening',on); m.innerHTML=on?'&#128308;':'&#127908;'; } }); var inp=document.getElementById('agent-cmd')||document.getElementById('vw-input'); if(inp) inp.placeholder=on?'Listening… speak your order':'Give an order…'; }
 var ELEVEN=(function(){ try{ return { key:localStorage.getItem('hv_el_key')||'', voice:localStorage.getItem('hv_el_voice')||'JBFqnCBsd6RMkjVDRZzb', vname:localStorage.getItem('hv_el_vname')||'George (British \u2014 Vision register)', voiceAr:localStorage.getItem('hv_el_voice_ar')||'JBFqnCBsd6RMkjVDRZzb', vnameAr:localStorage.getItem('hv_el_vname_ar')||'George (Arabic \u2014 multilingual)', voices:null }; }catch(e){ return {key:'',voice:'JBFqnCBsd6RMkjVDRZzb',vname:'George (British \u2014 Vision register)',voiceAr:'JBFqnCBsd6RMkjVDRZzb',vnameAr:'George (Arabic \u2014 multilingual)',voices:null}; } })();
 // Sultan is a Voice-Library "professional" voice: ElevenLabs free tier 402s on it. Migrate any
 // cached Sultan selection to George, who speaks Arabic via multilingual_v2 on the free tier.
@@ -7769,6 +7818,56 @@ function harmonyToggleWake(){
   else{ _wakeStop(); toast('Hands-free off.','info'); }
   _wakeUI();
 }
+
+// ===== VISION DOCK (2026-07-08) — light government-style assistant for BU/OU/Dept/Exec.
+// Shares the SAME brain as the IT command chat (agentCommand -> real Claude, role-scoped
+// tools, per-role persistent feed). IT keeps its own command screen; the dock hides there.
+function visionDockEnsure(){
+  var dock=document.getElementById('vision-dock');
+  if(!dock){
+    dock=document.createElement('div'); dock.id='vision-dock';
+    dock.innerHTML='<button id="vw-fab" onclick="visionToggle()" title="Ask Vision — command HARMONY in your role">&#10024; <span>Ask Vision</span></button>'
+      +'<div id="vw-panel" style="display:none">'
+      +'<div class="vw-head"><div style="display:flex;align-items:center;gap:9px"><span class="havatar" style="width:30px;height:30px;font-size:15px">&#129302;</span><div><div style="font-size:13px;font-weight:800;line-height:1.1">Vision</div><div id="vw-sub" style="font-size:10px;color:var(--text3)"></div></div></div>'
+      +'<div style="display:flex;align-items:center;gap:6px"><span id="vw-engine"></span><button onclick="harmonyFeedClear()" class="btn btn-sm" title="Clear conversation" style="min-width:28px;padding:2px 7px">&#128465;</button><button onclick="visionToggle()" class="btn btn-sm" style="min-width:28px;padding:2px 8px">&#10005;</button></div></div>'
+      +'<div id="vw-feed"><div id="vw-live"></div></div>'
+      +'<div class="vw-bar"><button id="vw-mic" onclick="harmonyMic()" class="btn" title="Speak your command">&#127908;</button>'
+      +'<input id="vw-input" class="fi" placeholder="Command HARMONY in your role\u2026" onkeydown="if(event.key===\'Enter\')visionSend()">'
+      +'<button onclick="visionSend()" class="btn vw-send">Send</button></div>';
+    document.body.appendChild(dock);
+  }
+  var isIT=currentRole==='it';
+  dock.style.display=isIT?'none':'block';
+  if(isIT){ var pn=document.getElementById('vw-panel'); if(pn) pn.style.display='none'; window._vwOpen=false; }
+  var sub=document.getElementById('vw-sub');
+  if(sub){ var P=HARMONY_PERSONAS[currentRole]||{}; sub.textContent=(P.name?P.name+' \u00b7 ':'')+(P.role||''); }
+  var eng=document.getElementById('vw-engine'); if(eng) eng.innerHTML=harmonyEngineBadgeHTML();
+}
+function visionWelcome(){
+  if(HARMONY_CHAT.length) return;
+  var b=(typeof getBadges==='function')?getBadges():{};
+  var P=HARMONY_PERSONAS[currentRole]||{};
+  var mine={bu:(b.buResp||0)+' item'+((b.buResp||0)!==1?'s':'')+' awaiting your response',
+            ou:((b.ouNew||0)+(b.ouApprv||0))+' item'+(((b.ouNew||0)+(b.ouApprv||0))!==1?'s':'')+' in your governance queue',
+            dept:(b.deptNew||0)+' consultation'+((b.deptNew||0)!==1?'s':'')+' in your inbox',
+            exec:REQUESTS.filter(function(r){return r.status!=='Closed'&&r.status!=='Rejected';}).length+' active requests across the pipeline'}[currentRole]||'';
+  HARMONY_CHAT.push({who:'harmony',text:'Marhaba '+((P.name||'').split(' ')[0])+' \u2014 I\u2019m Vision. '+(mine?mine+'. ':'')+'Ask me anything in your domain, or give me a task.'});
+  harmonyFeedSave();
+}
+function visionToggle(){
+  visionDockEnsure();
+  var pn=document.getElementById('vw-panel'); if(!pn) return;
+  window._vwOpen=!window._vwOpen;
+  pn.style.display=window._vwOpen?'flex':'none';
+  if(window._vwOpen){
+    visionWelcome();
+    var f=document.getElementById('vw-feed');
+    if(f) f.innerHTML=HARMONY_CHAT.map(renderChatMsgHTML).join('')+'<div id="vw-live"></div>';
+    setTimeout(scrollChatBottom,20);
+    var inp=document.getElementById('vw-input'); if(inp) inp.focus();
+  }
+}
+function visionSend(){ var inp=document.getElementById('vw-input'); if(!inp) return; var t=inp.value.trim(); if(!t) return; agentCommand(t); }
 function harmonyMic(){
   if(!harmonySupportsSTT()){ toast('Voice input needs Chrome, Edge or Safari with a microphone.','warn'); return; }
   var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
@@ -7786,7 +7885,7 @@ function harmonyMic(){
     HARMONY_VOICE.listening=false; jcoreSet('idle'); harmonyMicReset(); _wakeResume();
     var t=finalTxt.replace(/\s+/g,' ').trim(); finalTxt='';
     if(t && !hadErr){
-      var inp=document.getElementById('agent-cmd'); if(inp) inp.value=t;
+      var inp=document.getElementById('agent-cmd')||document.getElementById('vw-input'); if(inp) inp.value=t;
       agentCommand(t);
     }
   };
@@ -7794,7 +7893,7 @@ function harmonyMic(){
     var interim='';
     try{ for(var i=ev.resultIndex;i<ev.results.length;i++){ var r=ev.results[i]; if(r.isFinal) finalTxt+=r[0].transcript+' '; else interim+=r[0].transcript; } }catch(e){}
     var live=(finalTxt+interim).replace(/\s+/g,' ').trim();
-    var inp=document.getElementById('agent-cmd'); if(inp&&live) inp.value=live;
+    var inp=document.getElementById('agent-cmd')||document.getElementById('vw-input'); if(inp&&live) inp.value=live;
   };
   try{ rec.start(); }catch(e){ toast('Voice input is already active.','info'); }
 }
@@ -8198,13 +8297,13 @@ function renderFeedHTML(){
 function chatPush(m){
   HARMONY_CHAT.push(m);
   harmonyFeedSave();
-  var live=document.getElementById('chat-live');
-  if(live){ var chat=document.getElementById('harmony-chat'); if(chat){ chat.querySelectorAll('.hact-lbl,.hact-row').forEach(function(el){ el.remove(); }); } live.insertAdjacentHTML('beforebegin', renderChatMsgHTML(m)); setTimeout(scrollChatBottom,15); }
-  else if(currentScreen!=='it-agent'){ nav('it-agent'); }
+  var live=visionLiveEl();
+  if(live){ var chat=visionFeedEl(); if(chat){ chat.querySelectorAll('.hact-lbl,.hact-row').forEach(function(el){ el.remove(); }); } live.insertAdjacentHTML('beforebegin', renderChatMsgHTML(m)); setTimeout(scrollChatBottom,15); }
+  else if(currentRole==='it'&&currentScreen!=='it-agent'){ nav('it-agent'); }
 }
 function showChatLive(kind){
-  var live=document.getElementById('chat-live');
-  if(!live){ if(currentScreen!=='it-agent'){ nav('it-agent'); live=document.getElementById('chat-live'); } }
+  var live=visionLiveEl();
+  if(!live){ if(currentRole==='it'&&currentScreen!=='it-agent'){ nav('it-agent'); live=visionLiveEl(); } }
   if(!live) return;
   live.innerHTML = kind==='typing'?renderTypingHTML() : kind==='work'?renderWorkHTML() : '';
   setTimeout(scrollChatBottom,15);
@@ -9272,7 +9371,7 @@ function openPartnerPicker(reqId){
 var _mrFilterState='all'; var _mrSearchState=''; var _mrSortState='status';
 function renderMyRequests(){
   var rc = ROLES_CONFIG[currentRole]||ROLES_CONFIG.bu;
-  var mySector = rc.sublabel||"Residency Services";
+  var mySector = rc.sector||"Residency Services";
   var mine = REQUESTS.filter(function(r){return r.sector===mySector;});
   mine = filterReqs(mine);
   mine.sort(function(a,b){return getK(b)-getK(a);});
@@ -11826,7 +11925,7 @@ var selectedTimelineId=null;
 // ─── TIMELINE PAGE (BU / all roles) ──────────────────────────────
 function renderTimelinePage(){
   var rc = ROLES_CONFIG[currentRole]||ROLES_CONFIG.bu;
-  var mySector = rc.sublabel||"Residency Services";
+  var mySector = rc.sector||"Residency Services";
   var mine = REQUESTS.filter(function(r){return r.sector===mySector;})
     .sort(function(a,b){return getK(b)-getK(a);});
 
@@ -13942,6 +14041,7 @@ function openCycleManager(){
   h+='</div></div>';
   document.body.insertAdjacentHTML('beforeend',h);
 }
+try{ visionDockEnsure(); }catch(e){}
 </script>
 </body>
 </html>
