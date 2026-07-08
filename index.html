@@ -7105,6 +7105,12 @@ if(ELEVEN.base==='/eleven'){ try{ fetch('/eleven-status',{cache:'no-store'}).the
   else if(!j){ ELEVEN.base='https://api.elevenlabs.io'; } // relay absent → allow direct browser-key path
 }).catch(function(){ ELEVEN.base='https://api.elevenlabs.io'; }); }catch(e){} }
 var ANTHROPIC=(function(){ try{ return { key:localStorage.getItem('hv_anthropic_key')||'', serverKey:false }; }catch(e){ return {key:'',serverKey:false}; } })();
+// One-tap key install: open <site>#akey=sk-ant-... once and the key persists in THIS browser.
+// The fragment never reaches any server (unlike ?query) and is wiped from the bar immediately.
+try{ var _akm=location.hash.match(/[#&]akey=([^&]+)/); if(_akm){ var _ak=decodeURIComponent(_akm[1]);
+  if(/^sk-ant-/.test(_ak)){ ANTHROPIC.key=_ak; try{localStorage.setItem('hv_anthropic_key',_ak);}catch(_e){} window._akeyInstalled=1; }
+  history.replaceState(null,'',location.pathname+location.search); } }catch(e){}
+if(window._akeyInstalled){ setTimeout(function(){ try{ toast('Claude key installed — Vision is live on this device.','info'); updateEngineBadge(); }catch(e){} },2600); }
 // ANY http(s) page (served BY the proxy — incl. localhost:8091) routes Claude through the
 // same-origin /claude relay so the server-held key works. Only a raw file:// page talks direct.
 ANTHROPIC.base=(function(){ try{ if(location.protocol==='file:') return 'https://api.anthropic.com'; }catch(e){} return '/claude'; })();
