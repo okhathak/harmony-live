@@ -7949,21 +7949,16 @@ function renderAgent(){
   h+='<div style="flex:1"></div>';
   h+='<div class="hud-ctl">';
   h+='<button id="btn-voice" onclick="harmonyToggleVoice()" class="hud-tog'+(HARMONY_VOICE.on?'':' off')+'" title="Vision voice on / off">'+(HARMONY_VOICE.on?'&#128266;':'&#128263;')+'</button>';
-  h+='<button id="btn-fx" onclick="harmonyToggleFX()" class="hud-tog'+(HARMONY_FX.on?'':' off')+'" title="HUD sound effects on / off">'+(HARMONY_FX.on?'&#127898;':'&#128263;')+'</button>';
-  h+='<button onclick="voiceLabOpen()" class="hud-tog" title="Voice Lab — choose the Vision voice (neural offline, ElevenLabs studio)">&#127911;</button>';
   h+='<button onclick="harmonyToggleLang()" class="hud-tog" style="font-size:11px;font-weight:800" title="'+TT('التبديل إلى العربية','Switch to English')+'">'+TT('ع','EN')+'</button>';
   h+='</div>';
   h+='</div>';
   h+='<div style="display:flex;gap:26px;flex-wrap:wrap;align-items:center">';
   h+='<div style="flex:1;min-width:340px">';
   h+='<div class="t5-greet">'+_greet+TT(', ','\u060c ')+'<span class="t5-grad">'+TT('Omar.','\u0639\u0645\u0631.')+'</span></div>';
-  h+='<div class="t5-sub">\u00b7 '+TT('WATCHING '+_actv+' ACTIVE REQUESTS \u00b7 4 SECTORS \u00b7 24/7','\u0645\u0631\u0627\u0642\u0628\u0629 '+_actv+' \u0637\u0644\u0628\u0627\u064b \u0646\u0634\u0637\u0627\u064b \u00b7 4 \u0642\u0637\u0627\u0639\u0627\u062a \u00b7 \u0639\u0644\u0649 \u0645\u062f\u0627\u0631 \u0627\u0644\u0633\u0627\u0639\u0629')+'</div>';
-  var st5=function(c,id,n,l){return '<span class="t5-stat"><span class="t5-dot" style="--c:'+c+'"></span><b id="'+id+'">'+n+'</b>'+l+'</span>';};
+    var st5=function(c,id,n,l){return '<span class="t5-stat"><span class="t5-dot" style="--c:'+c+'"></span><b id="'+id+'">'+n+'</b>'+l+'</span>';};
   h+='<div class="t5-stats">';
   h+=st5('#60A5FA','hs-del',inDel,TT('Delivery','\u0642\u064a\u062f \u0627\u0644\u062a\u0646\u0641\u064a\u0630'));
   h+=st5('#FBBF24','hs-uat',inUAT,TT('UAT','\u0627\u062e\u062a\u0628\u0627\u0631 \u0627\u0644\u0642\u0628\u0648\u0644'));
-  h+=st5('#93C5FD','hs-wait',waiting.length,TT('Waiting','\u0628\u0627\u0644\u0627\u0646\u062a\u0638\u0627\u0631'));
-  h+=st5('#4ADE80','hs-safe',direct.length,TT('Safe','\u0622\u0645\u0646\u0629'));
   h+='<span class="ops-threat '+(atRisk.length?'hot':'ok')+'" id="ops-threat"><span class="tt-n" id="tt-n">'+atRisk.length+'</span><span class="tt-l">'+TT('at risk','\u0645\u0639\u0631\u0651\u0636\u0629 \u0644\u0644\u062e\u0637\u0631')+'</span><span class="tt-s" id="tt-s">'+(atRisk.length?'attention required':'all clear')+'</span></span>';
   h+='<span class="t5-stat" title="'+TT('Pipeline health','\u0635\u062d\u0629 \u062e\u0637 \u0627\u0644\u0625\u0646\u062c\u0627\u0632')+'"><b id="gv-health">'+_health+'%</b>'+TT('Health','\u0627\u0644\u0635\u062d\u0629')+'</span>';
   h+='</div>';
@@ -7976,7 +7971,6 @@ function renderAgent(){
   h+=jcoreHTML(_closedN,inDel,direct.length);
   h+='</div>';
   h+='</div>';
-  h+='<div class="ops-ticker"><div class="ops-tk" id="ops-tk">'+renderTickerHTML({atRisk:atRisk,direct:direct,_actv:_actv,_health:_health})+'</div></div>';
 
   // ── Conversation with HARMONY ──
   if(!HARMONY_CHAT.length){
@@ -8038,7 +8032,7 @@ function renderAgent(){
 
   // ── Quick command chips ──
   h+='<div style="display:flex;gap:6px;flex-wrap:wrap;margin:14px 0 8px">';
-  ['Who is delaying?','What needs my decision?','Create CR for Finance','Run all safe actions','Show at-risk','Clear'].forEach(function(ex){
+  ['What needs my decision?','Run all safe actions','Show at-risk'].forEach(function(ex){
     h+='<button onclick="agentCommand(&apos;'+ex+'&apos;)" class="btn btn-sm tchip" style="font-size:10.5px;color:var(--text2)">'+ex+'</button>';
   });
   h+='</div>';
