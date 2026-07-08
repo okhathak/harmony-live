@@ -1286,7 +1286,7 @@ body[data-role="it"] [style*="background:#EFF6FF"]{background:rgba(217,119,87,.1
         </button>
         <div id="role-dropdown"></div>
       </div>
-      <button onclick="openDemoPicker()" style="display:flex;align-items:center;gap:6px;background:#1D4ED8;color:#fff;border:none;border-radius:99px;padding:5px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;margin-left:8px">&#127916; Demo</button><button onclick="resetDemo()" title="Reset demo data" style="display:flex;align-items:center;gap:5px;background:#fff;color:#64748B;border:1.5px solid #E2E8F0;border-radius:99px;padding:5px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;margin-left:6px">&#8635; Reset</button>
+      <button id="btn-demo" onclick="openDemoPicker()" style="display:flex;align-items:center;gap:6px;background:#1D4ED8;color:#fff;border:none;border-radius:99px;padding:5px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;margin-left:8px">&#127916; Demo</button><button id="btn-reset" onclick="resetDemo()" title="Reset demo data" style="display:flex;align-items:center;gap:5px;background:#fff;color:#64748B;border:1.5px solid #E2E8F0;border-radius:99px;padding:5px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;margin-left:6px">&#8635; Reset</button>
     </div>
     <div id="content-el"></div>
   </div>
@@ -7265,6 +7265,11 @@ if(window._akeyInstalled){ setTimeout(function(){ try{ toast('Claude key install
 ANTHROPIC.base=(function(){ try{ if(location.protocol==='file:') return 'https://api.anthropic.com'; }catch(e){} return '/claude'; })();
 // Live brain is ready with a browser key OR a server-held key on the proxy (no per-device setup).
 function aiReady(){ return !!(ANTHROPIC.key||ANTHROPIC.serverKey); }
+// Live host = a public deployment (not file:// and not localhost). Presenter-only demo
+// controls (Reset) are hidden there so a visitor can't wipe the working pipeline state.
+function harmonyIsLiveHost(){ try{ var h=location.hostname; return !!h && h!=='localhost' && h!=='127.0.0.1' && location.protocol!=='file:'; }catch(e){ return false; } }
+function harmonyApplyLiveMode(){ if(!harmonyIsLiveHost()) return; var r=document.getElementById('btn-reset'); if(r) r.style.display='none'; }
+try{ if(document.readyState!=='loading') harmonyApplyLiveMode(); else document.addEventListener('DOMContentLoaded',harmonyApplyLiveMode); }catch(e){}
 if(ANTHROPIC.base==='/claude'){ try{ fetch('/claude-status',{cache:'no-store'}).then(function(r){return r.ok?r.json():null;}).then(function(j){
   if(j&&j.serverKey){ ANTHROPIC.serverKey=true; HARMONY_AI.on=true;
   if(!window._aiKeyToast){ window._aiKeyToast=1; toast('Live Claude engine active (server key) — Vision is thinking for real.','info'); }
