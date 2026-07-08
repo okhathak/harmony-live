@@ -1283,8 +1283,8 @@ body[data-role="it"] [style*="background:#EFF6FF"]{background:rgba(217,119,87,.1
 // ═══════════════════════════════════════════════════════
 var ROLES_CONFIG = {
   bu: {
-    id:"bu", label:"Business Unit", sublabel:"Residency Services",
-    user:"Hamad Al Nuaimi", initials:"HN", title:"BU Lead",
+    id:"bu", label:"Residency Sector", sublabel:"Business Unit \u00b7 GDRFA Dubai",
+    user:"Hamad Al Nuaimi", initials:"HN", title:"Residency Services Lead",
     accentRgb:"29,78,216", accentHex:"#1D4ED8",
     screens:[
       {id:"dashboard",   label:"Dashboard",         icon:"&#11042;"},
@@ -1296,8 +1296,8 @@ var ROLES_CONFIG = {
     defaultScreen:"dashboard"
   },
   ou: {
-    id:"ou", label:"Operations Unit", sublabel:"Change Governance",
-    user:"Yousuf Al Hameli", initials:"YH", title:"OU Lead",
+    id:"ou", label:"Governance & Excellence", sublabel:"Change Governance \u00b7 GDRFA Dubai",
+    user:"Yousuf Al Hameli", initials:"YH", title:"Governance Lead",
     accentRgb:"15,118,110", accentHex:"#0F766E",
     screens:[
       {id:"ou-dashboard", label:"Dashboard",   icon:"&#11042;"},
@@ -1323,8 +1323,8 @@ var ROLES_CONFIG = {
     defaultScreen:"it-agent"
   },
   dept: {
-    id:"dept", label:"Department", sublabel:"Entry Permits",
-    user:"Sultan Al Dhaheri", initials:"SD", title:"Finance Director",
+    id:"dept", label:"Entry Permits Sector", sublabel:"Approving Department \u00b7 GDRFA Dubai",
+    user:"Sultan Al Dhaheri", initials:"SD", title:"Entry Permits Director",
     accentRgb:"180,83,9", accentHex:"#B45309",
     screens:[
       {id:"dept-dashboard", label:"Dashboard",    icon:"&#128202;"},
@@ -1334,7 +1334,7 @@ var ROLES_CONFIG = {
     defaultScreen:"dept-dashboard"
   },
   exec: {
-    id:"exec", label:"Executive", sublabel:"Strategic Overview",
+    id:"exec", label:"Director General\u2019s Office", sublabel:"Strategic Overview \u00b7 GDRFA Dubai",
     user:"Khalid Al Falasi", initials:"KF", title:"Director General",
     accentRgb:"15,23,42", accentHex:"#0F172A",
     screens:[
@@ -1347,7 +1347,7 @@ var ROLES_CONFIG = {
   }
 }
 var DEPT_ROLES = [
-  {key:"dept-finance", dept:"Entry Permits",    user:"Sultan Al Dhaheri",  initials:"SD", title:"Finance Director",  accentHex:"#D97706"},
+  {key:"dept-finance", dept:"Entry Permits",    user:"Sultan Al Dhaheri",  initials:"SD", title:"Entry Permits Director",  accentHex:"#D97706"},
   {key:"dept-legal",   dept:"Ports Affairs",      user:"Rashed Al Shamsi",   initials:"RS", title:"Legal Counsel",     accentHex:"#7C3AED"},
   {key:"dept-media",   dept:"Media",      user:"Aisha Al Balushi",   initials:"AB", title:"Media Director",    accentHex:"#0891B2"},
   {key:"dept-risk",    dept:"Risk",       user:"Saeed Al Mansoori",  initials:"SM", title:"Risk Manager",      accentHex:"#DC2626"},
@@ -1493,9 +1493,9 @@ function toggleDropdown(){
   if(dropdownOpen){
     dd.style.display="block";
     var items=[
-      {key:"bu",   label:"Hamad Al Nuaimi",   sub:"BU Lead — Corporate Services",       av:"HN",  c:"#1D4ED8", n:getBadges().buResp},
-      {key:"ou",   label:"Yousuf Al Hameli",  sub:"OU Lead — Change Governance",        av:"YH",  c:"#0F766E", n:(getBadges().ouNew||0)+(getBadges().ouApprv||0)},
-      {key:"it",   label:"Omar Al Ahrari",   sub:"IT Delivery Lead",                        av:"OA",  c:"#4338CA", n:getBadges().itNew},
+      {key:"bu",   label:"Hamad Al Nuaimi",   sub:"Residency Services Lead",       av:"HN",  c:"#1D4ED8", n:getBadges().buResp},
+      {key:"ou",   label:"Yousuf Al Hameli",  sub:"Governance Lead \u2014 Change Governance",        av:"YH",  c:"#0F766E", n:(getBadges().ouNew||0)+(getBadges().ouApprv||0)},
+      {key:"it",   label:"Omar Al Ahrari",   sub:"IT Delivery Lead \u2014 Smart Services",                        av:"OA",  c:"#4338CA", n:getBadges().itNew},
       {key:"exec", label:"Khalid Al Falasi", sub:"Director General — Strategic View",  av:"KF",  c:"#0F172A"},
     ];
     // Add dept roles
@@ -6859,10 +6859,10 @@ async function harmonyAICall(){
   return {reply:finalText||'Done.', cmd:null};
 }
 var HARMONY_PERSONAS={
-  bu:{name:'Hamad Al Nuaimi',role:'BU Lead',sector:'Residency Services'},
-  ou:{name:'Yousuf Al Hameli',role:'OU \u2014 Change Governance',sector:'Residency Services'},
+  bu:{name:'Hamad Al Nuaimi',role:'Residency Services Lead',sector:'Residency Services'},
+  ou:{name:'Yousuf Al Hameli',role:'Governance Lead',sector:'Residency Services'},
   it:{name:'Omar Al Ahrari',role:'IT Delivery Lead',sector:'Residency Services'},
-  dept:{name:'Sultan Al Dhaheri',role:'Finance Dept Head',sector:'Entry Permits'},
+  dept:{name:'Sultan Al Dhaheri',role:'Entry Permits Director',sector:'Entry Permits'},
   exec:{name:'Khalid Al Falasi',role:'Director General',sector:'Residency Services'}
 };
 function harmonySendNotification(roleKey,note,reqId){
@@ -13588,7 +13588,7 @@ function showRoleInfo(role){
     ],
   };
   var items=itemSets[role]||[];
-  var roleLabels={ou:'Operations Unit \u2014 Governance Hub',it:'Smart Services Sector \u2014 GDRFA Dubai',exec:'Director General \u2014 Executive View'};
+  var roleLabels={ou:'Governance & Excellence \u2014 GDRFA Dubai',it:'Smart Services Sector \u2014 GDRFA Dubai',exec:'Director General\u2019s Office \u2014 GDRFA Dubai'};
   var roleCols={ou:'#0F766E',it:'#4338CA',exec:'#7C3AED'};
   var roleBgs={ou:'#F0FDFA',it:'#EEF2FF',exec:'#F5F3FF'};
   var h='<div id="role-info-modal" class="modal-bg" style="z-index:500" onclick="if(event.target===this)closeModal(\'role-info-modal\')">';
