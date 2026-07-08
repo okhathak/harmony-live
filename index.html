@@ -8110,32 +8110,31 @@ function agentClearFilter(){ AGENT_FILTER=null; AGENT_MSG=null; refreshAgentStat
 function renderPipeHTML(recs){
   var cs=computeShown(recs||agentRecommendations());
   var shown=cs.shown;
-  var h='<div style="font-size:12px;font-weight:800;color:var(--text3);letter-spacing:.5px;margin:8px 0 8px">FULL PIPELINE <span style="font-weight:600">('+shown.length+') \u2014 prioritised by the agent</span></div>';
-  if(!shown.length){ h+='<div class="card" style="padding:24px;text-align:center;color:var(--text3)">Nothing matches \u2014 pipeline clear or filter empty.</div>'; }
-  shown.forEach(function(x){
+  var open=!!window._pipeOpen, LIMIT=5;
+  var list=open?shown:shown.slice(0,LIMIT);
+  // header keeps the exact "FULL PIPELINE (n)" token the harness asserts on
+  var h='<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:8px 0 8px">';
+  h+='<span style="font-size:11px;font-weight:800;color:var(--text3);letter-spacing:.8px">FULL PIPELINE ('+shown.length+')<span style="font-weight:600;letter-spacing:.3px"> \u2014 top '+Math.min(LIMIT,shown.length)+' by priority</span></span>';
+  if(shown.length>LIMIT) h+='<button onclick="window._pipeOpen=!window._pipeOpen;refreshAgentStats()" class="btn btn-sm" style="font-size:10.5px;padding:3px 12px">'+(open?'Show top '+LIMIT:'Show all '+shown.length)+'</button>';
+  h+='</div>';
+  if(!shown.length){ h+='<div class="card" style="padding:18px;text-align:center;color:var(--text3)">Nothing matches \u2014 pipeline clear or filter empty.</div>'; return h; }
+  h+='<div class="card" style="padding:2px 0;overflow:hidden">';
+  list.forEach(function(x,i){
     var r=x.r, ns=x.ns;
     var accent=x.direct?'#16A34A':x.actionable?'#D97706':'#94A3B8';
-    h+='<div class="card mb10" style="border-left:4px solid '+accent+';padding:13px 15px">';
-    h+='<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap">';
-    h+='<div style="flex:1;min-width:230px">';
-    h+='<div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">';
-    h+='<span style="font-size:10.5px;font-family:monospace;font-weight:800;color:var(--accent)">'+r.id+'</span>';
+    h+='<div style="display:flex;align-items:center;gap:10px;padding:9px 14px'+(i<list.length-1?';border-bottom:1px solid var(--border2)':'')+'">';
+    h+='<span style="width:3px;align-self:stretch;border-radius:3px;background:'+accent+';flex-shrink:0"></span>';
+    h+='<span style="font-size:10px;font-family:monospace;font-weight:800;color:var(--accent);flex-shrink:0">'+r.id+'</span>';
+    h+='<span style="flex:1;min-width:0;font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="'+escH(r.title)+' \u00b7 '+x.rationale+'">'+escH(r.title)+'</span>';
+    h+='<span style="font-size:10px;color:var(--text3);white-space:nowrap;flex-shrink:0">'+escH(r.sector)+'</span>';
     h+=statusPill(r.status);
-    h+='<span style="font-size:11px;color:var(--text3)">'+escH(r.sector)+'</span></div>';
-    h+='<div style="font-size:13.5px;font-weight:700;margin:3px 0">'+escH(r.title)+'</div>';
-    h+='<div style="font-size:11px;color:var(--text3)"><b style="color:var(--text2)">Why:</b> '+x.rationale+'</div>';
-    if(x.decision){ h+='<div style="font-size:11px;color:#7C3AED;font-weight:700;margin-top:2px">&#129302; Agent decision: '+agentPreview(r)+'</div>'; }
+    if(x.direct){ h+='<button onclick="agentApplyAndShow(\''+r.id+'\')" class="btn btn-sm" style="background:#16A34A;color:#fff;border-color:#16A34A;font-weight:700;white-space:nowrap;flex-shrink:0;font-size:10.5px">\u26A1 '+ns.action+'</button>'; }
+    else if(x.actionable){ h+='<button onclick="agentRoute(\''+r.id+'\')" class="btn btn-sm" style="border-color:#D97706;color:#B45309;white-space:nowrap;flex-shrink:0;font-size:10.5px">'+ns.action+' \u2192</button>'; }
+    else { h+='<span style="font-size:10px;font-weight:700;color:#B45309;white-space:nowrap;flex-shrink:0" title="Waiting on '+(ns.owner||'')+'">\u23F3 '+(ns.owner||'waiting')+'</span>'; }
     h+='</div>';
-    h+='<div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">';
-    if(x.direct){
-      h+='<button onclick="agentApplyAndShow(\''+r.id+'\')" class="btn" style="background:#16A34A;color:#fff;border-color:#16A34A;font-weight:800;white-space:nowrap">&#9889; Apply: '+ns.action+'</button>';
-    } else if(x.actionable){
-      h+='<button onclick="agentRoute(\''+r.id+'\')" class="btn btn-sm" style="border-color:#D97706;color:#B45309;white-space:nowrap">&#128295; '+ns.action+' &#8594;</button>';
-    } else {
-      h+='<span style="font-size:11px;font-weight:700;color:#B45309;background:#FFFBEB;border:1px solid #FDE68A;padding:4px 10px;border-radius:7px;white-space:nowrap">&#9203; Waiting on '+(ns.owner||'')+'</span>';
-    }
-    h+='</div></div></div>';
   });
+  h+='</div>';
+  if(!open && shown.length>LIMIT) h+='<div style="font-size:10.5px;color:var(--text3);margin-top:6px;text-align:center">'+(shown.length-LIMIT)+' more \u2014 ask Vision or tap Show all</div>';
   return h;
 }
 function renderTickerHTML(M){
