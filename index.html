@@ -568,6 +568,46 @@ select.fi{cursor:pointer;appearance:none;
   #role-chevron { display: none !important; }
   #topbar { gap: 6px !important; padding: 0 10px !important; }
 }
+/* ═══ MOBILE UI HARDENING (2026-07) ═══ */
+@media (max-width:760px){
+  html,body{overflow-x:hidden}
+  #main,#content-el,.page{max-width:100%;min-width:0}
+  #content-el .card,.page .card{max-width:100%}
+  /* collapse ALL multi-column grids (nested too) to a single column */
+  .page [style*="grid-template-columns:repeat(2"],
+  .page [style*="grid-template-columns:repeat(3"],
+  .page [style*="grid-template-columns:repeat(4"],
+  .page [style*="grid-template-columns:repeat(5"],
+  .page [style*="grid-template-columns:repeat(6"],
+  .page [style*="grid-template-columns:1fr 1fr"],
+  .page [style*="grid-template-columns:3fr 2fr"],
+  .page [style*="grid-template-columns:2fr 1fr"],
+  .page [style*="grid-template-columns:1fr 2fr"]{grid-template-columns:1fr !important}
+  .page [style*="minmax("]{min-width:0}
+  /* the classic overflow cause: grid/flex children default to min-width:auto,
+     so a wide table forces its card past the viewport and it gets clipped.
+     Letting children shrink lets the table's own overflow-x:auto engage. */
+  .page [style*="display:grid"] > *{min-width:0}
+  .page [style*="display:flex"] > *{min-width:0}
+  /* header action clusters wrap; buttons/pills never squish into blobs.
+     flex-wrap only engages on overflow, so single-line rows are unaffected. */
+  .page > div[style*="justify-content:space-between"]{flex-wrap:wrap; gap:12px}
+  .page div[style*="display:flex"][style*="gap"]{flex-wrap:wrap}
+  #main button, #main .btn, #main .t5-pill{flex-shrink:0}
+  /* segmented pipeline strip: scroll instead of clipping segments */
+  .ou-pipestrip{flex-wrap:wrap}
+  .ou-pipestrip > button{flex:1 0 24% !important; min-width:84px}
+  /* wide tables scroll within their card rather than clipping the page */
+  #content-el table,.page table{display:block; overflow-x:auto; -webkit-overflow-scrolling:touch; white-space:nowrap; max-width:100%}
+  /* hero type scales down */
+  .t5-greet{font-size:clamp(30px,9vw,46px)}
+}
+@media (max-width:430px){
+  #content-el{padding:10px !important}
+  #content-el .card,.page .card{border-radius:14px}
+  .t5-stats{gap:10px 16px}
+  .ptitle{font-size:17px !important}
+}
 @media print {
   /* ── Hide all app chrome ────────────────────────────────── */
   #sidebar, #topbar, #demo-hud, #toast-el,
@@ -4453,7 +4493,7 @@ function renderOUDashboard(){
   if(counts.readyIT)   urgentAlerts.push({icon:"&#9989;",msg:counts.readyIT+" request"+(counts.readyIT>1?"s":"")+" cleared — ready to send to IT",c:"#166534",bg:"#DCFCE7",nav:"ou-approvals"});
 
   // ── Pipeline summary strip render ──────────────────────────────
-  h+='<div style="display:flex;gap:0;background:#fff;border:1.5px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:16px">';
+  h+='<div class="ou-pipestrip" style="display:flex;gap:0;background:#fff;border:1.5px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:16px">';
   pipeStrip.forEach(function(p,i){
     var isActive=p.n>0;
     h+='<button onclick="nav(\''+p.nav+'\')" style="flex:1;padding:12px 8px;display:flex;flex-direction:column;align-items:center;gap:3px;'
