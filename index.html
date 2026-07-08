@@ -1184,6 +1184,51 @@ body[data-role="it"] .jc-top{color:#C9A18E}
 body[data-role="it"] .jcore-panel:not(.working):not(.speaking):not(.listening) .jc-state{color:#E8B79F}
 body[data-role="it"] .jc-wave i{background:linear-gradient(180deg,#E88E6A,#D97757);box-shadow:0 0 6px rgba(217,119,87,.5)}
 body[data-role="it"] .jc-halo{background:radial-gradient(circle,rgba(217,119,87,.28),transparent 65%)}
+/* ===== CLAUDE SKIN phase 3 — UI uplift: depth, rhythm, micro-interactions (IT role) ===== */
+/* material: layered cards with inner hairline + soft elevation */
+body[data-role="it"] .card,body[data-role="it"] .tac .card{background:linear-gradient(180deg,#2E2D2A 0%,#282724 100%)!important;border:1px solid rgba(250,249,245,.07)!important;border-radius:18px!important;box-shadow:inset 0 1px 0 rgba(250,249,245,.045),0 24px 60px -36px rgba(0,0,0,.65)!important}
+body[data-role="it"] #topbar{backdrop-filter:blur(16px) saturate(1.1);-webkit-backdrop-filter:blur(16px) saturate(1.1);background:rgba(38,38,36,.72)!important}
+/* type rhythm */
+.t5-greet{font-size:clamp(34px,4.4vw,54px);line-height:1.04}
+.t5-stats{gap:26px;margin-top:26px}
+.t5-stat b{font-size:17px;font-variant-numeric:tabular-nums}
+body[data-role="it"] ::selection{background:rgba(217,119,87,.35);color:#FAF9F5}
+/* conversation, claude.ai style: assistant text sits on the surface, no bubble */
+body[data-role="it"] #harmony-chat .hbot:not(.herr){background:transparent!important;border:none!important;padding:2px 0!important;max-width:96%!important;font-size:13px!important;line-height:1.68!important;color:#EDEBE2!important;border-radius:0!important}
+body[data-role="it"] #harmony-chat div[style*="background:#2563EB"]{background:#3B3936!important;color:#F0EEE5!important;border:1px solid rgba(250,249,245,.08)!important;border-radius:16px 16px 6px 16px!important;padding:9px 14px!important}
+body[data-role="it"] #harmony-chat{padding:16px 18px 10px!important}
+/* composer: large rounded field with a coral focus ring */
+body[data-role="it"] #agent-cmd{padding:12px 16px!important;font-size:13.5px!important;border-radius:16px!important;transition:border-color .18s,box-shadow .18s}
+body[data-role="it"] #agent-cmd:focus{outline:none!important;border-color:rgba(217,119,87,.65)!important;box-shadow:0 0 0 3px rgba(217,119,87,.22)!important}
+body[data-role="it"] .hbar{padding:12px 16px 14px!important}
+body[data-role="it"] .hbar button{border-radius:14px!important;transition:transform .15s,filter .15s,box-shadow .15s}
+body[data-role="it"] .hbar button:hover{transform:translateY(-1px)}
+body[data-role="it"] .hbar button:active{transform:scale(.97)}
+/* pills: spring + press */
+.t5-pill{transition:transform .16s cubic-bezier(.34,1.56,.64,1),filter .16s,box-shadow .16s,border-color .16s}
+.t5-pill:active{transform:scale(.96)}
+.t5-pill.ghost:hover{background:rgba(250,249,245,.07);box-shadow:0 10px 26px -18px rgba(0,0,0,.8)}
+/* chips + suggested actions */
+body[data-role="it"] .tchip,body[data-role="it"] .hact{transition:transform .15s,color .15s,border-color .15s,background .15s}
+body[data-role="it"] .tchip:hover,body[data-role="it"] .hact:hover{transform:translateY(-1px)}
+/* sidebar: rounded active state */
+body[data-role="it"] .sbi{border-radius:10px;margin:1px 8px;transition:background .15s,color .15s}
+/* accessible focus */
+body[data-role="it"] button:focus-visible,body[data-role="it"] input:focus-visible{outline:2px solid rgba(217,119,87,.7);outline-offset:2px}
+/* quiet, warm scrollbars */
+body[data-role="it"] ::-webkit-scrollbar{width:10px;height:10px}
+body[data-role="it"] ::-webkit-scrollbar-thumb{background:#45433F;border-radius:99px;border:3px solid #262624}
+body[data-role="it"] ::-webkit-scrollbar-thumb:hover{background:#57544F}
+body[data-role="it"] ::-webkit-scrollbar-track{background:transparent}
+/* engineering plate: quieter frame, stronger number */
+body[data-role="it"] .jc-plate{border-radius:16px;background:rgba(48,48,46,.6);border:1px solid rgba(250,249,245,.07)}
+body[data-role="it"] .jc-num{font-size:24px;letter-spacing:.5px}
+/* warm the CIA layer's light-inline mappings (chat header + all card headers app-wide) */
+body[data-role="it"] [style*="background:#fff"]{background:#2E2D2A!important}
+body[data-role="it"] [style*="background:#F8FAFC"]{background:#262624!important}
+body[data-role="it"] [style*="background:#EFF6FF"]{background:rgba(217,119,87,.12)!important}
+/* reduce motion for those who ask */
+@media (prefers-reduced-motion:reduce){ .t5-pill,body[data-role="it"] .hbar button{transition:none} }
 </style>
 </head>
 <body data-role="bu">
