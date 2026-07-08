@@ -1239,7 +1239,7 @@ body[data-role="it"] [style*="background:#EFF6FF"]{background:rgba(217,119,87,.1
       <div><div class="sb-name">HARMONY</div><div class="sb-subt">Change &amp; Delivery</div></div>
     </div>
     <div class="sb-role">
-      <div class="sb-rl">Workspace</div>
+      <div class="sb-rl">GDRFA Dubai</div>
       <div class="sb-rn" id="sb-role-name">Business Unit</div>
       <div class="sb-rs" id="sb-role-sub">Corporate Services</div>
       <div id="sb-user-id" style="font-size:9px;color:rgba(255,255,255,.22);margin-top:4px;padding-top:4px;border-top:1px solid rgba(255,255,255,.07)">Hamad Al Nuaimi &mdash; BU Lead</div>
@@ -1283,7 +1283,7 @@ body[data-role="it"] [style*="background:#EFF6FF"]{background:rgba(217,119,87,.1
 // ═══════════════════════════════════════════════════════
 var ROLES_CONFIG = {
   bu: {
-    id:"bu", label:"Business Unit", sublabel:"Corporate Services",
+    id:"bu", label:"Business Unit", sublabel:"Residency Services",
     user:"Hamad Al Nuaimi", initials:"HN", title:"BU Lead",
     accentRgb:"29,78,216", accentHex:"#1D4ED8",
     screens:[
@@ -1309,7 +1309,7 @@ var ROLES_CONFIG = {
     defaultScreen:"ou-dashboard"
   },
   it: {
-    id:"it", label:"IT / Digital Services", sublabel:"Delivery Team",
+    id:"it", label:"Smart Services Sector", sublabel:"Delivery Team",
     user:"Omar Al Ahrari", initials:"OA", title:"IT Delivery Lead",
     accentRgb:"67,56,202", accentHex:"#4338CA",
     screens:[
@@ -1323,7 +1323,7 @@ var ROLES_CONFIG = {
     defaultScreen:"it-agent"
   },
   dept: {
-    id:"dept", label:"Department", sublabel:"Finance",
+    id:"dept", label:"Department", sublabel:"Entry Permits",
     user:"Sultan Al Dhaheri", initials:"SD", title:"Finance Director",
     accentRgb:"180,83,9", accentHex:"#B45309",
     screens:[
@@ -1347,15 +1347,15 @@ var ROLES_CONFIG = {
   }
 }
 var DEPT_ROLES = [
-  {key:"dept-finance", dept:"Finance",    user:"Sultan Al Dhaheri",  initials:"SD", title:"Finance Director",  accentHex:"#D97706"},
-  {key:"dept-legal",   dept:"Legal",      user:"Rashed Al Shamsi",   initials:"RS", title:"Legal Counsel",     accentHex:"#7C3AED"},
+  {key:"dept-finance", dept:"Entry Permits",    user:"Sultan Al Dhaheri",  initials:"SD", title:"Finance Director",  accentHex:"#D97706"},
+  {key:"dept-legal",   dept:"Ports Affairs",      user:"Rashed Al Shamsi",   initials:"RS", title:"Legal Counsel",     accentHex:"#7C3AED"},
   {key:"dept-media",   dept:"Media",      user:"Aisha Al Balushi",   initials:"AB", title:"Media Director",    accentHex:"#0891B2"},
   {key:"dept-risk",    dept:"Risk",       user:"Saeed Al Mansoori",  initials:"SM", title:"Risk Manager",      accentHex:"#DC2626"},
   {key:"dept-compliance",dept:"Compliance",user:"Waleed Al Kaabi",   initials:"WK", title:"Compliance Officer",accentHex:"#16A34A"},
   {key:"dept-hr",      dept:"HR",         user:"Sara Al Balushi",    initials:"SB", title:"HR Manager",        accentHex:"#2563EB"},
 ];
 var currentRole = "bu";
-var currentDept = "Finance"; // default for demo — Finance Director
+var currentDept = "Entry Permits"; // default for demo — Finance Director
 var currentScreen = "dashboard";
 var dropdownOpen  = false;
 // ─── BADGE COUNTS ─────────────────────────────────────────────────
@@ -1368,8 +1368,8 @@ function getBadges(){
     ouConsult:REQUESTS.filter(function(r){return (r.consultations||[]).some(function(c){return c.status==="Pending"&&!c.reply;});}).length,
     ouFT:     REQUESTS.filter(function(r){return r.urgency==="Critical";}).length,
     itNew:    REQUESTS.filter(function(r){return r.status==="OU Approved";}).length,
-    deptNew:  REQUESTS.filter(function(r){return (r.consultations||[]).some(function(c){return c.dept===(currentDept||"Finance")&&c.status==="Pending"&&!c.reply;});}).length,
-    deptAppr: REQUESTS.filter(function(r){var ap=r.deptApprovals||{};var d=currentDept||"Finance";return ap[d]&&ap[d].status==="Pending";}).length,
+    deptNew:  REQUESTS.filter(function(r){return (r.consultations||[]).some(function(c){return c.dept===(currentDept||"Entry Permits")&&c.status==="Pending"&&!c.reply;});}).length,
+    deptAppr: REQUESTS.filter(function(r){var ap=r.deptApprovals||{};var d=currentDept||"Entry Permits";return ap[d]&&ap[d].status==="Pending";}).length,
   };
 }
 // ─── SIDEBAR ──────────────────────────────────────────────────────
@@ -1387,7 +1387,7 @@ function renderSidebar(){
     // Dynamic badge: Awaiting Your Input requests
     var _awaitCnt=0;
     if(sc.id==='my-requests'&&currentRole==='bu'){
-      var _bsec=(ROLES_CONFIG.bu||{}).sublabel||'Corporate Services';
+      var _bsec=(ROLES_CONFIG.bu||{}).sublabel||'Residency Services';
       _awaitCnt=REQUESTS.filter(function(r){return r.sector===_bsec&&r.status==='Awaiting Your Input'||r.status==='Awaiting BU Input';}).length;
     }
     var cnt = _awaitCnt || (sc.badge?bc[sc.badge]||0:0);
@@ -1420,7 +1420,7 @@ var HARMONY_SENT_NOTIFS={bu:[],ou:[],it:[],dept:[],exec:[]};
 function computeNotifications(){
   var items=(HARMONY_SENT_NOTIFS[currentRole]||[]).slice();
   if(currentRole==='bu'){
-    var sec=(ROLES_CONFIG[currentRole]||{}).sublabel||'Corporate Services';
+    var sec=(ROLES_CONFIG[currentRole]||{}).sublabel||'Residency Services';
     REQUESTS.filter(function(r){return r.sector===sec;}).forEach(function(r){
       if(r.status==='Awaiting BU Confirmation') items.push({icon:'\u{1F4CA}',color:'#7C3AED',title:'Scope ready for confirmation',sub:r.id+' — '+r.title,action:"openReq('"+r.id+"')"});
       if(r.status==='Acceptance Testing') items.push({icon:'\u{1F50D}',color:'#1D4ED8',title:'Ready for your UAT',sub:r.id+' — '+r.title,action:"openReq('"+r.id+"')"});
@@ -1551,10 +1551,10 @@ document.addEventListener("click",function(e){
 // ─── SHARED DATA ──────────────────────────────────────────────────
 var REQUESTS=[
   // ── Corporate Services ──────────────────────────────────────
-  {id:"REQ-001",title:"Arabic UI Enhancement — Customer Portal",
-   system:"Customer Portal",sector:"Corporate Services",
-   reason:"60% of users are Arabic-first. Current English-only interface causes high support volume.",
-   benefit:"Estimated 40% reduction in support tickets. Accessibility compliance met.",
+  {id:"REQ-001",title:"Arabic-First UI Uplift — Salama Residency Portal",
+   system:"Salama Platform",sector:"Residency Services",
+   reason:"Most applicants are Arabic-first; the English-led interface drives avoidable call-center volume.",
+   benefit:"Est. 40% fewer support tickets; full AR/EN accessibility compliance.",
    neededBy:"25 Jun 2026",status:"In Delivery",khalidS:8,khalidB:8,khalidT:5,
    submittedBy:"Hamad Al Nuaimi",submittedAt:"10 Apr 2026",submittedDays:40,
    baAssigned:"Hessa Al Zaabi",effortHours:14,complexity:"Medium",
@@ -1566,26 +1566,26 @@ var REQUESTS=[
   effortHours:14,
   baAssigned:"Hessa Al Zaabi",
   partnerId:"DSP"},
-  {id:"REQ-002",title:"KYC Document Upload for Partner Onboarding",
-   system:"Document Management",sector:"Corporate Services",
-   reason:"Partner onboarding requires manual KYC collection via email — 5 day average delay.",
-   benefit:"Reduces partner onboarding from 5 days to same-day. Full digital audit trail.",
+  {id:"REQ-002",title:"Digital Document Vault — Golden Visa Applications",
+   system:"GDRFA Smart App",sector:"Residency Services",
+   reason:"Golden Visa evidence packs arrive by email and are re-requested on average twice per case.",
+   benefit:"Same-day nomination review with a complete digital audit trail.",
    neededBy:"15 Jun 2026",status:"Acceptance Testing",khalidS:8,khalidB:8,khalidT:8,
    submittedBy:"Fatima Al Blooshi",submittedAt:"15 Mar 2026",submittedDays:65,
    baAssigned:"Omar Al Kaabi",effortHours:18,complexity:"High",
    cycle:"Cycle 18",jiraId:"CORE-0912",jiraStatus:"In Review",sprintReady:true,
    riskLevel:"Medium",partnerId:"CORE",urgency:"High",assignedUnit:"IT",routingNote:"Legal residency requirement confirmed.",
    locked:true,clarifications:[],
-   deptApprovals:{"Legal":{type:"Approval Required",status:"Approved",approver:"Rashed Al Shamsi",date:"20 Mar 2026",comments:""},"IT Security":{type:"Approval Required",status:"Approved",approver:"Mohammed Al Rashed",date:"23 Mar 2026",comments:""},"Compliance":{type:"Approval Required",status:"Approved",approver:"Waleed Al Kaabi",date:"21 Mar 2026",comments:""},"Risk":{type:"Approval Required",status:"Approved",approver:"Saeed Al Mansoori",date:"22 Mar 2026",comments:""}},
-   consultations:[{id:"CON-001",dept:"Legal",question:"Are there restrictions on storing KYC documents outside UAE jurisdiction?",required:true,askedBy:"Yousuf Al Hameli",date:"17 Mar 2026",status:"Replied",reply:"Documents must remain on UAE-hosted infrastructure. Vendor must confirm data residency.",replyDate:"19 Mar 2026"}],
-   solutionNotes:"PCI-compliant auto-renewal engine. BU UAT started 22 May. Two test scenarios passed, one edge case pending.",dependencies:"KYC vendor API keys confirmed.",riskNotes:"Vendor SLA is 48h.",outcomeNotes:"",
+   deptApprovals:{"Ports Affairs":{type:"Approval Required",status:"Approved",approver:"Rashed Al Shamsi",date:"20 Mar 2026",comments:""},"IT Security":{type:"Approval Required",status:"Approved",approver:"Mohammed Al Rashed",date:"23 Mar 2026",comments:""},"Compliance":{type:"Approval Required",status:"Approved",approver:"Waleed Al Kaabi",date:"21 Mar 2026",comments:""},"Risk":{type:"Approval Required",status:"Approved",approver:"Saeed Al Mansoori",date:"22 Mar 2026",comments:""}},
+   consultations:[{id:"CON-001",dept:"Ports Affairs",question:"Are there restrictions on storing eKYC documents outside UAE jurisdiction?",required:true,askedBy:"Yousuf Al Hameli",date:"17 Mar 2026",status:"Replied",reply:"Documents must remain on UAE-hosted infrastructure. Typing Center must confirm data residency.",replyDate:"19 Mar 2026"}],
+   solutionNotes:"PCI-compliant auto-renewal engine. BU UAT started 22 May. Two test scenarios passed, one edge case pending.",dependencies:"KYC typing center API keys confirmed.",riskNotes:"Typing Center SLA is 48h.",outcomeNotes:"",
   effortHours:18,
   baAssigned:"Omar Al Kaabi",
   partnerId:"CORE"},
-  {id:"REQ-003",title:"Vendor Portal Access Auto-Renewal",
-   system:"IAM",sector:"Corporate Services",
-   reason:"Vendors lose portal access after 90 days with no automated renewal — IT handles 50+ manual tickets/month.",
-   benefit:"Eliminate manual renewals. Reduce IT support tickets by 40%. Vendor satisfaction improvement.",
+  {id:"REQ-003",title:"Establishment Card Auto-Renewal via UAE Pass",
+   system:"UAE Pass SSO",sector:"Residency Services",
+   reason:"Company PROs re-submit identical establishment-card renewals manually every year.",
+   benefit:"Zero-touch renewal for compliant establishments; frees counter capacity.",
    neededBy:"15 Jul 2026",status:"Closed",khalidS:5,khalidB:8,khalidT:5,
    submittedBy:"Hamad Al Nuaimi",submittedAt:"01 May 2026",submittedDays:19,
    baAssigned:"Hessa Al Zaabi",effortHours:20,complexity:"Medium",
@@ -1593,49 +1593,49 @@ var REQUESTS=[
    riskLevel:"Low",partnerId:"DSP",urgency:"Normal",assignedUnit:"IT",routingNote:"Straightforward IAM config. No high-risk flags.",
    locked:false,clarifications:[],
    deptApprovals:{"IT Security":{type:"Approval Required",status:"Approved",approver:"Mohammed Al Rashed",date:"04 May 2026",comments:""}},
-   linkedInitiatives:["DubaiPaperless","UAE-DS-2025"],consultations:[],solutionNotes:"",dependencies:"",riskNotes:"",outcomeNotes:"Vendor portal launched. 320 active vendors onboarded. Renewal processing time reduced from 8 days to same-day. Zero manual follow-ups in first month.",
+   linkedInitiatives:["DubaiPaperless","UAE-DS-2025"],consultations:[],solutionNotes:"",dependencies:"",riskNotes:"",outcomeNotes:"Typing Center portal launched. 320 active typing centers onboarded. Renewal processing time reduced from 8 days to same-day. Zero manual follow-ups in first month.",
   cycle:"Cycle 17",
   outcomeRating:"full"},
-  {id:"REQ-004",title:"Real-Time Payment Status Notifications",
-   system:"Customer Portal",sector:"Corporate Services",
-   reason:"Customers call the contact centre after payments because they receive no confirmation. 200+ calls/day.",
-   benefit:"Reduce inbound call volume by 30%. Customer NPS improvement estimated +12 points.",
+  {id:"REQ-004",title:"Real-Time Application Status Notifications",
+   system:"Salama Platform",sector:"Residency Services",
+   reason:"Applicants call Amer partners to ask where their residency file is.",
+   benefit:"Push/SMS status at each stage; projected 35% call-volume drop.",
    neededBy:"30 Jul 2026",status:"OU Approved",khalidS:8,khalidB:13,khalidT:5,
    nominated:true,submittedBy:"Fatima Al Blooshi",submittedAt:"05 May 2026",submittedDays:15,
    baAssigned:"Hessa Al Zaabi",effortHours:20,complexity:"Medium",
    cycle:null,jiraId:"DSP-1495",jiraStatus:"To Do",sprintReady:false,
    riskLevel:"Medium",partnerId:"DSP",urgency:"Normal",assignedUnit:"IT",routingNote:"Payment system integration. Risk dept consulted.",
    locked:false,clarifications:[],
-   deptApprovals:{"Finance":{type:"Approval Required",status:"Approved",approver:"Noura Al Rashidi",date:"08 May 2026",comments:""},"Risk":{type:"Approval Required",status:"Approved",approver:"Saeed Al Mansoori",date:"09 May 2026",comments:""}},
-   consultations:[],solutionNotes:"Vendor onboarding portal automation — document upload + e-signature + status notifications. DSP to build on existing portal stack.",dependencies:"Payment Gateway team availability.",riskNotes:"Real-time dependency on CORE partner.",outcomeNotes:"",
+   deptApprovals:{"Entry Permits":{type:"Approval Required",status:"Approved",approver:"Noura Al Rashidi",date:"08 May 2026",comments:""},"Risk":{type:"Approval Required",status:"Approved",approver:"Saeed Al Mansoori",date:"09 May 2026",comments:""}},
+   consultations:[],solutionNotes:"Typing Center onboarding portal automation — document upload + e-signature + status notifications. DSP to build on existing portal stack.",dependencies:"Payment Gateway team availability.",riskNotes:"Real-time dependency on CORE partner.",outcomeNotes:"",
   cycle:""},
   // ── Finance ──────────────────────────────────────────────────
-  {id:"REQ-005",title:"Automated Financial Reconciliation Dashboard",
-   system:"Reporting Platform",sector:"Finance",
-   reason:"Finance team spends 3 days/month on manual reconciliation across 6 source systems.",
-   benefit:"Reduce reconciliation effort from 3 days to 4 hours. Eliminate reporting errors.",
+  {id:"REQ-005",title:"Entry Permit Volumes Dashboard — Dubai Pulse Feed",
+   system:"Dubai Pulse Reports",sector:"Entry Permits",
+   reason:"Permit issuance stats are compiled by hand for weekly leadership review.",
+   benefit:"Live issuance and approval-rate dashboard fed to Dubai Pulse open data.",
    neededBy:"20 Jul 2026",status:"Under Analysis",khalidS:8,khalidB:13,khalidT:8,
    submittedBy:"Noura Al Rashidi",submittedAt:"20 Apr 2026",submittedDays:30,
    baAssigned:"Omar Al Kaabi",effortHours:22,complexity:"High",
    cycle:null,jiraId:null,jiraStatus:null,sprintReady:false,
    riskLevel:"High",partnerId:"CORE",urgency:"High",assignedUnit:"IT",routingNote:"Finance and Risk sign-off required.",
    locked:false,clarifications:[],
-   deptApprovals:{"Finance":{type:"Approval Required",status:"Approved",approver:"Noura Al Rashidi",date:"23 Apr 2026",comments:""},"Risk":{type:"Approval Required",status:"Approved",approver:"Saeed Al Mansoori",date:"24 Apr 2026",comments:""},"IT Security":{type:"Approval Required",status:"Approved",approver:"Mohammed Al Rashed",date:"25 Apr 2026",comments:""}},
-   consultations:[{id:"CON-002",dept:"Compliance",question:"Does automated reconciliation require audit trail logging under CBUAE guidelines?",required:true,askedBy:"Yousuf Al Hameli",date:"22 Apr 2026",status:"Replied",reply:"Yes — all automated reconciliation actions must be logged with timestamp and user attribution.",replyDate:"24 Apr 2026"}],
-   solutionNotes:"CBUAE Open Finance API integration. Scope confirmed: 3 endpoints, OAuth 2.0 flow, sandbox testing required. Risk: third-party certification timeline.",dependencies:"Access to all 6 source system APIs.",riskNotes:"Data quality varies across source systems.",outcomeNotes:"",
+   deptApprovals:{"Entry Permits":{type:"Approval Required",status:"Approved",approver:"Noura Al Rashidi",date:"23 Apr 2026",comments:""},"Risk":{type:"Approval Required",status:"Approved",approver:"Saeed Al Mansoori",date:"24 Apr 2026",comments:""},"IT Security":{type:"Approval Required",status:"Approved",approver:"Mohammed Al Rashed",date:"25 Apr 2026",comments:""}},
+   consultations:[{id:"CON-002",dept:"Compliance",question:"Does automated reconciliation require audit trail logging under ICP guidelines?",required:true,askedBy:"Yousuf Al Hameli",date:"22 Apr 2026",status:"Replied",reply:"Yes — all automated reconciliation actions must be logged with timestamp and user attribution.",replyDate:"24 Apr 2026"}],
+   solutionNotes:"ICP Open Finance API integration. Scope confirmed: 3 endpoints, OAuth 2.0 flow, sandbox testing required. Risk: third-party certification timeline.",dependencies:"Access to all 6 source system APIs.",riskNotes:"Data quality varies across source systems.",outcomeNotes:"",
   effortHours:22,
   baAssigned:"Omar Al Kaabi",
   partnerId:"CORE",
   complexity:"High",
   cycle:"",
-  itQuestion:"The current API gateway — is it the CBUAE sandbox or production endpoint? This determines if we need additional certification before go-live.",
+  itQuestion:"The current API gateway — is it the ICP sandbox or production endpoint? This determines if we need additional certification before go-live.",
   itQuestionDate:"26 May 2026",
   jiraId:"CORE-0931",
   jiraStatus:"In Progress"},
-  {id:"REQ-006",title:"Budget Variance Alert System",
-   system:"Reporting Platform",sector:"Finance",
-   reason:"Budget overruns are discovered at month-end, not in real-time. Corrective action is too late.",
-   benefit:"Early warning enables corrective action. Estimated AED 2M savings in first year.",
+  {id:"REQ-006",title:"Visit Visa SLA Breach Alerting",
+   system:"Dubai Pulse Reports",sector:"Entry Permits",
+   reason:"Visit-visa files nearing SLA are found only at end-of-day sweeps.",
+   benefit:"Automatic alerts at 80% of SLA; measurable drop in breached files.",
    neededBy:"15 Aug 2026",status:"Under Review",khalidS:5,khalidB:8,khalidT:3,
    submittedBy:"Noura Al Rashidi",submittedAt:"14 May 2026",submittedDays:3,
    baAssigned:"Omar Al Balushi",effortHours:null,complexity:null,
@@ -1644,18 +1644,18 @@ var REQUESTS=[
    locked:false,clarifications:[],deptApprovals:{},consultations:[],
    solutionNotes:"",dependencies:"",riskNotes:"",outcomeNotes:""},
   // ── Legal ────────────────────────────────────────────────────
-  {id:"REQ-007",title:"Contract Lifecycle Management Integration",
-   system:"Document Management",sector:"Legal",
-   reason:"Contracts are tracked in spreadsheets. Renewal deadlines are missed — 3 incidents last quarter.",
-   benefit:"Zero missed renewals. Legal team saves 15h/week. Audit-ready contract repository.",
+  {id:"REQ-007",title:"Crew & Vessel Clearance Workflow — Port Rashid",
+   system:"GDRFA Smart App",sector:"Ports Affairs",
+   reason:"Marine crew clearances at Port Rashid still ride on paper manifests.",
+   benefit:"Digital manifest intake; clearance time cut from hours to minutes.",
    neededBy:"25 Jun 2026",status:"Awaiting BU Confirmation",khalidS:8,khalidB:8,khalidT:5,
    submittedBy:"Rashed Al Shamsi",submittedAt:"25 Apr 2026",submittedDays:31,
    baAssigned:"Hessa Al Zaabi",effortHours:null,complexity:null,
    cycle:null,jiraId:null,jiraStatus:null,sprintReady:false,
    riskLevel:"Medium",partnerId:null,urgency:"Normal",assignedUnit:null,routingNote:"Multiple dept sign-offs required.",
    locked:false,clarifications:[],
-   deptApprovals:{"Legal":{type:"Approval Required",status:"Approved",approver:"Rashed Al Shamsi",date:"28 Apr 2026",comments:""},"Procurement":{type:"Approval Required",status:"Pending",approver:"",date:"",comments:""},"Finance":{type:"Approval Required",status:"Blocked",approver:"Noura Al Rashidi",date:"02 May 2026",comments:"Budget for CLM licence not pre-approved. Requires CFO sign-off before proceeding."}},
-   consultations:[],solutionNotes:"PDPL consent module: subject dashboard, audit trail, consent versioning. Dependency: legal wording sign-off by 10 Jun.",dependencies:"CLM vendor selection pending.",riskNotes:"Vendor selection adds 3-week lead time.",outcomeNotes:"",
+   deptApprovals:{"Ports Affairs":{type:"Approval Required",status:"Approved",approver:"Rashed Al Shamsi",date:"28 Apr 2026",comments:""},"Licensing":{type:"Approval Required",status:"Pending",approver:"",date:"",comments:""},"Entry Permits":{type:"Approval Required",status:"Blocked",approver:"Noura Al Rashidi",date:"02 May 2026",comments:"Budget for CLM licence not pre-approved. Requires CFO sign-off before proceeding."}},
+   consultations:[],solutionNotes:"PDPL consent module: subject dashboard, audit trail, consent versioning. Dependency: legal wording sign-off by 10 Jun.",dependencies:"CLM typing center selection pending.",riskNotes:"Typing Center selection adds 3-week lead time.",outcomeNotes:"",
   effortHours:16,
   baAssigned:"Hessa Al Zaabi",
   partnerId:"CORE",
@@ -1663,19 +1663,19 @@ var REQUESTS=[
   cycle:"",
   jiraId:"CORE-0928",
   jiraStatus:"To Do"},
-  {id:"REQ-008",title:"Regulatory Reporting Automation — CBUAE",
-   system:"Reporting Platform",sector:"Legal",
-   reason:"CBUAE requires monthly regulatory submissions. Current process is manual and error-prone.",
-   benefit:"Compliance guaranteed. Reduces preparation from 5 days to automated overnight run.",
+  {id:"REQ-008",title:"Federal Data Exchange Automation — ICP",
+   system:"Dubai Pulse Reports",sector:"Ports Affairs",
+   reason:"Monthly federal returns to ICP are exported and reconciled manually.",
+   benefit:"Automated, validated ICP exchange; removes a 3-day monthly effort.",
    neededBy:"10 Aug 2026",status:"OU Approved",khalidS:13,khalidB:13,khalidT:21,
    submittedBy:"Rashed Al Shamsi",submittedAt:"08 May 2026",submittedDays:18,
    baAssigned:"Sara Al Hashimi",effortHours:null,complexity:null,
    cycle:null,jiraId:null,jiraStatus:null,sprintReady:false,
    riskLevel:"Critical",partnerId:null,urgency:"Critical",assignedUnit:null,routingNote:"",
    locked:false,
-   clarifications:[{id:"CLR-001",askedBy:"Yousuf Al Hameli",askedByRole:"Operations Unit",question:"Is the Jun 30 deadline a hard regulatory deadline or an internal target?",date:"10 May 2026",reply:"Hard regulatory deadline. CBUAE fines apply for late submission.",replyDate:"11 May 2026"}],
+   clarifications:[{id:"CLR-001",askedBy:"Yousuf Al Hameli",askedByRole:"Operations Unit",question:"Is the Jun 30 deadline a hard regulatory deadline or an internal target?",date:"10 May 2026",reply:"Hard regulatory deadline. ICP fines apply for late submission.",replyDate:"11 May 2026"}],
    deptApprovals:{},consultations:[],
-   solutionNotes:"Legal document automation — clause library, contract templates, approval workflow. High BU urgency (K=47). Dependency on legal team for content sign-off.",dependencies:"CBUAE API specification document needed.",riskNotes:"Any delay risks regulatory penalty.",outcomeNotes:"",
+   solutionNotes:"Legal document automation — clause library, contract templates, approval workflow. High BU urgency (K=47). Dependency on legal team for content sign-off.",dependencies:"ICP API specification document needed.",riskNotes:"Any delay risks regulatory penalty.",outcomeNotes:"",
   cycle:"",
   partnerId:"CORE",
   effortHours:28,
@@ -1683,10 +1683,10 @@ var REQUESTS=[
   jiraId:"CORE-0933",
   jiraStatus:"To Do"},
   // ── Customer Services ────────────────────────────────────────
-  {id:"REQ-009",nominated:true,title:"Omnichannel Customer Complaint Tracking",
-   system:"Customer Portal",sector:"Customer Services",
-   reason:"Complaints arrive via email, phone, and portal but are tracked in separate systems. No single view.",
-   benefit:"Single complaint view reduces average resolution time from 8 days to 3 days.",
+  {id:"REQ-009",nominated:true,title:"Omnichannel Complaint Tracking — Amer & Call Center",
+   system:"Salama Platform",sector:"Amer Centers",
+   reason:"Complaints arrive via app, hotline and centers with no single view.",
+   benefit:"One complaint timeline across channels; faster closure and honest SLAs.",
    neededBy:"01 Oct 2026",status:"Closed",khalidS:5,khalidB:8,khalidT:3,
    submittedBy:"Maryam Al Ketbi",submittedAt:"01 May 2026",submittedDays:19,
    baAssigned:"Omar Al Kaabi",effortHours:18,complexity:"Very High",
@@ -1704,10 +1704,10 @@ var REQUESTS=[
   partnerId:"CORE",
   outcomeRating:"full",
   outcomeNotes:"Complaint tracking live. CSAT score improved from 3.2 to 4.1. Average resolution time down 40%."},
-  {id:"REQ-010",title:"Customer Identity Verification — eKYC",nominated:true,
-   system:"IAM",sector:"Customer Services",
-   reason:"Manual ID verification takes 24-48h. Competitors offer instant digital onboarding.",
-   benefit:"Instant customer onboarding. Estimated 25% increase in successful account openings.",
+  {id:"REQ-010",title:"Traveller Identity Verification — Biometric eKYC",nominated:true,
+   system:"UAE Pass SSO",sector:"Amer Centers",
+   reason:"Manual identity checks add minutes per traveller at peak.",
+   benefit:"Biometric eKYC match in seconds; fewer manual referrals.",
    neededBy:"15 Jul 2026",status:"Deployed — Pending Closure",khalidS:13,khalidB:13,khalidT:8,
    submittedBy:"Maryam Al Ketbi",submittedAt:"10 Apr 2026",submittedDays:40,
    baAssigned:"Hessa Al Zaabi",effortHours:28,complexity:"Medium",
@@ -1725,17 +1725,17 @@ var REQUESTS=[
   outcomeRating:"full",
   outcomeNotes:"eKYC live across all customer touchpoints. Onboarding time reduced from 3 days to 4 hours."},
   // ── Closed / Delivered ───────────────────────────────────────
-  {id:"REQ-011",title:"Payment Gateway Upgrade — PCI DSS v4.0",
-   system:"Payment Gateway",sector:"Finance",
-   reason:"PCI DSS v4.0 mandate effective March 2026. Current gateway is non-compliant.",
-   benefit:"Regulatory compliance. Avoids AED 500K/month penalty. Zero customer data exposure.",
+  {id:"REQ-011",title:"Dubai Pay Gateway Upgrade — Permit Fees",
+   system:"Dubai Pay Gateway",sector:"Entry Permits",
+   reason:"The fee gateway must move to the new Dubai Pay standard before the mandate date.",
+   benefit:"Compliant, tokenised fee payments; fewer failed transactions.",
    neededBy:"31 Mar 2026",status:"Closed",khalidS:21,khalidB:21,khalidT:21,
    submittedBy:"Noura Al Rashidi",submittedAt:"15 Jan 2026",submittedDays:90,
    baAssigned:"Hessa Al Zaabi",effortHours:34,complexity:"Very High",
    cycle:"Cycle 16",jiraId:"CORE-0892",jiraStatus:"Done",sprintReady:true,
    riskLevel:"Critical",partnerId:"DSP",urgency:"Critical",assignedUnit:"IT",routingNote:"Emergency fast-track — regulatory deadline.",
    locked:true,clarifications:[],
-   deptApprovals:{"Finance":{type:"Approval Required",status:"Approved",approver:"Noura Al Rashidi",date:"16 Jan 2026",comments:""},"Legal":{type:"Approval Required",status:"Approved",approver:"Rashed Al Shamsi",date:"17 Jan 2026",comments:""},"Risk":{type:"Approval Required",status:"Approved",approver:"Saeed Al Mansoori",date:"17 Jan 2026",comments:""},"IT Security":{type:"Approval Required",status:"Approved",approver:"Mohammed Al Rashed",date:"18 Jan 2026",comments:""},"Compliance":{type:"Approval Required",status:"Approved",approver:"Waleed Al Kaabi",date:"18 Jan 2026",comments:""}},
+   deptApprovals:{"Entry Permits":{type:"Approval Required",status:"Approved",approver:"Noura Al Rashidi",date:"16 Jan 2026",comments:""},"Ports Affairs":{type:"Approval Required",status:"Approved",approver:"Rashed Al Shamsi",date:"17 Jan 2026",comments:""},"Risk":{type:"Approval Required",status:"Approved",approver:"Saeed Al Mansoori",date:"17 Jan 2026",comments:""},"IT Security":{type:"Approval Required",status:"Approved",approver:"Mohammed Al Rashed",date:"18 Jan 2026",comments:""},"Compliance":{type:"Approval Required",status:"Approved",approver:"Waleed Al Kaabi",date:"18 Jan 2026",comments:""}},
    consultations:[],solutionNotes:"Full PCI DSS v4.0 implementation by CORE partner.",dependencies:"",riskNotes:"",
    outcomeRating:"full",outcomeNotes:"PCI DSS v4.0 achieved. Zero payment failures Q1. Fraud detection +23%.",
   status:"Closed",
@@ -1746,17 +1746,17 @@ var REQUESTS=[
   jiraId:"HRM-411",
   baAssigned:"Hessa Al Zaabi",
   partnerId:"DSP"},
-  {id:"REQ-012",title:"Data Privacy Dashboard — PDPL Compliance",
-   system:"Reporting Platform",sector:"Legal",
-   reason:"UAE Personal Data Protection Law requires documented data processing records and subject rights workflow.",
-   benefit:"Full PDPL compliance. Avoids regulatory action. Legal team has a live compliance dashboard.",
+  {id:"REQ-012",title:"Traveller Data Privacy Dashboard — PDPL",
+   system:"Dubai Pulse Reports",sector:"Ports Affairs",
+   reason:"No single view proves traveller-data handling meets PDPL obligations.",
+   benefit:"Continuous PDPL compliance posture, audit-ready.",
    neededBy:"01 May 2026",status:"Closed",khalidS:13,khalidB:13,khalidT:13,
    submittedBy:"Rashed Al Shamsi",submittedAt:"01 Mar 2026",submittedDays:79,
    baAssigned:"Omar Al Kaabi",effortHours:21,complexity:"High",
    cycle:"Cycle 17",jiraId:"DATA-0341",jiraStatus:"Done",sprintReady:true,
    riskLevel:"High",partnerId:"CORE",urgency:"High",assignedUnit:"IT",routingNote:"PDPL compliance change. All depts involved.",
    locked:true,clarifications:[],
-   deptApprovals:{"Legal":{type:"Approval Required",status:"Approved",approver:"Rashed Al Shamsi",date:"05 Mar 2026",comments:""},"Compliance":{type:"Approval Required",status:"Approved",approver:"Waleed Al Kaabi",date:"06 Mar 2026",comments:""},"HR":{type:"Approval Required",status:"Approved",approver:"Mona Al Suwaidi",date:"07 Mar 2026",comments:""},"Risk":{type:"Approval Required",status:"Approved",approver:"Saeed Al Mansoori",date:"07 Mar 2026",comments:""}},
+   deptApprovals:{"Ports Affairs":{type:"Approval Required",status:"Approved",approver:"Rashed Al Shamsi",date:"05 Mar 2026",comments:""},"Compliance":{type:"Approval Required",status:"Approved",approver:"Waleed Al Kaabi",date:"06 Mar 2026",comments:""},"HR":{type:"Approval Required",status:"Approved",approver:"Mona Al Suwaidi",date:"07 Mar 2026",comments:""},"Risk":{type:"Approval Required",status:"Approved",approver:"Saeed Al Mansoori",date:"07 Mar 2026",comments:""}},
    consultations:[],solutionNotes:"DataBridge Analytics built processing register and rights workflow.",dependencies:"",riskNotes:"",
    outcomeRating:"partial",outcomeNotes:"PDPL dashboard live. Consent workflows delayed to Phase 2. Core compliance met.",
   status:"Closed",
@@ -1768,9 +1768,9 @@ var REQUESTS=[
   baAssigned:"Omar Al Kaabi",
   partnerId:"CORE"},
   // ── Additional requests ─────────────────────────────────────
-  {id:"REQ-013",title:"Vendor Portal Access Management",system:"IAM",sector:"Corporate Services",
-   reason:"Vendors lose portal access after 90 days with no automated renewal.",
-   benefit:"Eliminate manual renewals, reduce IT support tickets by 40%.",
+  {id:"REQ-013",title:"Typing Center Access Management via UAE Pass",system:"UAE Pass SSO",sector:"Residency Services",
+   reason:"Typing-center operator accounts are provisioned by email requests.",
+   benefit:"Self-service UAE Pass onboarding with automatic de-provisioning.",
    neededBy:"20 Jun 2026",status:"Closed",khalidS:5,khalidB:8,khalidT:5,
    submittedBy:"Hamad Al Nuaimi",submittedAt:"14 May 2026",
    baAssigned:"Omar Al Kaabi",effortHours:null,cycle:null,riskLevel:"Low",
@@ -1778,12 +1778,12 @@ var REQUESTS=[
    submittedDays:7,urgency:"Normal",assignedUnit:null,routingNote:"",
   cycle:"Cycle 16",
   outcomeRating:"partial",
-  outcomeNotes:"Access provisioning automated for 180 vendors. Role-based controls live. Audit trail full. SSO integration deferred to Phase 2 — 40% of scope outstanding.",
+  outcomeNotes:"Access provisioning automated for 180 typing centers. Role-based controls live. Audit trail full. SSO integration deferred to Phase 2 — 40% of scope outstanding.",
   effortHours:14,
   partnerId:"CORE"},
-  {id:"REQ-014",title:"Contract Renewal Alerts",system:"Document Management",sector:"Corporate Services",
-   reason:"Contract renewals are missed because there is no automated reminder system.",
-   benefit:"Prevent contract lapses, avoid emergency renewals that cost 3x more.",
+  {id:"REQ-014",title:"Residency Expiry Reminders — 90/60/30-Day Nudges",system:"GDRFA Smart App",sector:"Residency Services",
+   reason:"Residents discover expiry late, driving overstay fines and appeals.",
+   benefit:"Proactive nudges; measurable reduction in unintentional overstays.",
    neededBy:"15 Aug 2026",status:"Planned",khalidS:8,khalidB:13,khalidT:8,
    nominated:true,partnerId:"DATA",submittedBy:"Hamad Al Nuaimi",submittedAt:"01 May 2026",
    baAssigned:"Sara Al Hashimi",effortHours:null,cycle:null,riskLevel:"Medium",
@@ -1796,20 +1796,20 @@ var REQUESTS=[
   sprintReady:true,
   complexity:"Low",
   effortHours:8,
-  solutionNotes:"Procurement KPI dashboard via Tableau Pulse. DataBridge connectors already live — pure dashboard build.",
+  solutionNotes:"Licensing KPI dashboard via Tableau Pulse. DataBridge connectors already live — pure dashboard build.",
   jiraId:"DATA-0044",
   jiraStatus:"To Do"},
-  {id:"REQ-015",title:"Supplier Performance Dashboard",system:"Reporting Platform",sector:"Corporate Services",
-   reason:"No single view of supplier KPIs — team uses multiple spreadsheets.",
-   benefit:"One-click supplier health view, faster procurement decisions.",
+  {id:"REQ-015",title:"Amer Partner Performance Dashboard",system:"Dubai Pulse Reports",sector:"Residency Services",
+   reason:"Partner-center throughput and error rates are reviewed quarterly from spreadsheets.",
+   benefit:"Weekly scored dashboard per Amer partner; data-driven licensing.",
    neededBy:"30 Sep 2026",status:"Department Approvals",khalidS:5,khalidB:5,khalidT:3,
    submittedBy:"Hamad Al Nuaimi",submittedAt:"13 May 2026",
    baAssigned:"Hessa Al Zaabi",effortHours:null,cycle:null,riskLevel:"Low",
    clarifications:[],deptApprovals:{},
    submittedDays:6,urgency:"Normal",assignedUnit:null,routingNote:""},
-  {id:"REQ-016",title:"Onboarding Checklist Digitisation",system:"Customer Portal",sector:"Corporate Services",
-   reason:"New staff onboarding handled via PDF checklists — items are missed.",
-   benefit:"Reduce onboarding errors, full audit trail, 50% faster completion.",
+  {id:"REQ-016",title:"New-Resident Onboarding Journey Digitisation",system:"Salama Platform",sector:"Residency Services",
+   reason:"New residents juggle medical, biometrics and Emirates ID steps across systems.",
+   benefit:"One guided Salama journey; fewer incomplete files.",
    neededBy:"01 Oct 2026",status:"In Delivery",khalidS:8,khalidB:8,khalidT:5,
    partnerId:"DSP",jiraId:"DSP-1488",jiraStatus:"In Progress",submittedBy:"Hamad Al Nuaimi",submittedAt:"02 Apr 2026",
    baAssigned:"Sara Al Hashimi",effortHours:12,cycle:"Cycle 18",riskLevel:"Low",
@@ -1825,15 +1825,15 @@ var REQUESTS=[
   sprintReady:true,
   complexity:"Low",
   solutionNotes:"E-signature via DocuSign API — wired into contract management module. Final integration testing this week."},
-  {id:"REQ-017",title:"Payment Reconciliation Automation",system:"Payment Gateway",sector:"Finance",
-   reason:"Daily reconciliation takes 4 hours manually with frequent errors.",
-   benefit:"Save 80 hours/month, reduce reconciliation errors by 95%.",
+  {id:"REQ-017",title:"Permit Fee Reconciliation Automation",system:"Dubai Pay Gateway",sector:"Entry Permits",
+   reason:"Daily fee reconciliation between the gateway and GRP is manual.",
+   benefit:"Same-day automated reconciliation; discrepancies flagged instantly.",
    neededBy:"01 Sep 2026",status:"OU Approved",khalidS:13,khalidB:21,khalidT:13,
    complexity:"Medium",submittedBy:"Noura Al Hammadi",submittedAt:"05 May 2026",
    baAssigned:"Omar Al Kaabi",effortHours:18,cycle:null,riskLevel:"High",
    clarifications:[],
    deptApprovals:{
-     "Finance":{type:"Approval Required",status:"In Delivery",approver:"Sultan Al Dhaheri",date:"08 May 2026",comments:"Strategic priority"},
+     "Entry Permits":{type:"Approval Required",status:"In Delivery",approver:"Sultan Al Dhaheri",date:"08 May 2026",comments:"Strategic priority"},
      "IT Security":{type:"Approval Required",status:"Pending",approver:"Mohammed Al Rashed",date:"",comments:""},
      "Compliance":{type:"Approval Required",status:"Pending",approver:"Waleed Al Kaabi",date:"",comments:""},
      "Risk":{type:"Review / Clearance",status:"Blocked",approver:"Saeed Al Mansoori",date:"",comments:"Needs risk impact assessment first"}
@@ -1845,17 +1845,17 @@ var REQUESTS=[
   jiraId:"DATA-0047",
   jiraStatus:"To Do",
   solutionNotes:"Budget variance reporting — automated alerts, 3 Tableau dashboards. DataBridge platform. Straightforward build once data warehouse schema confirmed."},
-  {id:"REQ-018",title:"Customer Self-Service Portal Upgrade",system:"Customer Portal",sector:"Customer Services",
-   reason:"Current portal is outdated — customers prefer digital self-service.",
-   benefit:"Reduce call centre volume by 30%, improve NPS by 15 points.",
+  {id:"REQ-018",title:"Amer Self-Service Kiosk Experience Upgrade",system:"Salama Platform",sector:"Amer Centers",
+   reason:"Kiosk journeys time out on long forms and lose applicants mid-way.",
+   benefit:"Completed-at-kiosk rate up; counter queues down.",
    neededBy:"01 Sep 2026",status:"Submitted",khalidS:13,khalidB:13,khalidT:8,
    submittedBy:"Khalid Al Falasi",submittedAt:"12 May 2026",
    baAssigned:"Sara Al Hashimi",effortHours:null,cycle:null,riskLevel:"Medium",
    clarifications:[],deptApprovals:{},
    submittedDays:7,urgency:"Normal",assignedUnit:null,routingNote:""},
-  {id:"REQ-019",title:"Regulatory Compliance Reporting",system:"Reporting Platform",sector:"Legal",
-   reason:"Manual regulatory reports take 3 days. Regulator requires monthly submissions.",
-   benefit:"Automated submissions, zero non-compliance risk.",
+  {id:"REQ-019",title:"Smart Gates Compliance Reporting — DXB",system:"Dubai Pulse Reports",sector:"Ports Affairs",
+   reason:"Smart Gate usage and exception stats are stitched together per terminal.",
+   benefit:"Unified DXB terminals report; exceptions traced same-day.",
    neededBy:"30 Aug 2026",status:"Planned",khalidS:21,khalidB:21,khalidT:21,
    complexity:"High",partnerId:"CORE",submittedBy:"Rashed Al Shamsi",submittedAt:"01 May 2026",
    baAssigned:"Hessa Al Zaabi",effortHours:34,cycle:null,riskLevel:"Critical",
@@ -1866,10 +1866,10 @@ var REQUESTS=[
   solutionNotes:"FIU AML transaction monitoring integration. 12 AML rules from compliance. CORE sandbox booked w/c 14 Jul.",
   jiraId:"CORE-0935",
   jiraStatus:"To Do"},
-  {id:"REQ-020",title:"Self-Service Refund Portal",
-   system:"Customer Portal",sector:"Customer Services",
-   reason:"Customers wait 5+ days for refund processing through call centre. High complaint driver.",
-   benefit:"Refund cycle from 5 days to under 24h. Projected 30% drop in call volume.",
+  {id:"REQ-020",title:"Self-Service Refunds for Cancelled Applications",
+   system:"Salama Platform",sector:"Amer Centers",
+   reason:"Refunds for cancelled applications require a counter visit.",
+   benefit:"In-app refunds with rule-based auto-approval under threshold.",
    neededBy:"20 Jul 2026",status:"Planned",khalidS:8,khalidB:8,khalidT:5,
    submittedBy:"Mariam Al Zaabi",submittedAt:"02 May 2026",submittedDays:30,
    baAssigned:"Sara Al Hashimi",effortHours:16,complexity:"Medium",
@@ -1877,10 +1877,10 @@ var REQUESTS=[
    riskLevel:"Low",partnerId:"DSP",urgency:"High",assignedUnit:"IT",routingNote:"Approved by OU.",
    locked:false,clarifications:[],deptApprovals:{"IT Security":{type:"Approval Required",status:"Approved",approver:"Mohammed Al Rashed",date:"08 May 2026",comments:""}},
    consultations:[],solutionNotes:"Refund workflow engine with automated eligibility checks, integrated with payment gateway. DSP building on existing portal.",dependencies:"",riskNotes:"",outcomeNotes:""},
-  {id:"REQ-021",title:"Complaint Escalation Dashboard",
-   system:"CRM",sector:"Customer Services",
-   reason:"No single view of escalated complaints. SLA breaches discovered too late.",
-   benefit:"Real-time escalation tracking. Target 95% SLA compliance.",
+  {id:"REQ-021",title:"Complaint Escalation Dashboard — Amer Hotline",
+   system:"Amer CRM",sector:"Amer Centers",
+   reason:"Escalations from the hotline lack ownership and aging visibility.",
+   benefit:"Aging and ownership per escalation; nothing silently stalls.",
    neededBy:"15 Aug 2026",status:"Acceptance Testing",khalidS:5,khalidB:8,khalidT:5,
    submittedBy:"Mariam Al Zaabi",submittedAt:"18 Apr 2026",submittedDays:44,
    baAssigned:"Omar Al Kaabi",effortHours:12,complexity:"Low",
@@ -1888,10 +1888,10 @@ var REQUESTS=[
    riskLevel:"Low",partnerId:"DATA",urgency:"Normal",assignedUnit:"IT",routingNote:"",
    locked:false,clarifications:[],deptApprovals:{},
    consultations:[],solutionNotes:"DataBridge dashboard with live SLA timers and escalation routing. UAT in progress.",dependencies:"",riskNotes:"",outcomeNotes:""},
-  {id:"REQ-022",title:"Treasury Cash-Flow Forecasting",
-   system:"Reporting Platform",sector:"Finance",
-   reason:"Manual Excel forecasting takes 3 days per cycle and is error-prone.",
-   benefit:"Automated forecasting, near real-time. Frees 3 analyst-days monthly.",
+  {id:"REQ-022",title:"Seasonal Arrivals Forecasting — Visa Demand Model",
+   system:"Dubai Pulse Reports",sector:"Entry Permits",
+   reason:"Peak-season staffing is planned on last year's totals.",
+   benefit:"ML demand forecast per permit type; counters staffed to real demand.",
    neededBy:"30 Aug 2026",status:"Under Analysis",khalidS:8,khalidB:13,khalidT:8,
    submittedBy:"Noura Al Rashidi",submittedAt:"10 May 2026",submittedDays:22,
    baAssigned:"Omar Al Kaabi",effortHours:26,complexity:"High",
@@ -1899,32 +1899,32 @@ var REQUESTS=[
    riskLevel:"Medium",partnerId:"DATA",urgency:"High",assignedUnit:"IT",routingNote:"",
    locked:false,clarifications:[],deptApprovals:{},
    consultations:[],solutionNotes:"DataBridge predictive model fed from GL and bank feeds. Under technical scoping.",dependencies:"Requires bank API access confirmation.",riskNotes:"",outcomeNotes:""},
-  {id:"REQ-023",title:"Procurement Approval Workflow",
-   system:"Document Management",sector:"Corporate Services",
-   reason:"Purchase approvals routed by email; no audit trail, frequent delays.",
-   benefit:"Digital multi-stage approval with full audit. 50% faster cycle.",
+  {id:"REQ-023",title:"Medical & Biometrics Appointment Workflow",
+   system:"GDRFA Smart App",sector:"Residency Services",
+   reason:"Residency medicals and biometrics are booked in separate queues.",
+   benefit:"Single combined appointment; average file completion 2 days faster.",
    neededBy:"10 Sep 2026",status:"Awaiting BU Confirmation",khalidS:5,khalidB:8,khalidT:5,
    submittedBy:"Hamad Al Nuaimi",submittedAt:"05 May 2026",submittedDays:27,
    baAssigned:"Hessa Al Zaabi",effortHours:18,complexity:"Medium",
    cycle:"Cycle 21",jiraId:"DSP-1510",jiraStatus:"To Do",sprintReady:true,
    riskLevel:"Low",partnerId:"DSP",urgency:"Normal",assignedUnit:"IT",routingNote:"",
-   locked:false,clarifications:[],deptApprovals:{"Procurement":{type:"Approval Required",status:"Approved",approver:"Khalid Al Suwaidi",date:"12 May 2026",comments:""}},
+   locked:false,clarifications:[],deptApprovals:{"Licensing":{type:"Approval Required",status:"Approved",approver:"Khalid Al Suwaidi",date:"12 May 2026",comments:""}},
    consultations:[],solutionNotes:"Configurable approval matrix on DSP document platform. Scope sent to BU for sign-off.",dependencies:"",riskNotes:"",outcomeNotes:""},
-  {id:"REQ-024",title:"Contract Expiry Alert System",
-   system:"Document Management",sector:"Legal",
-   reason:"Contracts auto-renew or lapse unnoticed; legal exposure.",
-   benefit:"90-day advance alerts. Eliminates unplanned renewals.",
+  {id:"REQ-024",title:"Overstay Watchlist Alert System",
+   system:"GDRFA Smart App",sector:"Ports Affairs",
+   reason:"Overstay follow-up lists are compiled weekly from raw extracts.",
+   benefit:"Daily watchlist with case routing to follow-up teams.",
    neededBy:"25 Aug 2026",status:"Planned",khalidS:8,khalidB:5,khalidT:8,
    submittedBy:"Rashed Al Shamsi",submittedAt:"28 Apr 2026",submittedDays:34,
    baAssigned:"Sara Al Hashimi",effortHours:10,complexity:"Low",
    cycle:"Cycle 19",jiraId:"CORE-0940",jiraStatus:"To Do",sprintReady:true,
    riskLevel:"Medium",partnerId:"CORE",urgency:"High",assignedUnit:"IT",routingNote:"",
-   locked:false,clarifications:[],deptApprovals:{"Legal":{type:"Review / Clearance",status:"Approved",approver:"Fatima Al Hammadi",date:"03 May 2026",comments:""}},
+   locked:false,clarifications:[],deptApprovals:{"Ports Affairs":{type:"Review / Clearance",status:"Approved",approver:"Fatima Al Hammadi",date:"03 May 2026",comments:""}},
    consultations:[],solutionNotes:"CoreTech rules engine on contract metadata. Cycle 19 scheduled.",dependencies:"",riskNotes:"",outcomeNotes:""},
-  {id:"REQ-025",title:"Customer Feedback Sentiment Analytics",
-   system:"Reporting Platform",sector:"Customer Services",
-   reason:"Survey data sits unused; no systematic sentiment view.",
-   benefit:"Automated sentiment scoring informs service improvements.",
+  {id:"REQ-025",title:"Customer Happiness Sentiment Analytics — Amer Centers",
+   system:"Dubai Pulse Reports",sector:"Amer Centers",
+   reason:"Happiness-meter comments go unread beyond the score.",
+   benefit:"Arabic/English sentiment themes per center, monthly.",
    neededBy:"01 Oct 2026",status:"OU Approved",khalidS:5,khalidB:5,khalidT:8,
    submittedBy:"Mariam Al Zaabi",submittedAt:"15 May 2026",submittedDays:17,
    baAssigned:"",effortHours:0,complexity:"",
@@ -1932,32 +1932,32 @@ var REQUESTS=[
    riskLevel:"Low",partnerId:"",urgency:"Normal",assignedUnit:"IT",routingNote:"Forwarded to IT for scheduling.",
    locked:false,clarifications:[],deptApprovals:{},
    consultations:[],solutionNotes:"",dependencies:"",riskNotes:"",outcomeNotes:""},
-  {id:"REQ-026",title:"Regulatory Reporting Automation (CBUAE)",
-   system:"Reporting Platform",sector:"Finance",
-   reason:"Monthly central-bank returns compiled manually; compliance risk.",
-   benefit:"Automated, validated submissions. Eliminates late-filing risk.",
+  {id:"REQ-026",title:"Federal Reporting Automation (ICP Exchange)",
+   system:"Dubai Pulse Reports",sector:"Entry Permits",
+   reason:"Quarterly federal reporting to ICP consumes a full analyst week.",
+   benefit:"Automated validated submission; analyst time returned to casework.",
    neededBy:"05 Jul 2026",status:"Planned",khalidS:13,khalidB:13,khalidT:8,
    submittedBy:"Noura Al Rashidi",submittedAt:"20 Apr 2026",submittedDays:42,
    baAssigned:"Omar Al Kaabi",effortHours:30,complexity:"Very High",
    cycle:"Cycle 21",jiraId:"CORE-0922",jiraStatus:"To Do",sprintReady:true,
    riskLevel:"High",partnerId:"CORE",urgency:"Critical",assignedUnit:"IT",routingNote:"Fast-tracked — regulatory deadline.",
-   locked:false,clarifications:[],deptApprovals:{"IT Security":{type:"Approval Required",status:"Approved",approver:"Mohammed Al Rashed",date:"25 Apr 2026",comments:""},"Finance":{type:"Approval Required",status:"Approved",approver:"Saeed Al Marri",date:"24 Apr 2026",comments:""}},
-   consultations:[],solutionNotes:"CoreTech regulatory engine mapping GL to CBUAE schema. Active build, deadline-critical.",dependencies:"",riskNotes:"Hard regulatory deadline 05 Jul.",outcomeNotes:""},
-  {id:"REQ-027",title:"Legal Case Management Upgrade",
-   system:"Document Management",sector:"Legal",
-   reason:"Legacy case system unsupported; data scattered.",
-   benefit:"Unified case repository with search and version control.",
+   locked:false,clarifications:[],deptApprovals:{"IT Security":{type:"Approval Required",status:"Approved",approver:"Mohammed Al Rashed",date:"25 Apr 2026",comments:""},"Entry Permits":{type:"Approval Required",status:"Approved",approver:"Saeed Al Marri",date:"24 Apr 2026",comments:""}},
+   consultations:[],solutionNotes:"CoreTech regulatory engine mapping GL to ICP schema. Active build, deadline-critical.",dependencies:"",riskNotes:"Hard regulatory deadline 05 Jul.",outcomeNotes:""},
+  {id:"REQ-027",title:"Violation Case Management Upgrade",
+   system:"GDRFA Smart App",sector:"Ports Affairs",
+   reason:"Violation files move between teams as PDF attachments.",
+   benefit:"End-to-end case states with legal-hold and appeal tracking.",
    neededBy:"15 Oct 2026",status:"Under Review",khalidS:5,khalidB:5,khalidT:5,
    submittedBy:"Rashed Al Shamsi",submittedAt:"22 May 2026",submittedDays:10,
    baAssigned:"",effortHours:0,complexity:"",
    cycle:"",jiraId:"",jiraStatus:"",sprintReady:false,
    riskLevel:"Medium",partnerId:"",urgency:"Normal",assignedUnit:"OU",routingNote:"",
-   locked:false,clarifications:[],deptApprovals:{"Legal":{type:"Review / Clearance",status:"Pending",approver:"",date:"",comments:""}},
+   locked:false,clarifications:[],deptApprovals:{"Ports Affairs":{type:"Review / Clearance",status:"Pending",approver:"",date:"",comments:""}},
    consultations:[],solutionNotes:"",dependencies:"",riskNotes:"",outcomeNotes:""},
-  {id:"REQ-028",title:"Employee Onboarding Digitalisation",
-   system:"Customer Portal",sector:"Corporate Services",
-   reason:"New-hire paperwork is manual; first-day delays common.",
-   benefit:"Fully digital onboarding. Day-one readiness.",
+  {id:"REQ-028",title:"Domestic Worker Permit Journey Digitalisation",
+   system:"Salama Platform",sector:"Residency Services",
+   reason:"Domestic-worker permits still require sponsor counter visits.",
+   benefit:"Fully digital journey via Salama incl. contract attestation.",
    neededBy:"20 Sep 2026",status:"Deployed — Pending Closure",khalidS:5,khalidB:8,khalidT:3,
    submittedBy:"Hamad Al Nuaimi",submittedAt:"01 Mar 2026",submittedDays:92,
    baAssigned:"Hessa Al Zaabi",effortHours:14,complexity:"Medium",
@@ -1965,10 +1965,10 @@ var REQUESTS=[
    riskLevel:"Low",partnerId:"DSP",urgency:"Normal",assignedUnit:"IT",routingNote:"",
    locked:true,clarifications:[],deptApprovals:{"IT Security":{type:"Approval Required",status:"Approved",approver:"Mohammed Al Rashed",date:"08 Mar 2026",comments:""}},
    consultations:[],solutionNotes:"Digital forms + e-signature deployed. Awaiting BU closure confirmation.",dependencies:"",riskNotes:"",outcomeNotes:"",outcomeRating:""},
-  {id:"REQ-029",title:"Fraud Detection Rule Engine",
-   system:"Payment Gateway",sector:"Finance",
-   reason:"Manual transaction review misses patterns; fraud losses rising.",
-   benefit:"Automated anomaly detection. Projected 60% faster fraud catch.",
+  {id:"REQ-029",title:"Permit Fraud Detection Rule Engine",
+   system:"Dubai Pay Gateway",sector:"Entry Permits",
+   reason:"Fraudulent applications are caught downstream, after issuance.",
+   benefit:"Rules + anomaly scoring at submission; earlier interdiction.",
    neededBy:"10 Aug 2026",status:"OU Approved",khalidS:13,khalidB:13,khalidT:8,
    submittedBy:"Noura Al Rashidi",submittedAt:"12 May 2026",submittedDays:20,
    baAssigned:"",effortHours:0,complexity:"",
@@ -1976,10 +1976,10 @@ var REQUESTS=[
    riskLevel:"High",partnerId:"",urgency:"Critical",assignedUnit:"IT",routingNote:"High priority — forwarded to IT.",
    locked:false,clarifications:[],deptApprovals:{"IT Security":{type:"Approval Required",status:"Approved",approver:"Mohammed Al Rashed",date:"18 May 2026",comments:""}},
    consultations:[],solutionNotes:"",dependencies:"",riskNotes:"",outcomeNotes:""},
-  {id:"REQ-030",title:"Knowledge Base Self-Service",
-   system:"Customer Portal",sector:"Customer Services",
-   reason:"Repetitive queries overload agents; no searchable knowledge base.",
-   benefit:"Deflect 25% of tier-1 queries to self-service.",
+  {id:"REQ-030",title:"Knowledge Base Self-Service — Visa & Residency FAQs",
+   system:"Salama Platform",sector:"Amer Centers",
+   reason:"The same visa questions consume most hotline minutes.",
+   benefit:"AR/EN self-service answers; deflection tracked per article.",
    neededBy:"30 Sep 2026",status:"Submitted",khalidS:5,khalidB:5,khalidT:3,
    submittedBy:"Mariam Al Zaabi",submittedAt:"26 May 2026",submittedDays:6,
    baAssigned:"",effortHours:0,complexity:"",
@@ -1996,40 +1996,40 @@ var NOMINATIONS={};
 // Each service maps to the requests that digitise it.
 // A service is "Transformed" when its key requests are delivered.
 var DX_SERVICES = {
-  "Corporate Services":[
-    {id:"onboarding", name:"Customer Onboarding",    icon:"&#128100;", reqs:["REQ-001","REQ-002","REQ-016"],
+  "Residency Services":[
+    {id:"onboarding", name:"Resident Onboarding",    icon:"&#128100;", reqs:["REQ-001","REQ-002","REQ-016"],
      desc:"Digital onboarding journey for customers and partners"},
-    {id:"vendor",     name:"Vendor Management",      icon:"&#127970;", reqs:["REQ-003","REQ-013"],
-     desc:"Self-service vendor portal and access lifecycle"},
-    {id:"contracts",  name:"Contract Management",    icon:"&#128196;", reqs:["REQ-014"],
+    {id:"typing center",     name:"Typing Center Access",      icon:"&#127970;", reqs:["REQ-003","REQ-013"],
+     desc:"Self-service typing-center portal and access lifecycle"},
+    {id:"contracts",  name:"Sponsor File Management",    icon:"&#128196;", reqs:["REQ-014"],
      desc:"Automated contract renewal alerts and lifecycle tracking"},
-    {id:"payments",   name:"Payment Notifications",  icon:"&#128179;", reqs:["REQ-004"],
+    {id:"payments",   name:"Application Status Alerts",  icon:"&#128179;", reqs:["REQ-004"],
      desc:"Real-time payment status for customers and partners"},
-    {id:"analytics",  name:"Supplier Analytics",     icon:"&#128200;", reqs:["REQ-015"],
-     desc:"Supplier performance dashboards and reporting"},
+    {id:"analytics",  name:"Amer Partner Analytics",     icon:"&#128200;", reqs:["REQ-015"],
+     desc:"Amer Partner performance dashboards and reporting"},
   ],
-  "Finance":[
-    {id:"paymentsec", name:"Payment Security",       icon:"&#128737;", reqs:["REQ-011"],
+  "Entry Permits":[
+    {id:"paymentsec", name:"Fee Payment Security",       icon:"&#128737;", reqs:["REQ-011"],
      desc:"PCI DSS v4.0 compliant payment gateway"},
-    {id:"finreport",  name:"Financial Reporting",    icon:"&#128200;", reqs:["REQ-005","REQ-006"],
+    {id:"finreport",  name:"Permit Volume Reporting",    icon:"&#128200;", reqs:["REQ-005","REQ-006"],
      desc:"Automated reconciliation and budget variance alerts"},
-    {id:"paycomp",    name:"Payment Compliance",     icon:"&#9878;",   reqs:["REQ-017"],
+    {id:"paycomp",    name:"Fee Payment Compliance",     icon:"&#9878;",   reqs:["REQ-017"],
      desc:"Payment reconciliation automation and audit trail"},
-    {id:"privacy",    name:"Data Privacy",           icon:"&#128274;", reqs:["REQ-012"],
+    {id:"privacy",    name:"Traveller Data Privacy",           icon:"&#128274;", reqs:["REQ-012"],
      desc:"PDPL-compliant data privacy dashboard"},
   ],
-  "Legal":[
-    {id:"contracts",  name:"Contract Lifecycle",     icon:"&#128196;", reqs:["REQ-007"],
+  "Ports Affairs":[
+    {id:"contracts",  name:"Crew & Vessel Clearance",     icon:"&#128196;", reqs:["REQ-007"],
      desc:"End-to-end digital contract management and renewal"},
-    {id:"regreport",  name:"Regulatory Reporting",   icon:"&#128221;", reqs:["REQ-008","REQ-019"],
-     desc:"Automated CBUAE regulatory submissions"},
-    {id:"privacy2",   name:"Data Privacy Compliance",icon:"&#128274;", reqs:["REQ-012"],
+    {id:"regreport",  name:"Federal Reporting (ICP)",   icon:"&#128221;", reqs:["REQ-008","REQ-019"],
+     desc:"Automated ICP regulatory submissions"},
+    {id:"privacy2",   name:"Traveller Data Privacy",icon:"&#128274;", reqs:["REQ-012"],
      desc:"PDPL compliance dashboard and audit capability"},
   ],
-  "Customer Services":[
+  "Amer Centers":[
     {id:"complaints", name:"Complaint Management",   icon:"&#128172;", reqs:["REQ-009"],
      desc:"Omnichannel complaint tracking and resolution"},
-    {id:"identity",   name:"Identity Verification",  icon:"&#128100;", reqs:["REQ-010"],
+    {id:"identity",   name:"Identity & Biometrics",  icon:"&#128100;", reqs:["REQ-010"],
      desc:"Digital eKYC and customer identity lifecycle"},
     {id:"selfservice",name:"Self-Service Portal",    icon:"&#128187;", reqs:["REQ-018"],
      desc:"Customer self-service for accounts and requests"},
@@ -2064,27 +2064,27 @@ function getSectorDXSummary(sector){
 // ══════════════════════════════════════════════════════════════
 
 var DX_SERVICES = {
-  "Corporate Services": [
-    {id:"cust-onboarding",  name:"Customer Onboarding",        icon:"&#128100;", requests:["REQ-016","REQ-002"]},
-    {id:"cust-portal",      name:"Customer Self-Service",       icon:"&#128241;", requests:["REQ-001","REQ-004"]},
-    {id:"vendor-mgmt",      name:"Vendor Management",           icon:"&#129309;", requests:["REQ-003","REQ-013"]},
-    {id:"contract-mgmt",    name:"Contract Management",         icon:"&#128196;", requests:["REQ-014"]},
-    {id:"reporting",        name:"Performance Reporting",       icon:"&#128200;", requests:["REQ-015"]},
+  "Residency Services": [
+    {id:"cust-onboarding",  name:"Resident Onboarding",        icon:"&#128100;", requests:["REQ-016","REQ-002"]},
+    {id:"cust-portal",      name:"Salama Self-Service",       icon:"&#128241;", requests:["REQ-001","REQ-004"]},
+    {id:"typing center-mgmt",      name:"Typing Center Access",           icon:"&#129309;", requests:["REQ-003","REQ-013"]},
+    {id:"contract-mgmt",    name:"Sponsor File Management",         icon:"&#128196;", requests:["REQ-014"]},
+    {id:"reporting",        name:"Amer Partner Analytics",       icon:"&#128200;", requests:["REQ-015"]},
   ],
-  "Finance": [
-    {id:"payment-processing",name:"Payment Processing",         icon:"&#128184;", requests:["REQ-011","REQ-017"]},
-    {id:"reconciliation",   name:"Financial Reconciliation",    icon:"&#128203;", requests:["REQ-005"]},
-    {id:"budget-mgmt",      name:"Budget Management",           icon:"&#128202;", requests:["REQ-006"]},
+  "Entry Permits": [
+    {id:"payment-processing",name:"Fee Processing",         icon:"&#128184;", requests:["REQ-011","REQ-017"]},
+    {id:"reconciliation",   name:"Fee Reconciliation",    icon:"&#128203;", requests:["REQ-005"]},
+    {id:"budget-mgmt",      name:"Permit Demand Planning",           icon:"&#128202;", requests:["REQ-006"]},
   ],
-  "Legal": [
-    {id:"contract-lifecycle",name:"Contract Lifecycle",         icon:"&#128196;", requests:["REQ-007"]},
-    {id:"reg-reporting",    name:"Regulatory Reporting",        icon:"&#128737;", requests:["REQ-008","REQ-019"]},
-    {id:"data-privacy",     name:"Data Privacy Compliance",     icon:"&#128274;", requests:["REQ-012"]},
+  "Ports Affairs": [
+    {id:"contract-lifecycle",name:"Crew & Vessel Clearance",         icon:"&#128196;", requests:["REQ-007"]},
+    {id:"reg-reporting",    name:"Federal Reporting (ICP)",        icon:"&#128737;", requests:["REQ-008","REQ-019"]},
+    {id:"data-privacy",     name:"Traveller Data Privacy",     icon:"&#128274;", requests:["REQ-012"]},
   ],
-  "Customer Services": [
+  "Amer Centers": [
     {id:"complaint-mgmt",   name:"Complaint Management",        icon:"&#128172;", requests:["REQ-009"]},
-    {id:"identity-verify",  name:"Identity Verification",       icon:"&#129515;", requests:["REQ-010"]},
-    {id:"self-service",     name:"Customer Self-Service",       icon:"&#128241;", requests:["REQ-018"]},
+    {id:"identity-verify",  name:"Identity & Biometrics",       icon:"&#129515;", requests:["REQ-010"]},
+    {id:"self-service",     name:"Salama Self-Service",       icon:"&#128241;", requests:["REQ-018"]},
   ],
 };
 
@@ -2198,7 +2198,7 @@ var MAX_NOM=8;
 var CYCLE_CAP=60;
 var SYSTEMS=["Customer Portal","Mobile App","CRM","Payment Gateway","IAM","Document Management","Reporting Platform","Other"];
 var KV=[1,2,3,5,8,13,21];
-var DEPT_LIST=["Finance","Legal","Media","Data Privacy","Compliance","Procurement","Risk","HR","IT Security"];
+var DEPT_LIST=["Entry Permits","Ports Affairs","Media","Data Privacy","Compliance","Licensing","Risk","HR","IT Security"];
 var APPROVAL_TYPES=["Approval Required","Input Required","Review / Clearance","Conditional","Not Required"];
 var BA_TEAM=[
   {name:"Sara Al Hashimi",  team:"BA — Customer & Portal", specialty:["Customer Portal","CRM","Mobile App"],          load:75,active:2},
@@ -2220,8 +2220,8 @@ var AUDIT=[
   {dt:"25 Apr 2026, 11:00",action:"Deployed",                     reqId:"REQ-003",by:"Omar Al Ahrari",detail:"Health portal deployed to production. Go-live confirmed."},
   // ── REQ-013: HR Onboarding Module (Closed) ────────────────────
   {dt:"15 Jan 2026, 09:00",action:"Request submitted",            reqId:"REQ-013",by:"Hamad Al Nuaimi",detail:"HR onboarding module submitted."},
-  {dt:"17 Jan 2026, 14:00",action:"Validation Started",           reqId:"REQ-013",by:"Yousuf Al Hameli",detail:"OU review started. K=18, procurement sign-off required."},
-  {dt:"20 Jan 2026, 16:00",action:"Dept approval given",          reqId:"REQ-013",by:"Khalid Al Suwaidi",detail:"Procurement approved — within existing budget envelope."},
+  {dt:"17 Jan 2026, 14:00",action:"Validation Started",           reqId:"REQ-013",by:"Yousuf Al Hameli",detail:"OU review started. K=18, licensing sign-off required."},
+  {dt:"20 Jan 2026, 16:00",action:"Dept approval given",          reqId:"REQ-013",by:"Khalid Al Suwaidi",detail:"Licensing approved — within existing budget envelope."},
   {dt:"24 Jan 2026, 09:30",action:"Sent to IT",                   reqId:"REQ-013",by:"Yousuf Al Hameli",detail:"All approvals cleared. Forwarded to IT."},
   {dt:"30 Jan 2026, 10:00",action:"BA assigned",                  reqId:"REQ-013",by:"Omar Al Ahrari",detail:"Hessa Al Zaabi assigned as BA."},
   {dt:"05 Feb 2026, 15:00",action:"Scope sent to BU",             reqId:"REQ-013",by:"Hessa Al Zaabi",detail:"Scope: 8h, DSP, Low complexity. E-forms + manager approval flow."},
@@ -2229,8 +2229,8 @@ var AUDIT=[
   {dt:"12 Feb 2026, 09:00",action:"Sprint started",               reqId:"REQ-013",by:"Omar Al Ahrari",detail:"Moved to Cycle 15. DSP started build."},
   {dt:"24 Feb 2026, 14:00",action:"UAT started",                  reqId:"REQ-013",by:"Hamad Al Nuaimi",detail:"User acceptance testing started."},
   {dt:"01 Mar 2026, 10:00",action:"Deployed",                     reqId:"REQ-013",by:"Omar Al Ahrari",detail:"HR onboarding deployed. Pilot group active."},
-  // ── REQ-014: Procurement KPI Dashboard (Planned) ──────────────
-  {dt:"05 May 2026, 10:00",action:"Request submitted",            reqId:"REQ-014",by:"Hamad Al Nuaimi",detail:"Procurement KPI dashboard submitted. K=29 — High priority."},
+  // ── REQ-014: Licensing KPI Dashboard (Planned) ──────────────
+  {dt:"05 May 2026, 10:00",action:"Request submitted",            reqId:"REQ-014",by:"Hamad Al Nuaimi",detail:"Licensing KPI dashboard submitted. K=29 — High priority."},
   {dt:"08 May 2026, 14:00",action:"Validation Started",           reqId:"REQ-014",by:"Yousuf Al Hameli",detail:"OU review opened."},
   {dt:"11 May 2026, 09:00",action:"Sent to IT",                   reqId:"REQ-014",by:"Yousuf Al Hameli",detail:"OU approved. Forwarded to IT for scheduling."},
   {dt:"14 May 2026, 11:00",action:"BA assigned",                  reqId:"REQ-014",by:"Omar Al Ahrari",detail:"Sara Al Hashimi assigned as BA."},
@@ -2240,10 +2240,10 @@ var AUDIT=[
   {dt:"30 Apr 2026, 14:00",action:"Validation Started",           reqId:"REQ-015",by:"Yousuf Al Hameli",detail:"OU review opened. Finance sign-off required due to budget impact."},
   {dt:"03 May 2026, 09:00",action:"Clarification asked",          reqId:"REQ-015",by:"Yousuf Al Hameli",detail:"OU asked BU: what is the expected monthly spend ceiling?"},
   {dt:"05 May 2026, 11:00",action:"Reply sent",                   reqId:"REQ-015",by:"Hamad Al Nuaimi",detail:"BU replied: ceiling AED 250,000/month based on last year actuals."},
-  // ── REQ-023: Procurement Approval Workflow (Scope Ready) ──────
-  {dt:"05 May 2026, 09:00",action:"Request submitted",            reqId:"REQ-023",by:"Hamad Al Nuaimi",detail:"Procurement approval workflow submitted."},
+  // ── REQ-023: Licensing Approval Workflow (Scope Ready) ──────
+  {dt:"05 May 2026, 09:00",action:"Request submitted",            reqId:"REQ-023",by:"Hamad Al Nuaimi",detail:"Licensing approval workflow submitted."},
   {dt:"07 May 2026, 11:00",action:"Validation Started",           reqId:"REQ-023",by:"Yousuf Al Hameli",detail:"OU review started. K=18."},
-  {dt:"09 May 2026, 15:00",action:"Dept approval given",          reqId:"REQ-023",by:"Khalid Al Suwaidi",detail:"Procurement sign-off granted."},
+  {dt:"09 May 2026, 15:00",action:"Dept approval given",          reqId:"REQ-023",by:"Khalid Al Suwaidi",detail:"Licensing sign-off granted."},
   {dt:"12 May 2026, 09:00",action:"Sent to IT",                   reqId:"REQ-023",by:"Yousuf Al Hameli",detail:"Forwarded to IT."},
   {dt:"15 May 2026, 14:00",action:"BA assigned",                  reqId:"REQ-023",by:"Omar Al Ahrari",detail:"Hessa Al Zaabi assigned as BA."},
   {dt:"19 May 2026, 11:00",action:"Scope sent to BU",             reqId:"REQ-023",by:"Hessa Al Zaabi",detail:"IT scope: 18h, DSP, Medium. Configurable approval matrix. Awaiting BU confirmation."},
@@ -2259,11 +2259,11 @@ var AUDIT=[
   {dt:"20 Apr 2026, 14:00",action:"UAT started",                  reqId:"REQ-028",by:"Hamad Al Nuaimi",detail:"Acceptance testing started."},
   {dt:"25 Apr 2026, 11:00",action:"Deployed",                     reqId:"REQ-028",by:"Omar Al Ahrari",detail:"Deployed to production. Awaiting BU closure confirmation."},
   {dt:"28 May 2026",action:"Scope sent to BU",reqId:"REQ-007",by:"Hessa Al Zaabi",detail:"IT sent change scope: 16h PDPL consent module via CORE. Awaiting BU sign-off."},
-  {dt:"27 May 2026",action:"Analysis saved",reqId:"REQ-005",by:"Omar Al Kaabi",detail:"Effort: 22h, Complexity: High, Partner: CORE. CBUAE API sandbox confirmed."},
+  {dt:"27 May 2026",action:"Analysis saved",reqId:"REQ-005",by:"Omar Al Kaabi",detail:"Effort: 22h, Complexity: High, Partner: CORE. ICP API sandbox confirmed."},
   {dt:"27 May 2026",action:"Start Analysis",reqId:"REQ-005",by:"Omar Al Kaabi",detail:"IT BA started scoping REQ-005 — Finance open banking integration."},
-  {dt:"26 May 2026",action:"BA assigned",reqId:"REQ-004",by:"Omar Al Ahrari",detail:"Hessa Al Zaabi assigned as BA for Corporate Services — vendor onboarding automation."},
+  {dt:"26 May 2026",action:"BA assigned",reqId:"REQ-004",by:"Omar Al Ahrari",detail:"Hessa Al Zaabi assigned as BA for Corporate Services — typing center onboarding automation."},
   {dt:"26 May 2026",action:"IT Work Queue",reqId:"REQ-017",by:"System",detail:"REQ-017 received from OU. Assigned to Omar Al Kaabi for initial review."},
-  {dt:"25 May 2026",action:"UAT started",reqId:"REQ-002",by:"Hamad Al Nuaimi",detail:"BU started acceptance testing for vendor auto-renewal. Test plan: 8 scenarios."},
+  {dt:"25 May 2026",action:"UAT started",reqId:"REQ-002",by:"Hamad Al Nuaimi",detail:"BU started acceptance testing for typing center auto-renewal. Test plan: 8 scenarios."},
   {dt:"24 May 2026",action:"Jira updated",reqId:"REQ-001",by:"DSP",detail:"DSP-1471 moved to In Progress. Arabic UI sprint started. ETA: 3 Jun 2026."},
   {dt:"23 May 2026",action:"Cycle assigned: Cycle 19",reqId:"REQ-019",by:"Omar Al Ahrari",detail:"IT assigned REQ-019 (FIU AML integration) to Cycle 19 — complex scope, needs CORE sandbox."},
   {dt:"22 May 2026",action:"Sprint started",reqId:"REQ-016",by:"Omar Al Ahrari",detail:"Cycle 18 started. REQ-016 (e-signature) moved to In Delivery with Sara Al Hashimi."},
@@ -2291,7 +2291,7 @@ var AUDIT=[
   {dt:"06 Apr 2026, 11:30",action:"Finance sign-off requested",      reqId:"REQ-007",by:"Yousuf Al Hameli",   comments:""},
   {dt:"08 Apr 2026, 14:00",action:"Finance objected",                reqId:"REQ-007",by:"Sultan Al Dhaheri",  comments:"Budget approval required before proceeding"},
   {dt:"09 Apr 2026, 09:00",action:"Clarification requested from BU", reqId:"REQ-007",by:"Yousuf Al Hameli",   comments:"Finance requires budget code"},
-  {dt:"15 Apr 2026, 08:00",action:"Request submitted",               reqId:"REQ-008",by:"Rashed Al Shamsi",   comments:"K=47, CRITICAL — CBUAE regulatory deadline"},
+  {dt:"15 Apr 2026, 08:00",action:"Request submitted",               reqId:"REQ-008",by:"Rashed Al Shamsi",   comments:"K=47, CRITICAL — ICP regulatory deadline"},
   {dt:"15 Apr 2026, 08:01",action:"Risk gate triggered — Critical",  reqId:"REQ-008",by:"HARMONY",            comments:"Risk and IT Security sign-off mandatory"},
   {dt:"16 Apr 2026, 09:00",action:"Risk sign-off requested",         reqId:"REQ-008",by:"Yousuf Al Hameli",   comments:"Expedite — regulatory deadline"},
   {dt:"05 Mar 2026, 09:00",action:"Request submitted",               reqId:"REQ-009",by:"Noura Al Rashidi",   comments:"K=21"},
@@ -2315,7 +2315,7 @@ var AUDIT=[
   {dt:"09 Apr 2026, 10:00",action:"OU Approved",                     reqId:"REQ-016",by:"Yousuf Al Hameli",   comments:"Standard process"},
   {dt:"12 Apr 2026, 09:00",action:"Added to Cycle 18",               reqId:"REQ-016",by:"Omar Al Ahrari",    comments:"32h, Jira: DSP-1489"},
   {dt:"25 Apr 2026, 17:00",action:"Sent for acceptance testing",     reqId:"REQ-016",by:"Omar Al Ahrari",    comments:"Ready for BU UAT"},
-  {dt:"09 Apr 2026, 08:00",action:"Request submitted",               reqId:"REQ-019",by:"Rashed Al Shamsi",   comments:"K=47, CBUAE mandate — critical"},
+  {dt:"09 Apr 2026, 08:00",action:"Request submitted",               reqId:"REQ-019",by:"Rashed Al Shamsi",   comments:"K=47, ICP mandate — critical"},
   {dt:"09 Apr 2026, 08:05",action:"Escalated by Director General",   reqId:"REQ-019",by:"Khalid Al Falasi",  comments:"Regulatory deadline — expedite governance immediately"},
 ];
 
@@ -2561,7 +2561,7 @@ function buildInitiativesPanel(mode){
   var items=Object.keys(iMap).map(function(k){return iMap[k];}).sort(function(a,b){return b.total-a.total;});
   if(!items.length) return '';
 
-  var SC={"Corporate Services":"#1D4ED8","Finance":"#D97706","Legal":"#7C3AED","Customer Services":"#0891B2"};
+  var SC={"Residency Services":"#1D4ED8","Entry Permits":"#D97706","Ports Affairs":"#7C3AED","Amer Centers":"#0891B2"};
 
   function rag(item){
     var pct=item.total?Math.round(item.delivered/item.total*100):0;
@@ -2649,7 +2649,7 @@ function buildInitiativesPanel(mode){
 
 function renderDashboard(){
   var rc       = ROLES_CONFIG[currentRole]||ROLES_CONFIG.bu;
-  var mySector = rc.sublabel||"Corporate Services";
+  var mySector = rc.sublabel||"Residency Services";
   var myUser   = rc.user||"Hamad Al Nuaimi";
 
   // ── Data slices ────────────────────────────────────────────
@@ -3154,7 +3154,7 @@ function renderDashboard(){
   var _uqInits=[]; REQUESTS.forEach(function(r){(r.linkedInitiatives||[]).forEach(function(id){if(_uqInits.indexOf(id)===-1)_uqInits.push(id);});});
   var _lkReqs=REQUESTS.filter(function(r){return r.linkedInitiatives&&r.linkedInitiatives.length>0;}).length;
   if(_uqInits.length>0){
-    var _initNames={"UAE-DS-2025":"Digital Gov 2025","UAE-AI-2031":"AI Strategy 2031","UAE-PDPL":"PDPL","CBUAE-FS":"CBUAE Strategy","UAE-OPEN-FINANCE":"Open Finance","DubaiPaperless":"Dubai Paperless","SmartDubai":"Smart Dubai","Dubai10X":"Dubai 10X","UAE-DIFC-GDPR":"DIFC GDPR","UAE-NDS":"Natl Data Strategy","UAE-CYBERSEC":"Cybersecurity","DubaiProcure":"Dubai Procurement","UAE-MOHRE-Digital":"MOHRE Digital","UAE-CUSTOMER-EXP":"CX Index","ADGM-DIGITAL":"ADGM Digital"};
+    var _initNames={"UAE-DS-2025":"Digital Gov 2025","UAE-AI-2031":"AI Strategy 2031","UAE-PDPL":"PDPL","ICP-FS":"ICP Strategy","UAE-OPEN-FINANCE":"Open Finance","DubaiPaperless":"Dubai Paperless","SmartDubai":"Smart Dubai","Dubai10X":"Dubai 10X","UAE-DIFC-GDPR":"UAE PDPL","UAE-NDS":"Natl Data Strategy","UAE-CYBERSEC":"Cybersecurity","DubaiProcure":"Digital Gov 2025","UAE-MOHRE-Digital":"Digital Dubai","UAE-CUSTOMER-EXP":"CX Index","ADGM-DIGITAL":"D33 Agenda"};
     h+='<div style="background:#EFF6FF;border:1.5px solid #BFDBFE;border-radius:11px;padding:10px 16px;margin-bottom:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">';
     h+='<span style="font-size:18px">&#127462;&#127466;</span>';
     h+='<div style="flex:1;min-width:0"><div style="font-size:12.5px;font-weight:800;color:#1E40AF">'+_uqInits.length+' UAE &amp; Dubai Government Initiatives linked</div>';
@@ -3394,18 +3394,18 @@ function renderWizard(){
         {id:'UAE-DS-2025',    name:'UAE Digital Government Strategy 2025',    body:'UAE Government'},
         {id:'UAE-AI-2031',    name:'UAE Artificial Intelligence Strategy 2031',body:'UAE Office of AI'},
         {id:'UAE-PDPL',       name:'UAE Personal Data Protection Law (PDPL)',  body:'Ministry of Justice'},
-        {id:'CBUAE-FS',       name:'CBUAE Financial Sector Strategy 2023–2026',body:'Central Bank of UAE'},
+        {id:'ICP-FS',       name:'Zero Government Bureaucracy Programme',body:'Central Bank of UAE'},
         {id:'UAE-OPEN-FINANCE',name:'UAE Open Finance Framework',             body:'Central Bank of UAE'},
         {id:'DubaiPaperless', name:'Dubai Paperless Strategy',                body:'Dubai Government'},
         {id:'SmartDubai',     name:'Smart Dubai 2021 Strategy',               body:'Smart Dubai Office'},
         {id:'Dubai10X',       name:'Dubai 10X Initiative',                    body:'Dubai Future Foundation'},
-        {id:'UAE-DIFC-GDPR',  name:'DIFC Data Protection Law 2020',           body:'Dubai Int\'l Financial Centre'},
+        {id:'UAE-DIFC-GDPR',  name:'UAE PDPL — Federal Data Protection',           body:'Dubai Int\'l Financial Centre'},
         {id:'UAE-NDS',        name:'UAE National Data Strategy',              body:'UAE Data Office'},
         {id:'UAE-CYBERSEC',   name:'UAE Cybersecurity Strategy 2023–2026',    body:'UAE Cybersecurity Council'},
-        {id:'DubaiProcure',   name:'Dubai Government Procurement Strategy',   body:'Dubai Dept. of Finance'},
-        {id:'UAE-MOHRE-Digital',name:'MOHRE Digital Transformation Programme',body:'Ministry of HR & Emiratisation'},
+        {id:'DubaiProcure',   name:'UAE Digital Government Strategy 2025',   body:'Dubai Dept. of Finance'},
+        {id:'UAE-MOHRE-Digital',name:'Smart Dubai — Happiness Agenda',body:'Digital Dubai Authority'},
         {id:'UAE-CUSTOMER-EXP',name:'UAE Customer Experience Index',          body:'UAE Prime Minister Office'},
-        {id:'ADGM-DIGITAL',   name:'ADGM Digital Assets Framework',           body:'Abu Dhabi Global Market'},
+        {id:'ADGM-DIGITAL',   name:'D33 — Dubai Economic Agenda',           body:'Abu Dhabi Global Market'},
       ];
       return '<div style="display:grid;gap:5px">'
         +AI.map(function(init){
@@ -3443,7 +3443,7 @@ function renderWizard(){
       +'<div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:4px 14px">'
       +[["Request",WF.title],["System",WF.system],["Why needed",WF.reason],["Expected value",WF.benefit],
         ["Urgency",WF.urgencyFlag||"Normal"],["Expected Cycle",(WF.expectedCycle||"No preference")+" — IT will confirm"],["Gov. Initiatives",WF.linkedInitiatives&&WF.linkedInitiatives.length?WF.linkedInitiatives.length+" linked":"None selected"],["Priority Score","K="+k3+" &#8212; "+kl3.label+" (S="+WF.s+", B="+WF.b+", T="+WF.t+")"],
-        ["Sector","Corporate Services"]].map(function(f){
+        ["Sector","Residency Services"]].map(function(f){
         return '<div class="rv-row"><div class="rv-k">'+f[0]+'</div><div style="color:var(--text);line-height:1.6">'+(escH(f[1])||'<span style="color:var(--text3)">&#8212;</span>')+"</div></div>";
       }).join("")
       +'<div class="rv-row" style="display:block;padding:10px 0">'
@@ -3528,7 +3528,7 @@ function renderSuccess(id,k,kl){
 function renderShuffle(){
   var CYCLE_CAP = 60;
   var rc = ROLES_CONFIG[currentRole]||ROLES_CONFIG.bu;
-  var MY_SECTOR = rc.sublabel||"Corporate Services";
+  var MY_SECTOR = rc.sublabel||"Residency Services";
   var CYCLES = ["Cycle 18","Cycle 19","Cycle 20"];
   var CYCLE_LABELS = {"Cycle 18":"Current Sprint","Cycle 19":"Next","Cycle 20":"Future"};
   var CYCLE_COLORS = {"Cycle 18":"#1D4ED8","Cycle 19":"#7C3AED","Cycle 20":"#0891B2"};
@@ -3739,7 +3739,7 @@ function commitCycleDrop(reqId, r, toLane){
 }
 
 function showUrgentCycleConfirm(reqId, r){
-  var _sec=(ROLES_CONFIG[currentRole]||ROLES_CONFIG.bu).sublabel||"Corporate Services";
+  var _sec=(ROLES_CONFIG[currentRole]||ROLES_CONFIG.bu).sublabel||"Residency Services";
   var _cap=60;
   var _c18=REQUESTS.filter(function(x){return x.sector===_sec&&x.cycle==="Cycle 18"&&!["Deployed","Closed","Rejected","Deployed \u2014 Pending Closure"].includes(x.status);});
   var _used=_c18.reduce(function(s,x){return s+estHrs(x);},0);
@@ -3830,7 +3830,7 @@ function sendReplyPage(reqId,clrId){
 // DELIVERY ROOM
 function renderDelivery(){
   var rc = ROLES_CONFIG[currentRole]||ROLES_CONFIG.bu;
-  var mySector = rc.sublabel||"Corporate Services";
+  var mySector = rc.sublabel||"Residency Services";
 
   // Live capacity from real data
   var c18 = REQUESTS.filter(function(r){return r.cycle==="Cycle 18"&&r.sector===mySector;});
@@ -4225,7 +4225,7 @@ function confirmNominations(){
 
 
 // ─── SHARED DATA (mirrors BU data) ────────────────────────────────
-var DEPT_LIST = ["Finance","Legal","Media","Data Privacy","Compliance","Procurement","Risk","HR","IT Security"];
+var DEPT_LIST = ["Entry Permits","Ports Affairs","Media","Data Privacy","Compliance","Licensing","Risk","HR","IT Security"];
 var APPROVAL_TYPES = ["Approval Required","Input Required","Review / Clearance","Conditional","Not Required"];
 // ─── STATE ─────────────────────────────────────────────────────────
 var currentScreen = "ou-dashboard";
@@ -4449,7 +4449,7 @@ function renderOUDashboard(){
   h+='<div style="display:flex;gap:14px;align-items:center">';
   h+='<div><div style="font-size:32px;font-weight:900;color:#16A34A;font-family:monospace;line-height:1">44%</div><div style="font-size:10px;color:#15803D;font-weight:600;margin-top:3px">org-wide</div></div>';
   h+='<div style="flex:1">';
-  [{s:'Corp Svcs',p:46,c:'#1D4ED8'},{s:'Cust Svcs',p:72,c:'#0891B2'},{s:'Legal',p:43,c:'#7C3AED'},{s:'Finance',p:15,c:'#D97706'}].forEach(function(d){h+='<div style="display:flex;align-items:center;gap:5px;margin-bottom:5px"><div style="font-size:9px;color:#374151;min-width:56px">'+d.s+'</div><div style="flex:1;height:5px;background:#D1FAE5;border-radius:99px"><div style="width:'+d.p+'%;height:100%;background:'+d.c+';border-radius:99px"></div></div><div style="font-size:9px;font-weight:800;color:'+d.c+';min-width:24px;text-align:right">'+d.p+'%</div></div>';});
+  [{s:'Corp Svcs',p:46,c:'#1D4ED8'},{s:'Cust Svcs',p:72,c:'#0891B2'},{s:'Ports Affairs',p:43,c:'#7C3AED'},{s:'Entry Permits',p:15,c:'#D97706'}].forEach(function(d){h+='<div style="display:flex;align-items:center;gap:5px;margin-bottom:5px"><div style="font-size:9px;color:#374151;min-width:56px">'+d.s+'</div><div style="flex:1;height:5px;background:#D1FAE5;border-radius:99px"><div style="width:'+d.p+'%;height:100%;background:'+d.c+';border-radius:99px"></div></div><div style="font-size:9px;font-weight:800;color:'+d.c+';min-width:24px;text-align:right">'+d.p+'%</div></div>';});
   h+='</div></div></div>';
   // Right: Mandates
   h+='<div style="flex:1;min-width:0;background:#EFF6FF;border-radius:0 11px 11px 0;padding:14px 16px">'+(_ouIP||'<div style="font-size:10px;font-weight:800;color:#1E40AF;text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px">&#127462;&#127466; UAE &amp; Dubai Gov Initiatives</div><div style="font-size:12px;color:#64748B">No initiatives linked yet.</div>')+'</div>';
@@ -4536,7 +4536,7 @@ function renderOUDashboard(){
   }
   h+='</div>';
 
-  var OU_SECS=[{n:'Corporate Services',c:'#1D4ED8'},{n:'Finance',c:'#059669'},{n:'Legal',c:'#7C3AED'},{n:'Customer Services',c:'#D97706'}];
+  var OU_SECS=[{n:'Residency Services',c:'#1D4ED8'},{n:'Entry Permits',c:'#059669'},{n:'Ports Affairs',c:'#7C3AED'},{n:'Amer Centers',c:'#D97706'}];
   h+='<div class="card" style="padding:0;max-height:380px;overflow:hidden">';
   h+='<div class="ch"><span class="ct">&#127757; Digital Transformation Goals</span>'
     +'<span class="cs">OU-set targets per business unit</span></div>';
@@ -4631,7 +4631,7 @@ function renderOUDashboard(){
         c+='<span style="font-size:11px;font-weight:800;background:#F5F3FF;color:#7C3AED;padding:3px 11px;border-radius:99px;white-space:nowrap">&#128197; '+cyc+'</span>';
         c+='<div style="flex:1;display:flex;gap:6px;flex-wrap:wrap">';
         reqs.forEach(function(r){
-          var sm={"Corporate Services":"#1D4ED8","Finance":"#059669","Legal":"#7C3AED","Customer Services":"#D97706"}[r.sector]||"#64748B";
+          var sm={"Residency Services":"#1D4ED8","Entry Permits":"#059669","Ports Affairs":"#7C3AED","Amer Centers":"#D97706"}[r.sector]||"#64748B";
           c+='<span onclick="openOU360(\''+r.id+'\')" style="font-size:10.5px;font-weight:700;color:'+sm+';background:'+sm+'12;padding:2px 8px;border-radius:6px;cursor:pointer" title="'+escH(r.title)+'">'+r.id+'</span>';
         });
         c+='</div></div>';
@@ -4834,7 +4834,7 @@ function openOU360(id){
     }).join('')
     :'<div style="font-size:12.5px;color:var(--text3);padding:8px 0">No consultations sent yet.</div>';
 
-  var UNITS=["IT","Legal","Finance","Risk","Compliance","IT Security","Media","HR","Procurement"];
+  var UNITS=["IT","Ports Affairs","Entry Permits","Risk","Compliance","IT Security","Media","HR","Licensing"];
 
   var html='<div id="ou360-modal" class="modal-bg" onclick="if(event.target===this)closeModal(\'ou360-modal\')"><div class="modal" style="max-width:720px">'
     // Header
@@ -5268,7 +5268,7 @@ function renderAudit(){
 // DEPT: Approval requests screen
 // DEPT: Decision history
 function renderDeptHistory(){
-  var myDept = currentDept||"Finance";
+  var myDept = currentDept||"Entry Permits";
 
   // Find requests where this dept was actually involved
   var involved = REQUESTS.filter(function(r){
@@ -5326,7 +5326,7 @@ function bindDeptReplies(){
       var cid=this.getAttribute("data-cid");
       var ta=document.getElementById("dr-"+cid);
       if(!ta||!ta.value.trim()){toast("Please type your response first.","warn");return;}
-      var myDept=currentDept||"Finance";
+      var myDept=currentDept||"Entry Permits";
       var r=REQUESTS.find(function(x){return x.id===rid;}); if(!r)return;
       var c=r.consultations.find(function(x){return x.id===cid;}); if(!c)return;
       c.reply=ta.value.trim(); c.replyDate=today(); c.status="Replied";
@@ -5337,7 +5337,7 @@ function bindDeptReplies(){
   });
 }
 function deptDecline(rid,cid){
-  var myDept=currentDept||"Finance";
+  var myDept=currentDept||"Entry Permits";
   var r=REQUESTS.find(function(x){return x.id===rid;}); if(!r)return;
   var c=r.consultations.find(function(x){return x.id===cid;}); if(!c)return;
   c.reply="No specific input from "+myDept+" — no concerns."; c.replyDate=today(); c.status="Replied";
@@ -5345,7 +5345,7 @@ function deptDecline(rid,cid){
   toast("Marked as no input needed."); renderSidebar(); nav(currentScreen);
 }
 function deptGiveApproval(rid){
-  var myDept=currentDept||"Finance";
+  var myDept=currentDept||"Entry Permits";
   var r=REQUESTS.find(function(x){return x.id===rid;}); if(!r)return;
   if(!r.deptApprovals) r.deptApprovals={};
   r.deptApprovals[myDept]=Object.assign({},r.deptApprovals[myDept]||{},{
@@ -5355,7 +5355,7 @@ function deptGiveApproval(rid){
   toast("Approval recorded."); renderSidebar(); nav(currentScreen);
 }
 function deptApproveWithCondition(rid){
-  var myDept=currentDept||"Finance";
+  var myDept=currentDept||"Entry Permits";
   var r=REQUESTS.find(function(x){return x.id===rid;}); if(!r) return;
   var old=document.getElementById("cond-modal"); if(old) old.remove();
   var html='<div id="cond-modal" class="modal-bg"><div class="modal" style="max-width:440px">'
@@ -5390,7 +5390,7 @@ function deptApproveWithCondition(rid){
   };
 }
 function deptBlockApproval(rid){
-  var myDept=currentDept||"Finance";
+  var myDept=currentDept||"Entry Permits";
   var r=REQUESTS.find(function(x){return x.id===rid;}); if(!r) return;
   var old=document.getElementById("block-modal"); if(old) old.remove();
   var html='<div id="block-modal" class="modal-bg"><div class="modal" style="max-width:440px">'
@@ -5482,9 +5482,9 @@ function nav(id){
 // ─── RECOMMENDATION ENGINE ────────────────────────────────────────
 var UNIT_MAP = {
   "Customer Portal":    {unit:"IT",       reason:"UI/UX and portal changes go directly to IT for analysis."},
-  "Document Management":{unit:"Legal",    reason:"Document workflows often require Legal review for compliance."},
+  "Document Management":{unit:"Ports Affairs",    reason:"Document workflows often require Legal review for compliance."},
   "IAM":                {unit:"IT Security",reason:"Identity and access changes require IT Security sign-off first."},
-  "Payment Gateway":    {unit:"Finance",  reason:"Payment systems need Finance approval and Risk assessment."},
+  "Payment Gateway":    {unit:"Entry Permits",  reason:"Payment systems need Finance approval and Risk assessment."},
   "Reporting Platform": {unit:"IT",       reason:"Reporting tools are built and maintained by IT."},
   "CRM":                {unit:"IT",       reason:"CRM changes are delivered by IT. Check Marketing for business alignment."},
   "Mobile App":         {unit:"IT",       reason:"Mobile development is owned by IT Digital team."},
@@ -5492,9 +5492,9 @@ var UNIT_MAP = {
 };
 var KEYWORD_RULES = [
   {words:["comply","compliance","regulation","regulatory","GDPR","data protection","legal","contract"],
-   unit:"Legal",   tip:"Legal / Compliance review recommended — regulatory keywords detected."},
+   unit:"Ports Affairs",   tip:"Legal / Compliance review recommended — regulatory keywords detected."},
   {words:["payment","invoice","reconcil","financial","budget","cost","revenue","finance"],
-   unit:"Finance", tip:"Finance approval likely needed — financial impact detected."},
+   unit:"Entry Permits", tip:"Finance approval likely needed — financial impact detected."},
   {words:["security","access","permission","authentication","password","encrypt","firewall","IAM","identity"],
    unit:"IT Security", tip:"IT Security review required — access or security change detected."},
   {words:["risk","audit","control","fraud","exposure"],
@@ -5503,8 +5503,8 @@ var KEYWORD_RULES = [
    unit:"Media",   tip:"Media / Communications should review — content or brand impact."},
   {words:["staff","employee","HR","onboard","offboard","policy","training"],
    unit:"HR",      tip:"HR input may be needed — people or policy change detected."},
-  {words:["supplier","vendor","procurement","contract","tender"],
-   unit:"Procurement", tip:"Procurement should be consulted — vendor or supplier involvement."},
+  {words:["Amer partner","typing center","licensing","contract","tender"],
+   unit:"Licensing", tip:"Licensing should be consulted — typing center or Amer partner involvement."},
 ];
 function getRecommendations(r){
   var recs = [];
@@ -5559,7 +5559,7 @@ function getRecommendations(r){
       action:"escalate",priority:"high"});
   }
   // 6. Sector-specific hint
-  if(r.sector==="Finance"||r.sector==="Legal"){
+  if(r.sector==="Entry Permits"||r.sector==="Ports Affairs"){
     var already=Object.keys(r.deptApprovals||{});
     if(!already.includes(r.sector)){
       recs.push({type:"info",icon:"&#128203;",title:r.sector+" sector — get their sign-off",
@@ -5722,7 +5722,7 @@ function renderITDashboard(){
   _itDxH+='<div style="display:flex;gap:14px;align-items:flex-start">';
   _itDxH+='<div><div style="font-size:30px;font-weight:900;color:#16A34A;font-family:monospace;line-height:1">44%</div><div style="font-size:10px;color:#15803D;font-weight:600;margin-top:2px">org-wide</div></div>';
   _itDxH+='<div style="flex:1">';
-  [{s:'Corp Svcs',p:46,c:'#1D4ED8'},{s:'Cust Svcs',p:72,c:'#0891B2'},{s:'Legal',p:43,c:'#7C3AED'},{s:'Finance',p:15,c:'#D97706'}].forEach(function(d){
+  [{s:'Corp Svcs',p:46,c:'#1D4ED8'},{s:'Cust Svcs',p:72,c:'#0891B2'},{s:'Ports Affairs',p:43,c:'#7C3AED'},{s:'Entry Permits',p:15,c:'#D97706'}].forEach(function(d){
     _itDxH+='<div style="display:flex;align-items:center;gap:5px;margin-bottom:4px"><div style="font-size:9px;color:#374151;min-width:56px">'+d.s+'</div><div style="flex:1;height:5px;background:#D1FAE5;border-radius:99px"><div style="width:'+d.p+'%;height:100%;background:'+d.c+';border-radius:99px"></div></div><div style="font-size:9px;font-weight:800;color:'+d.c+';min-width:24px;text-align:right">'+d.p+'%</div></div>';
   });
   _itDxH+='</div></div></div>';
@@ -6160,10 +6160,10 @@ function renderPlanning(){
 function renderJira(){
   var pColMap={'DSP':'#4338CA','CORE':'#0891B2','DATA':'#7C3AED'};
   var SMAP={
-    'Corporate Services':{c:'#1D4ED8',bg:'#EFF6FF',bdr:'#BFDBFE',icon:'&#11042;'},
-    'Finance':           {c:'#059669',bg:'#ECFDF5',bdr:'#6EE7B7',icon:'&#128181;'},
-    'Legal':             {c:'#7C3AED',bg:'#F5F3FF',bdr:'#DDD6FE',icon:'&#9878;'},
-    'Customer Services': {c:'#D97706',bg:'#FFFBEB',bdr:'#FDE68A',icon:'&#128101;'},
+    'Residency Services':{c:'#1D4ED8',bg:'#EFF6FF',bdr:'#BFDBFE',icon:'&#11042;'},
+    'Entry Permits':           {c:'#059669',bg:'#ECFDF5',bdr:'#6EE7B7',icon:'&#128181;'},
+    'Ports Affairs':             {c:'#7C3AED',bg:'#F5F3FF',bdr:'#DDD6FE',icon:'&#9878;'},
+    'Amer Centers': {c:'#D97706',bg:'#FFFBEB',bdr:'#FDE68A',icon:'&#128101;'},
   };
 
   var allActive   = REQUESTS.filter(function(r){return r.status!=='Closed'&&r.status!=='Rejected';});
@@ -6301,7 +6301,7 @@ function renderJira(){
       h+='<td style="font-family:monospace;font-size:11px;font-weight:700;color:'+pc+'">'+r.id+'</td>';
       h+='<td><div style="font-size:12.5px;font-weight:600">'+escH(r.title.length>36?r.title.slice(0,36)+'…':r.title)+'</div>';
       h+='<div style="font-size:10.5px;color:var(--text3)">'+escH(r.system)+'</div></td>';
-      h+='<td><span style="font-size:10.5px;font-weight:700;background:'+sm.bg+';color:'+sm.c+';padding:2px 7px;border-radius:99px">'+sm.icon+' '+(r.sector==='Customer Services'?'Cust':r.sector==='Corporate Services'?'Corp':r.sector)+'</span></td>';
+      h+='<td><span style="font-size:10.5px;font-weight:700;background:'+sm.bg+';color:'+sm.c+';padding:2px 7px;border-radius:99px">'+sm.icon+' '+(r.sector==='Amer Centers'?'Cust':r.sector==='Residency Services'?'Corp':r.sector)+'</span></td>';
       h+='<td>'+(r.jiraId
         ?'<span style="background:#E8F0FF;color:#0052CC;padding:2px 8px;border-radius:6px;font-family:monospace;font-size:11px;font-weight:700">'+r.jiraId+'</span>'
         :'<span style="font-size:11px;color:#DC2626;font-weight:600">No ticket</span>'
@@ -6564,11 +6564,11 @@ function harmonyParseCreate(raw){
     if(/hamad|business unit|^bu$/.test(rm))spec.role='bu';
     else if(/yousuf|^ou$/.test(rm))spec.role='ou';
     else if(/omar|^it$/.test(rm))spec.role='it';
-    else if(/sultan|finance|dept|department/.test(rm)){spec.role='dept';spec.sector='Finance';}
+    else if(/sultan|finance|dept|department/.test(rm)){spec.role='dept';spec.sector='Entry Permits';}
     else if(/khalid|exec|dg|director/.test(rm))spec.role='exec';
   }
   var secM=t.match(/\b(finance|legal|customer(?:\s+services)?|corporate(?:\s+services)?)\b/);
-  if(secM){var s=secM[1]; spec.sector=/finance/.test(s)?'Finance':/legal/.test(s)?'Legal':/customer/.test(s)?'Customer Services':'Corporate Services';}
+  if(secM){var s=secM[1]; spec.sector=/finance|entry|permit|visa/.test(s)?'Entry Permits':/legal|port|gate|marine/.test(s)?'Ports Affairs':/customer|amer|happiness/.test(s)?'Amer Centers':'Residency Services';}
   var title='';
   var mi=raw.indexOf(':');
   if(mi>-1){ title=raw.slice(mi+1); }
@@ -6634,7 +6634,7 @@ function harmonyAsk(raw){
   var waiting=recs.filter(function(x){return !x.actionable;});
   var active=R.filter(function(r){return r.status!=='Closed'&&r.status!=='Rejected';});
   function S(name){return R.filter(function(r){return r.status===name;}).length;}
-  function sectorOf(s){ if(/financ/.test(s))return 'Finance'; if(/legal/.test(s))return 'Legal'; if(/customer/.test(s))return 'Customer Services'; if(/corporate/.test(s))return 'Corporate Services'; return null; }
+  function sectorOf(s){ if(/financ/.test(s))return 'Entry Permits'; if(/legal/.test(s))return 'Ports Affairs'; if(/customer/.test(s))return 'Amer Centers'; if(/corporate/.test(s))return 'Residency Services'; return null; }
   function stageOf(s){
     if(/deployed|in production|\blive\b/.test(s))return 'Deployed — Pending Closure';
     if(/\bclosed\b|done|complete|finished/.test(s))return 'Closed';
@@ -6681,7 +6681,7 @@ function harmonyAsk(raw){
     return risk.length? (risk.length+' at SLA risk — top '+risk.slice(0,3).map(function(x){return x.r.id;}).join(', ')+'. Want detail on any?') : 'No SLA risk on the board — all clear.';
   // Reporting.
   if(/(portfolio|breakdown|by sector|across sectors|distribution|split by)/.test(t)){
-    var secs=['Finance','Legal','Customer Services','Corporate Services'];
+    var secs=['Entry Permits','Ports Affairs','Amer Centers','Residency Services'];
     return 'Portfolio: '+R.length+' requests — '+secs.map(function(s){return R.filter(function(r){return r.sector===s;}).length+' '+s;}).join(' · ')+'. '+active.length+' active, '+S('Closed')+' closed, '+risk.length+' at SLA risk.';
   }
   if(/risk report|risk (summary|picture|overview)|how much risk/.test(t)){
@@ -6728,7 +6728,7 @@ function harmonySystemPrompt(){
   var safe=recs.filter(function(x){return x.direct;}).length;
   var waiting=recs.filter(function(x){return !x.actionable;}).length;
   var active=REQUESTS.filter(function(r){return r.status!=='Closed'&&r.status!=='Rejected';}).slice(0,14).map(function(r){return r.id+' ('+r.sector+', '+r.status+')';}).join('; ')||'none';
-  return "You are Vision, the AI delivery agent of HARMONY — a UAE government IT Change & Delivery command center. You are talking with Omar Al Ahrari, the IT Delivery Lead. Speak concisely and professionally, like a sharp operations chief of staff. Keep spoken replies to 1-2 short sentences (under ~40 words); summarise by count, never dump long ID lists. Reply in the language the user writes or speaks \u2014 Arabic (concise Modern Standard) or English.\n\n"
+  return "You are Vision, the AI delivery agent of HARMONY — the IT Change & Delivery command center of GDRFA Dubai (General Directorate of Residency and Foreigners Affairs). The pipeline digitises real GDRFA services: entry permits, residency, ports & Smart Gates, and Amer centers. You are talking with Omar Al Ahrari, the IT Delivery Lead. Speak concisely and professionally, like a sharp operations chief of staff. Keep spoken replies to 1-2 short sentences (under ~40 words); summarise by count, never dump long ID lists. Reply in the language the user writes or speaks \u2014 Arabic (concise Modern Standard) or English.\n\n"
     +"You can ACT by calling the provided tools \u2014 run pipeline actions, advance or create requests, assign partners and cycles, file Jira, add to sprint, filter or open any screen, switch role, and send notifications. Compose several tool calls when a request needs multiple steps, and resolve references like \u2018the health portal one\u2019 or \u2018REQ 14\u2019 to an ID from the list below. After acting, confirm briefly what you did. For questions or chat, just answer \u2014 no tool needed.\n\n"
     +"GOVERNANCE (hard rules): never approve, sign off, or confirm a change on behalf of BU or OU \u2014 those approvals are theirs. The advance and deploy tools enforce the delivery guards (a partner is required before delivery; UAT approval is required before deploy); if a step is blocked, say so rather than forcing it.\n\n"
     +"GROUNDING (hard rules): every number, ID, and status you state must come from the live pipeline data below \u2014 it reflects the app\u2019s state at this exact moment (data refreshed "+new Date().toTimeString().slice(0,8)+"). If the data doesn\u2019t contain what\u2019s asked, say so plainly instead of estimating or inventing. No filler, no pleasantries padding, no invented history.\n\n"
@@ -6743,10 +6743,10 @@ var HARMONY_TOOLS=[
   {name:'deploy',description:'Deploy all UAT-approved requests to production (guard: only UAT-approved advance).',input_schema:{type:'object',properties:{}}},
   {name:'send_scope',description:'Send the change scope to the BU for all requests awaiting scope.',input_schema:{type:'object',properties:{}}},
   {name:'advance_request',description:'Advance ONE specific request by ID to its next legal stage (respects governance guards).',input_schema:{type:'object',properties:{id:{type:'string',description:'Request ID or reference, e.g. REQ-014'}},required:['id']}},
-  {name:'create_request',description:'Raise a new change request / CR.',input_schema:{type:'object',properties:{title:{type:'string'},sector:{type:'string',enum:['Finance','Legal','Customer Services','Corporate Services']},urgency:{type:'string',enum:['Normal','High','Critical']},role:{type:'string',enum:['bu','ou','it','dept','exec'],description:'Who raises it; default bu'}},required:['title']}},
+  {name:'create_request',description:'Raise a new change request / CR.',input_schema:{type:'object',properties:{title:{type:'string'},sector:{type:'string',enum:['Entry Permits','Ports Affairs','Amer Centers','Residency Services']},urgency:{type:'string',enum:['Normal','High','Critical']},role:{type:'string',enum:['bu','ou','it','dept','exec'],description:'Who raises it; default bu'}},required:['title']}},
   {name:'create_jira',description:'Create a Jira ticket for a request by ID.',input_schema:{type:'object',properties:{id:{type:'string'}},required:['id']}},
   {name:'add_to_sprint',description:'Add a request to the current sprint by ID.',input_schema:{type:'object',properties:{id:{type:'string'}},required:['id']}},
-  {name:'filter_view',description:'Filter the pipeline list.',input_schema:{type:'object',properties:{view:{type:'string',enum:['at-risk','waiting','critical','finance','legal','customer','corporate','clear']}},required:['view']}},
+  {name:'filter_view',description:'Filter the pipeline list.',input_schema:{type:'object',properties:{view:{type:'string',enum:['at-risk','waiting','critical','entry','ports','amer','residency','clear']}},required:['view']}},
   {name:'navigate',description:'Open a screen: it-agent (Command Center), it-dashboard, it-queue (Work Queue), it-planning (Cycle Planning), it-sprint (Sprint Board), it-jira (Jira & Partners).',input_schema:{type:'object',properties:{screen:{type:'string'}},required:['screen']}},
   {name:'switch_role',description:'Switch the active role/persona: bu, ou, it, dept, exec.',input_schema:{type:'object',properties:{role:{type:'string',enum:['bu','ou','it','dept','exec']}},required:['role']}},
   {name:'notify',description:'Send an in-app notification to a role.',input_schema:{type:'object',properties:{role:{type:'string',enum:['bu','ou','it','dept','exec']},note:{type:'string'},ids:{type:'array',items:{type:'string'}}},required:['role','note']}}
@@ -6771,7 +6771,7 @@ function harmonyRunTool(name,inp){
       case 'send_to_uat': agentCommandCore('send to uat'); return (AGENT_MSG&&AGENT_MSG.m)||'Sent to UAT.';
       case 'deploy': agentCommandCore('deploy'); return (AGENT_MSG&&AGENT_MSG.m)||'Deployed.';
       case 'send_scope': agentCommandCore('send scope'); return (AGENT_MSG&&AGENT_MSG.m)||'Sent scope.';
-      case 'filter_view': { var vm={'at-risk':'show at-risk','waiting':'waiting on bu','critical':'show critical','finance':'show finance','legal':'show legal','customer':'show customer','corporate':'show corporate','clear':'clear'}; agentCommandCore(vm[(inp.view||'').toLowerCase()]||inp.view||'clear'); return (AGENT_MSG&&AGENT_MSG.m)||'Filtered.'; }
+      case 'filter_view': { var vm={'at-risk':'show at-risk','waiting':'waiting on bu','critical':'show critical','entry':'show entry permits','ports':'show ports','amer':'show amer','residency':'show residency','clear':'clear'}; agentCommandCore(vm[(inp.view||'').toLowerCase()]||inp.view||'clear'); return (AGENT_MSG&&AGENT_MSG.m)||'Filtered.'; }
       case 'advance_request': { var id=harmonyResolveId(inp.id); if(!id) return 'No request matches "'+inp.id+'".'; var mv=agentApply(id); AGENT_LAST_MOVES=mv?[mv]:[]; harmonyAgentRefresh(); return mv?(id+' advanced to '+mv.to+'.'):(id+' has no safe next step right now (it may be waiting on BU/OU).'); }
       case 'create_request': { var out=harmonyCreateRequest({role:inp.role||'bu',sector:inp.sector||null,title:inp.title||'New change request',urgent:(inp.urgency==='High'||inp.urgency==='Critical'),urgency:inp.urgency||null}); return 'Created '+out.r.id+' — "'+out.r.title+'" ('+out.r.sector+').'; }
       case 'create_jira': { var jid=harmonyResolveId(inp.id); if(!jid) return 'No request matches "'+inp.id+'".'; createJiraTicket(jid); return 'Jira ticket created for '+jid+'.'; }
@@ -6859,11 +6859,11 @@ async function harmonyAICall(){
   return {reply:finalText||'Done.', cmd:null};
 }
 var HARMONY_PERSONAS={
-  bu:{name:'Hamad Al Nuaimi',role:'BU Lead',sector:'Corporate Services'},
-  ou:{name:'Yousuf Al Hameli',role:'OU \u2014 Change Governance',sector:'Corporate Services'},
-  it:{name:'Omar Al Ahrari',role:'IT Delivery Lead',sector:'Corporate Services'},
-  dept:{name:'Sultan Al Dhaheri',role:'Finance Dept Head',sector:'Finance'},
-  exec:{name:'Khalid Al Falasi',role:'Director General',sector:'Corporate Services'}
+  bu:{name:'Hamad Al Nuaimi',role:'BU Lead',sector:'Residency Services'},
+  ou:{name:'Yousuf Al Hameli',role:'OU \u2014 Change Governance',sector:'Residency Services'},
+  it:{name:'Omar Al Ahrari',role:'IT Delivery Lead',sector:'Residency Services'},
+  dept:{name:'Sultan Al Dhaheri',role:'Finance Dept Head',sector:'Entry Permits'},
+  exec:{name:'Khalid Al Falasi',role:'Director General',sector:'Residency Services'}
 };
 function harmonySendNotification(roleKey,note,reqId){
   var arr=HARMONY_SENT_NOTIFS[roleKey]||(HARMONY_SENT_NOTIFS[roleKey]=[]);
@@ -7137,7 +7137,7 @@ function agentCommandCore(text){
   if(/at.?risk|overdue|sla|deadline|due soon/.test(q)){ AGENT_FILTER={type:'sla'}; AGENT_MSG={t:'info',m:'Filtered to requests at SLA risk.'}; refreshAgentStats(); return; }
   if(/waiting|on bu|on ou|pending bu|pending ou|blocked/.test(q)){ AGENT_FILTER={type:'waiting'}; AGENT_MSG={t:'info',m:'Filtered to requests waiting on BU / OU.'}; refreshAgentStats(); return; }
   if(/critical|high priority|high.?pri|top priority/.test(q)){ AGENT_FILTER={type:'k',min:40}; AGENT_MSG={t:'info',m:'Filtered to critical-priority requests (K \u2265 40).'}; refreshAgentStats(); return; }
-  var sec=/financ/.test(q)?'Finance':/legal/.test(q)?'Legal':/customer/.test(q)?'Customer Services':/corporate/.test(q)?'Corporate Services':null;
+  var sec=/financ/.test(q)?'Entry Permits':/legal/.test(q)?'Ports Affairs':/customer/.test(q)?'Amer Centers':/corporate/.test(q)?'Residency Services':null;
   if(sec){ AGENT_FILTER={type:'sector',value:sec}; AGENT_MSG={t:'info',m:'Filtered to '+sec+'.'}; refreshAgentStats(); return; }
   AGENT_MSG={t:'warn',m:'Not sure how to do that. Try: \u201crun all safe actions\u201d, \u201cstart analysis on everything\u201d, \u201cassign partners\u201d, \u201cshow at-risk\u201d, \u201cshow Finance\u201d, or \u201cclear\u201d.'};
   refreshAgentStats();
@@ -7400,7 +7400,7 @@ function harmonySitrepSpokenAr(){
   var waiting=recs.filter(function(x){return !x.actionable;});
   var inDel=A.filter(function(r){return r.status==='In Delivery';}).length;
   var inUAT=A.filter(function(r){return r.status==='Acceptance Testing';}).length;
-  function secAr(x){ return {'Finance':'المالية','Legal':'الشؤون القانونية','Customer Services':'خدمة المتعاملين','Corporate Services':'الخدمات المؤسسية'}[x]||x; }
+  function secAr(x){ return {'Entry Permits':'تصاريح الدخول','Ports Affairs':'شؤون المنافذ','Amer Centers':'مراكز آمر','Residency Services':'خدمات الإقامة'}[x]||x; }
   var p=[];
   if(!riskArr.length) p.push('أخبار طيبة يا عمر — اللوحة بوضع ممتاز.');
   else if(riskArr.length>=5) p.push('يا عمر، خط الإنجاز يحتاج انتباهك.');
@@ -8370,27 +8370,27 @@ var GOV_INITIATIVES = {
     {id:"SmartDubai",name:"Smart Dubai 2021 Strategy",body:"Smart Dubai Office",url:"https://www.smartdubai.ae",desc:"Making Dubai the world's smartest and happiest city through seamless digital city experiences."}
   ],
   "REQ-004": [
-    {id:"CBUAE-FS",name:"CBUAE Financial Sector Strategy 2023–2026",body:"Central Bank of UAE",url:"https://centralbank.ae",desc:"CBUAE blueprint for a resilient, inclusive, and innovative financial sector with digital payment rails."},
-    {id:"UAE-OPEN-FINANCE",name:"UAE Open Finance Framework",body:"Central Bank of UAE",url:"https://centralbank.ae/en/our-operations/payments/open-finance",desc:"CBUAE framework enabling secure data sharing and third-party payment services across UAE banks."}
+    {id:"ICP-FS",name:"Zero Government Bureaucracy Programme",body:"Central Bank of UAE",url:"https://u.ae",desc:"ICP blueprint for a resilient, inclusive, and innovative financial sector with digital payment rails."},
+    {id:"UAE-OPEN-FINANCE",name:"UAE Open Finance Framework",body:"Central Bank of UAE",url:"https://u.ae/en/our-operations/payments/open-finance",desc:"ICP framework enabling secure data sharing and third-party payment services across UAE banks."}
   ],
   "REQ-005": [
-    {id:"CBUAE-FS",name:"CBUAE Financial Sector Strategy 2023–2026",body:"Central Bank of UAE",url:"https://centralbank.ae",desc:"CBUAE blueprint for a resilient, inclusive, and innovative financial sector with digital payment rails."},
-    {id:"UAE-OPEN-FINANCE",name:"UAE Open Finance Framework",body:"Central Bank of UAE",url:"https://centralbank.ae/en/our-operations/payments/open-finance",desc:"CBUAE framework enabling secure data sharing and third-party payment services across UAE banks."},
+    {id:"ICP-FS",name:"Zero Government Bureaucracy Programme",body:"Central Bank of UAE",url:"https://u.ae",desc:"ICP blueprint for a resilient, inclusive, and innovative financial sector with digital payment rails."},
+    {id:"UAE-OPEN-FINANCE",name:"UAE Open Finance Framework",body:"Central Bank of UAE",url:"https://u.ae/en/our-operations/payments/open-finance",desc:"ICP framework enabling secure data sharing and third-party payment services across UAE banks."},
     {id:"UAE-NDS",name:"UAE National Data Strategy",body:"UAE Data Office",url:"https://nds.gov.ae",desc:"Unified national framework for data governance, quality, and value creation across UAE entities."}
   ],
   "REQ-006": [
-    {id:"CBUAE-FS",name:"CBUAE Financial Sector Strategy 2023–2026",body:"Central Bank of UAE",url:"https://centralbank.ae",desc:"CBUAE blueprint for a resilient, inclusive, and innovative financial sector with digital payment rails."},
-    {id:"ADGM-DIGITAL",name:"ADGM Digital Assets Framework",body:"Abu Dhabi Global Market",url:"https://www.adgm.com",desc:"Comprehensive regulatory framework for digital assets, tokenisation, and virtual asset service providers."},
+    {id:"ICP-FS",name:"Zero Government Bureaucracy Programme",body:"Central Bank of UAE",url:"https://u.ae",desc:"ICP blueprint for a resilient, inclusive, and innovative financial sector with digital payment rails."},
+    {id:"ADGM-DIGITAL",name:"D33 — Dubai Economic Agenda",body:"Government of Dubai",url:"https://www.dubaieconomicagenda.ae",desc:"Comprehensive regulatory framework for digital assets, tokenisation, and virtual asset service providers."},
     {id:"UAE-NDS",name:"UAE National Data Strategy",body:"UAE Data Office",url:"https://nds.gov.ae",desc:"Unified national framework for data governance, quality, and value creation across UAE entities."}
   ],
   "REQ-007": [
-    {id:"UAE-DIFC-GDPR",name:"DIFC Data Protection Law 2020",body:"Dubai International Financial Centre",url:"https://www.difc.ae/business/laws-regulations/data-protection/",desc:"DIFC's GDPR-aligned data protection regulation applicable to financial and legal operations in the centre."},
-    {id:"ADGM-DIGITAL",name:"ADGM Digital Assets Framework",body:"Abu Dhabi Global Market",url:"https://www.adgm.com",desc:"Comprehensive regulatory framework for digital assets, tokenisation, and virtual asset service providers."},
-    {id:"DubaiProcure",name:"Dubai Government Procurement Strategy",body:"Dubai Department of Finance",url:"https://dof.gov.ae",desc:"Mandatory e-procurement framework for all Dubai government supplier and vendor management."}
+    {id:"UAE-DIFC-GDPR",name:"UAE PDPL — Federal Data Protection",body:"Dubai International Financial Centre",url:"https://www.u.ae/business/laws-regulations/data-protection/",desc:"UAE PDPL federal data-protection regulation applicable to financial and legal operations in the centre."},
+    {id:"ADGM-DIGITAL",name:"D33 — Dubai Economic Agenda",body:"Government of Dubai",url:"https://www.dubaieconomicagenda.ae",desc:"Comprehensive regulatory framework for digital assets, tokenisation, and virtual asset service providers."},
+    {id:"DubaiProcure",name:"UAE Digital Government Strategy 2025",body:"Dubai Department of Finance",url:"https://dof.gov.ae",desc:"Mandatory e-licensing framework for all Dubai government Amer partner and typing center management."}
   ],
   "REQ-008": [
-    {id:"CBUAE-FS",name:"CBUAE Financial Sector Strategy 2023–2026",body:"Central Bank of UAE",url:"https://centralbank.ae",desc:"CBUAE blueprint for a resilient, inclusive, and innovative financial sector with digital payment rails."},
-    {id:"ADGM-DIGITAL",name:"ADGM Digital Assets Framework",body:"Abu Dhabi Global Market",url:"https://www.adgm.com",desc:"Comprehensive regulatory framework for digital assets, tokenisation, and virtual asset service providers."},
+    {id:"ICP-FS",name:"Zero Government Bureaucracy Programme",body:"Central Bank of UAE",url:"https://u.ae",desc:"ICP blueprint for a resilient, inclusive, and innovative financial sector with digital payment rails."},
+    {id:"ADGM-DIGITAL",name:"D33 — Dubai Economic Agenda",body:"Government of Dubai",url:"https://www.dubaieconomicagenda.ae",desc:"Comprehensive regulatory framework for digital assets, tokenisation, and virtual asset service providers."},
     {id:"UAE-NDS",name:"UAE National Data Strategy",body:"UAE Data Office",url:"https://nds.gov.ae",desc:"Unified national framework for data governance, quality, and value creation across UAE entities."}
   ],
   "REQ-009": [
@@ -8404,12 +8404,12 @@ var GOV_INITIATIVES = {
     {id:"SmartDubai",name:"Smart Dubai 2021 Strategy",body:"Smart Dubai Office",url:"https://www.smartdubai.ae",desc:"Making Dubai the world's smartest and happiest city through seamless digital city experiences."}
   ],
   "REQ-011": [
-    {id:"UAE-OPEN-FINANCE",name:"UAE Open Finance Framework",body:"Central Bank of UAE",url:"https://centralbank.ae/en/our-operations/payments/open-finance",desc:"CBUAE framework enabling secure data sharing and third-party payment services across UAE banks."},
-    {id:"CBUAE-FS",name:"CBUAE Financial Sector Strategy 2023–2026",body:"Central Bank of UAE",url:"https://centralbank.ae",desc:"CBUAE blueprint for a resilient, inclusive, and innovative financial sector with digital payment rails."},
+    {id:"UAE-OPEN-FINANCE",name:"UAE Open Finance Framework",body:"Central Bank of UAE",url:"https://u.ae/en/our-operations/payments/open-finance",desc:"ICP framework enabling secure data sharing and third-party payment services across UAE banks."},
+    {id:"ICP-FS",name:"Zero Government Bureaucracy Programme",body:"Central Bank of UAE",url:"https://u.ae",desc:"ICP blueprint for a resilient, inclusive, and innovative financial sector with digital payment rails."},
     {id:"UAE-CYBERSEC",name:"UAE Cybersecurity Strategy 2023-2026",body:"UAE Cybersecurity Council",url:"https://cybersecurity.gov.ae",desc:"National strategy to build a secure and resilient digital infrastructure across UAE government and critical sectors."}
   ],
   "REQ-012": [
-    {id:"UAE-DIFC-GDPR",name:"DIFC Data Protection Law 2020",body:"Dubai International Financial Centre",url:"https://www.difc.ae/business/laws-regulations/data-protection/",desc:"DIFC's GDPR-aligned data protection regulation applicable to financial and legal operations in the centre."},
+    {id:"UAE-DIFC-GDPR",name:"UAE PDPL — Federal Data Protection",body:"Dubai International Financial Centre",url:"https://www.u.ae/business/laws-regulations/data-protection/",desc:"UAE PDPL federal data-protection regulation applicable to financial and legal operations in the centre."},
     {id:"UAE-NDS",name:"UAE National Data Strategy",body:"UAE Data Office",url:"https://nds.gov.ae",desc:"Unified national framework for data governance, quality, and value creation across UAE entities."},
     {id:"UAE-PDPL",name:"UAE Personal Data Protection Law (PDPL)",body:"UAE Ministry of Justice",url:"https://mohap.gov.ae",desc:"Federal Law No. 45 of 2021 — UAE's primary data protection regulation, effective 2023."}
   ],
@@ -8419,23 +8419,23 @@ var GOV_INITIATIVES = {
     {id:"SmartDubai",name:"Smart Dubai 2021 Strategy",body:"Smart Dubai Office",url:"https://www.smartdubai.ae",desc:"Making Dubai the world's smartest and happiest city through seamless digital city experiences."}
   ],
   "REQ-014": [
-    {id:"DubaiProcure",name:"Dubai Government Procurement Strategy",body:"Dubai Department of Finance",url:"https://dof.gov.ae",desc:"Mandatory e-procurement framework for all Dubai government supplier and vendor management."},
-    {id:"UAE-DIFC-GDPR",name:"DIFC Data Protection Law 2020",body:"Dubai International Financial Centre",url:"https://www.difc.ae/business/laws-regulations/data-protection/",desc:"DIFC's GDPR-aligned data protection regulation applicable to financial and legal operations in the centre."},
-    {id:"ADGM-DIGITAL",name:"ADGM Digital Assets Framework",body:"Abu Dhabi Global Market",url:"https://www.adgm.com",desc:"Comprehensive regulatory framework for digital assets, tokenisation, and virtual asset service providers."}
+    {id:"DubaiProcure",name:"UAE Digital Government Strategy 2025",body:"Dubai Department of Finance",url:"https://dof.gov.ae",desc:"Mandatory e-licensing framework for all Dubai government Amer partner and typing center management."},
+    {id:"UAE-DIFC-GDPR",name:"UAE PDPL — Federal Data Protection",body:"Dubai International Financial Centre",url:"https://www.u.ae/business/laws-regulations/data-protection/",desc:"UAE PDPL federal data-protection regulation applicable to financial and legal operations in the centre."},
+    {id:"ADGM-DIGITAL",name:"D33 — Dubai Economic Agenda",body:"Government of Dubai",url:"https://www.dubaieconomicagenda.ae",desc:"Comprehensive regulatory framework for digital assets, tokenisation, and virtual asset service providers."}
   ],
   "REQ-015": [
-    {id:"DubaiProcure",name:"Dubai Government Procurement Strategy",body:"Dubai Department of Finance",url:"https://dof.gov.ae",desc:"Mandatory e-procurement framework for all Dubai government supplier and vendor management."},
+    {id:"DubaiProcure",name:"UAE Digital Government Strategy 2025",body:"Dubai Department of Finance",url:"https://dof.gov.ae",desc:"Mandatory e-licensing framework for all Dubai government Amer partner and typing center management."},
     {id:"UAE-NDS",name:"UAE National Data Strategy",body:"UAE Data Office",url:"https://nds.gov.ae",desc:"Unified national framework for data governance, quality, and value creation across UAE entities."}
   ],
   "REQ-016": [
-    {id:"UAE-MOHRE-Digital",name:"MOHRE Digital Transformation Programme",body:"UAE Ministry of HR & Emiratisation",url:"https://mohre.gov.ae",desc:"Digital overhaul of HR, recruitment, and onboarding processes aligned to UAE Emiratisation targets."},
+    {id:"UAE-MOHRE-Digital",name:"Smart Dubai — Happiness Agenda",body:"Digital Dubai Authority",url:"https://digitaldubai.ae",desc:"City-wide digital experience agenda — every government service measured on customer happiness."},
     {id:"DubaiPaperless",name:"Dubai Paperless Strategy",body:"Dubai Government",url:"https://www.dubai.ae/en/aboutdubai/Pages/DubaiPaperlessStrategy.aspx",desc:"Eliminates paper-based transactions across all Dubai government entities — 100% digital by 2024."},
     {id:"UAE-DS-2025",name:"UAE Digital Government Strategy 2025",body:"UAE Government",url:"https://digital.gov.ae",desc:"Federal roadmap to make 100% of government services digital and proactive by 2025."}
   ],
   "REQ-017": [
-    {id:"CBUAE-FS",name:"CBUAE Financial Sector Strategy 2023–2026",body:"Central Bank of UAE",url:"https://centralbank.ae",desc:"CBUAE blueprint for a resilient, inclusive, and innovative financial sector with digital payment rails."},
-    {id:"UAE-OPEN-FINANCE",name:"UAE Open Finance Framework",body:"Central Bank of UAE",url:"https://centralbank.ae/en/our-operations/payments/open-finance",desc:"CBUAE framework enabling secure data sharing and third-party payment services across UAE banks."},
-    {id:"ADGM-DIGITAL",name:"ADGM Digital Assets Framework",body:"Abu Dhabi Global Market",url:"https://www.adgm.com",desc:"Comprehensive regulatory framework for digital assets, tokenisation, and virtual asset service providers."}
+    {id:"ICP-FS",name:"Zero Government Bureaucracy Programme",body:"Central Bank of UAE",url:"https://u.ae",desc:"ICP blueprint for a resilient, inclusive, and innovative financial sector with digital payment rails."},
+    {id:"UAE-OPEN-FINANCE",name:"UAE Open Finance Framework",body:"Central Bank of UAE",url:"https://u.ae/en/our-operations/payments/open-finance",desc:"ICP framework enabling secure data sharing and third-party payment services across UAE banks."},
+    {id:"ADGM-DIGITAL",name:"D33 — Dubai Economic Agenda",body:"Government of Dubai",url:"https://www.dubaieconomicagenda.ae",desc:"Comprehensive regulatory framework for digital assets, tokenisation, and virtual asset service providers."}
   ],
   "REQ-018": [
     {id:"SmartDubai",name:"Smart Dubai 2021 Strategy",body:"Smart Dubai Office",url:"https://www.smartdubai.ae",desc:"Making Dubai the world's smartest and happiest city through seamless digital city experiences."},
@@ -8443,9 +8443,9 @@ var GOV_INITIATIVES = {
     {id:"UAE-DS-2025",name:"UAE Digital Government Strategy 2025",body:"UAE Government",url:"https://digital.gov.ae",desc:"Federal roadmap to make 100% of government services digital and proactive by 2025."}
   ],
   "REQ-019": [
-    {id:"ADGM-DIGITAL",name:"ADGM Digital Assets Framework",body:"Abu Dhabi Global Market",url:"https://www.adgm.com",desc:"Comprehensive regulatory framework for digital assets, tokenisation, and virtual asset service providers."},
-    {id:"CBUAE-FS",name:"CBUAE Financial Sector Strategy 2023–2026",body:"Central Bank of UAE",url:"https://centralbank.ae",desc:"CBUAE blueprint for a resilient, inclusive, and innovative financial sector with digital payment rails."},
-    {id:"UAE-DIFC-GDPR",name:"DIFC Data Protection Law 2020",body:"Dubai International Financial Centre",url:"https://www.difc.ae/business/laws-regulations/data-protection/",desc:"DIFC's GDPR-aligned data protection regulation applicable to financial and legal operations in the centre."}
+    {id:"ADGM-DIGITAL",name:"D33 — Dubai Economic Agenda",body:"Government of Dubai",url:"https://www.dubaieconomicagenda.ae",desc:"Comprehensive regulatory framework for digital assets, tokenisation, and virtual asset service providers."},
+    {id:"ICP-FS",name:"Zero Government Bureaucracy Programme",body:"Central Bank of UAE",url:"https://u.ae",desc:"ICP blueprint for a resilient, inclusive, and innovative financial sector with digital payment rails."},
+    {id:"UAE-DIFC-GDPR",name:"UAE PDPL — Federal Data Protection",body:"Dubai International Financial Centre",url:"https://www.u.ae/business/laws-regulations/data-protection/",desc:"UAE PDPL federal data-protection regulation applicable to financial and legal operations in the centre."}
   ],
   "REQ-020": [
     {id:"UAE-CUSTOMER-EXP",name:"UAE Customer Experience Index",body:"UAE Prime Minister Office",url:"https://government.ae",desc:"Annual national benchmark measuring citizen happiness across all government service touchpoints."},
@@ -8458,18 +8458,18 @@ var GOV_INITIATIVES = {
     {id:"UAE-AI-2031",name:"UAE Artificial Intelligence Strategy 2031",body:"UAE Office of AI",url:"https://ai.gov.ae",desc:"National AI strategy targeting 50% efficiency gains across government sectors."}
   ],
   "REQ-022": [
-    {id:"CBUAE-FS",name:"CBUAE Financial Sector Strategy 2023–2026",body:"Central Bank of UAE",url:"https://centralbank.ae",desc:"CBUAE blueprint for a resilient, inclusive, and innovative financial sector with digital payment rails."},
+    {id:"ICP-FS",name:"Zero Government Bureaucracy Programme",body:"Central Bank of UAE",url:"https://u.ae",desc:"ICP blueprint for a resilient, inclusive, and innovative financial sector with digital payment rails."},
     {id:"UAE-AI-2031",name:"UAE Artificial Intelligence Strategy 2031",body:"UAE Office of AI",url:"https://ai.gov.ae",desc:"National AI strategy targeting 50% efficiency gains across government sectors."},
     {id:"UAE-NDS",name:"UAE National Data Strategy",body:"UAE Data Office",url:"https://nds.gov.ae",desc:"Unified national framework for data governance, quality, and value creation across UAE entities."}
   ],
   "REQ-023": [
-    {id:"DubaiProcure",name:"Dubai Government Procurement Strategy",body:"Dubai Department of Finance",url:"https://dof.gov.ae",desc:"Mandatory e-procurement framework for all Dubai government supplier and vendor management."},
+    {id:"DubaiProcure",name:"UAE Digital Government Strategy 2025",body:"Dubai Department of Finance",url:"https://dof.gov.ae",desc:"Mandatory e-licensing framework for all Dubai government Amer partner and typing center management."},
     {id:"DubaiPaperless",name:"Dubai Paperless Strategy",body:"Dubai Government",url:"https://www.dubai.ae/en/aboutdubai/Pages/DubaiPaperlessStrategy.aspx",desc:"Eliminates paper-based transactions across all Dubai government entities — 100% digital by 2024."}
   ],
   "REQ-024": [
-    {id:"UAE-DIFC-GDPR",name:"DIFC Data Protection Law 2020",body:"Dubai International Financial Centre",url:"https://www.difc.ae/business/laws-regulations/data-protection/",desc:"DIFC's GDPR-aligned data protection regulation applicable to financial and legal operations in the centre."},
-    {id:"ADGM-DIGITAL",name:"ADGM Digital Assets Framework",body:"Abu Dhabi Global Market",url:"https://www.adgm.com",desc:"Comprehensive regulatory framework for digital assets, tokenisation, and virtual asset service providers."},
-    {id:"DubaiProcure",name:"Dubai Government Procurement Strategy",body:"Dubai Department of Finance",url:"https://dof.gov.ae",desc:"Mandatory e-procurement framework for all Dubai government supplier and vendor management."}
+    {id:"UAE-DIFC-GDPR",name:"UAE PDPL — Federal Data Protection",body:"Dubai International Financial Centre",url:"https://www.u.ae/business/laws-regulations/data-protection/",desc:"UAE PDPL federal data-protection regulation applicable to financial and legal operations in the centre."},
+    {id:"ADGM-DIGITAL",name:"D33 — Dubai Economic Agenda",body:"Government of Dubai",url:"https://www.dubaieconomicagenda.ae",desc:"Comprehensive regulatory framework for digital assets, tokenisation, and virtual asset service providers."},
+    {id:"DubaiProcure",name:"UAE Digital Government Strategy 2025",body:"Dubai Department of Finance",url:"https://dof.gov.ae",desc:"Mandatory e-licensing framework for all Dubai government Amer partner and typing center management."}
   ],
   "REQ-025": [
     {id:"UAE-CUSTOMER-EXP",name:"UAE Customer Experience Index",body:"UAE Prime Minister Office",url:"https://government.ae",desc:"Annual national benchmark measuring citizen happiness across all government service touchpoints."},
@@ -8477,22 +8477,22 @@ var GOV_INITIATIVES = {
     {id:"SmartDubai",name:"Smart Dubai 2021 Strategy",body:"Smart Dubai Office",url:"https://www.smartdubai.ae",desc:"Making Dubai the world's smartest and happiest city through seamless digital city experiences."}
   ],
   "REQ-026": [
-    {id:"CBUAE-FS",name:"CBUAE Financial Sector Strategy 2023–2026",body:"Central Bank of UAE",url:"https://centralbank.ae",desc:"CBUAE blueprint for a resilient, inclusive, and innovative financial sector with digital payment rails."},
-    {id:"ADGM-DIGITAL",name:"ADGM Digital Assets Framework",body:"Abu Dhabi Global Market",url:"https://www.adgm.com",desc:"Comprehensive regulatory framework for digital assets, tokenisation, and virtual asset service providers."},
+    {id:"ICP-FS",name:"Zero Government Bureaucracy Programme",body:"Central Bank of UAE",url:"https://u.ae",desc:"ICP blueprint for a resilient, inclusive, and innovative financial sector with digital payment rails."},
+    {id:"ADGM-DIGITAL",name:"D33 — Dubai Economic Agenda",body:"Government of Dubai",url:"https://www.dubaieconomicagenda.ae",desc:"Comprehensive regulatory framework for digital assets, tokenisation, and virtual asset service providers."},
     {id:"UAE-NDS",name:"UAE National Data Strategy",body:"UAE Data Office",url:"https://nds.gov.ae",desc:"Unified national framework for data governance, quality, and value creation across UAE entities."}
   ],
   "REQ-027": [
-    {id:"UAE-DIFC-GDPR",name:"DIFC Data Protection Law 2020",body:"Dubai International Financial Centre",url:"https://www.difc.ae/business/laws-regulations/data-protection/",desc:"DIFC's GDPR-aligned data protection regulation applicable to financial and legal operations in the centre."},
-    {id:"ADGM-DIGITAL",name:"ADGM Digital Assets Framework",body:"Abu Dhabi Global Market",url:"https://www.adgm.com",desc:"Comprehensive regulatory framework for digital assets, tokenisation, and virtual asset service providers."}
+    {id:"UAE-DIFC-GDPR",name:"UAE PDPL — Federal Data Protection",body:"Dubai International Financial Centre",url:"https://www.u.ae/business/laws-regulations/data-protection/",desc:"UAE PDPL federal data-protection regulation applicable to financial and legal operations in the centre."},
+    {id:"ADGM-DIGITAL",name:"D33 — Dubai Economic Agenda",body:"Government of Dubai",url:"https://www.dubaieconomicagenda.ae",desc:"Comprehensive regulatory framework for digital assets, tokenisation, and virtual asset service providers."}
   ],
   "REQ-028": [
-    {id:"UAE-MOHRE-Digital",name:"MOHRE Digital Transformation Programme",body:"UAE Ministry of HR & Emiratisation",url:"https://mohre.gov.ae",desc:"Digital overhaul of HR, recruitment, and onboarding processes aligned to UAE Emiratisation targets."},
+    {id:"UAE-MOHRE-Digital",name:"Smart Dubai — Happiness Agenda",body:"Digital Dubai Authority",url:"https://digitaldubai.ae",desc:"City-wide digital experience agenda — every government service measured on customer happiness."},
     {id:"UAE-DS-2025",name:"UAE Digital Government Strategy 2025",body:"UAE Government",url:"https://digital.gov.ae",desc:"Federal roadmap to make 100% of government services digital and proactive by 2025."},
     {id:"DubaiPaperless",name:"Dubai Paperless Strategy",body:"Dubai Government",url:"https://www.dubai.ae/en/aboutdubai/Pages/DubaiPaperlessStrategy.aspx",desc:"Eliminates paper-based transactions across all Dubai government entities — 100% digital by 2024."}
   ],
   "REQ-029": [
     {id:"UAE-AI-2031",name:"UAE Artificial Intelligence Strategy 2031",body:"UAE Office of AI",url:"https://ai.gov.ae",desc:"National AI strategy targeting 50% efficiency gains across government sectors."},
-    {id:"CBUAE-FS",name:"CBUAE Financial Sector Strategy 2023–2026",body:"Central Bank of UAE",url:"https://centralbank.ae",desc:"CBUAE blueprint for a resilient, inclusive, and innovative financial sector with digital payment rails."},
+    {id:"ICP-FS",name:"Zero Government Bureaucracy Programme",body:"Central Bank of UAE",url:"https://u.ae",desc:"ICP blueprint for a resilient, inclusive, and innovative financial sector with digital payment rails."},
     {id:"Dubai10X",name:"Dubai 10X Initiative",body:"Dubai Future Foundation",url:"https://www.dubaifuture.ae",desc:"Positions Dubai 10 years ahead of other cities by piloting radical digital innovation in government."}
   ],
   "REQ-030": [
@@ -9273,7 +9273,7 @@ function openPartnerPicker(reqId){
 var _mrFilterState='all'; var _mrSearchState=''; var _mrSortState='status';
 function renderMyRequests(){
   var rc = ROLES_CONFIG[currentRole]||ROLES_CONFIG.bu;
-  var mySector = rc.sublabel||"Corporate Services";
+  var mySector = rc.sublabel||"Residency Services";
   var mine = REQUESTS.filter(function(r){return r.sector===mySector;});
   mine = filterReqs(mine);
   mine.sort(function(a,b){return getK(b)-getK(a);});
@@ -9415,10 +9415,10 @@ var _planCycle=null; // null = all cycles visible in planning
 function renderITQueue(){
   // ── Sector map ───────────────────────────────────────────
   var SMAP={
-    'Corporate Services':{c:'#1D4ED8',bg:'#EFF6FF',bdr:'#BFDBFE',icon:'&#11042;', abbr:'Corp Svc'},
-    'Finance':           {c:'#059669',bg:'#ECFDF5',bdr:'#6EE7B7',icon:'&#128181;',abbr:'Finance'},
-    'Legal':             {c:'#7C3AED',bg:'#F5F3FF',bdr:'#DDD6FE',icon:'&#9878;',  abbr:'Legal'},
-    'Customer Services': {c:'#D97706',bg:'#FFFBEB',bdr:'#FDE68A',icon:'&#128101;',abbr:'Cust Svc'},
+    'Residency Services':{c:'#1D4ED8',bg:'#EFF6FF',bdr:'#BFDBFE',icon:'&#11042;', abbr:'Corp Svc'},
+    'Entry Permits':           {c:'#059669',bg:'#ECFDF5',bdr:'#6EE7B7',icon:'&#128181;',abbr:'Entry Permits'},
+    'Ports Affairs':             {c:'#7C3AED',bg:'#F5F3FF',bdr:'#DDD6FE',icon:'&#9878;',  abbr:'Ports Affairs'},
+    'Amer Centers': {c:'#D97706',bg:'#FFFBEB',bdr:'#FDE68A',icon:'&#128101;',abbr:'Cust Svc'},
   };
   var pColMap={'DSP':'#4338CA','CORE':'#0891B2','DATA':'#7C3AED'};
 
@@ -9720,7 +9720,7 @@ function renderITQueue(){
   // Row 2: sector pills + phase pills
   h+='<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">';
   h+='<span style="font-size:10.5px;font-weight:700;color:var(--text3)">Unit:</span>';
-  [['all','All Units','#475569'],['Corporate Services','Corp Svc','#1D4ED8'],['Finance','Finance','#059669'],['Legal','Legal','#7C3AED'],['Customer Services','Cust Svc','#D97706']].forEach(function(o){
+  [['all','All Units','#475569'],['Residency Services','Corp Svc','#1D4ED8'],['Entry Permits','Entry Permits','#059669'],['Ports Affairs','Ports Affairs','#7C3AED'],['Amer Centers','Cust Svc','#D97706']].forEach(function(o){
     var active=_sc===o[0];
     h+='<button onclick="_itqSector=\''+o[0]+'\';nav(currentScreen)" style="font-size:11px;font-weight:700;padding:4px 11px;border-radius:99px;cursor:pointer;font-family:inherit;transition:all .12s;border:1.5px solid '+(active?o[2]:'#E2E8F0')+';background:'+(active?o[2]:'#fff')+';color:'+(active?'#fff':o[2])+'">'+o[1]+'</button>';
   });
@@ -9850,7 +9850,7 @@ function renderITQueue(){
 }
 // ─── DEPT: UNIFIED INBOX (consults + approvals merged) ────────────
 function renderDeptDashboard(){
-  var dept = currentDept || "Finance";
+  var dept = currentDept || "Entry Permits";
   var dr = DEPT_ROLES.find(function(d){return d.dept===dept;}) || DEPT_ROLES[0];
   var accent = dr.accentHex || "#B45309";
 
@@ -9970,7 +9970,7 @@ function renderDeptDashboard(){
 }
 
 function renderDeptUnified(){
-  var myDept = currentDept||"Finance";
+  var myDept = currentDept||"Entry Permits";
   var all = REQUESTS.filter(function(r){
     var hasConsult=(r.consultations||[]).some(function(c){return c.dept===myDept;});
     var hasApproval=!!(r.deptApprovals||{})[myDept];
@@ -10393,7 +10393,7 @@ function escalateToBU(id){
 function addDeptApproval(id){
   var old=document.getElementById("adept-modal"); if(old) old.remove();
   var r=REQUESTS.find(function(x){return x.id===id;}); if(!r) return;
-  var DEPT_LIST=["Finance","Legal","Media","Data Privacy","Compliance","Procurement","Risk","HR","IT Security"];
+  var DEPT_LIST=["Entry Permits","Ports Affairs","Media","Data Privacy","Compliance","Licensing","Risk","HR","IT Security"];
   var APPROVAL_TYPES=["Approval Required","Input Required","Review / Clearance","Not Required"];
   var existing=Object.keys(r.deptApprovals||{});
   var available=DEPT_LIST.filter(function(d){return !existing.includes(d);});
@@ -10674,8 +10674,8 @@ function renderExecOverview(){
       }).join('')
       +(decisions.length>6?'<div style="font-size:11px;font-weight:700;color:var(--text3);text-align:center;padding:6px 0">+'+(decisions.length-6)+' more signals — <span onclick="nav(\'exec-accountability\')"; style="color:#2563EB;cursor:pointer;text-decoration:underline">View Accountability</span></div>':'');
   // Sector breakdown
-  var SECTORS=[{n:"Corporate Services",c:"#1D4ED8",b:"#EFF6FF"},{n:"Finance",c:"#059669",b:"#ECFDF5"},
-               {n:"Legal",c:"#7C3AED",b:"#F5F3FF"},{n:"Customer Services",c:"#D97706",b:"#FFFBEB"}];
+  var SECTORS=[{n:"Residency Services",c:"#1D4ED8",b:"#EFF6FF"},{n:"Entry Permits",c:"#059669",b:"#ECFDF5"},
+               {n:"Ports Affairs",c:"#7C3AED",b:"#F5F3FF"},{n:"Amer Centers",c:"#D97706",b:"#FFFBEB"}];
   var maxSCount=1;
   var sData=SECTORS.map(function(s){
     var reqs=active.filter(function(r){return r.sector===s.n;});
@@ -10827,7 +10827,7 @@ function renderExecOverview(){
         var cyc=r.cycle||'Backlog'; if(!cp[cyc]) cp[cyc]={n:0,h:0,sec:{}};
         cp[cyc].n++; cp[cyc].h+=(r.effortHours||8); cp[cyc].sec[r.sector]=(cp[cyc].sec[r.sector]||0)+1;
       });
-      var SC={"Corporate Services":"#1D4ED8","Finance":"#D97706","Legal":"#7C3AED","Customer Services":"#0891B2"};
+      var SC={"Residency Services":"#1D4ED8","Entry Permits":"#D97706","Ports Affairs":"#7C3AED","Amer Centers":"#0891B2"};
       var out='<div class="card" style="padding:0;margin-bottom:14px">';
       out+='<div class="ch"><span class="ct">&#128197; Cycle Delivery Pipeline</span>';
       out+='<span style="font-size:11px;color:var(--text3)">What\'s coming in each sprint across all BUs</span></div>';
@@ -10851,7 +10851,7 @@ function renderExecOverview(){
     })()
     // ── Cross-Sector Risk Radar ──────────────────────────
     +(function(){
-      var SC={"Corporate Services":"#1D4ED8","Finance":"#D97706","Legal":"#7C3AED","Customer Services":"#0891B2"};
+      var SC={"Residency Services":"#1D4ED8","Entry Permits":"#D97706","Ports Affairs":"#7C3AED","Amer Centers":"#0891B2"};
       var out='<div class="card" style="padding:0;margin-bottom:14px">';
       out+='<div class="ch"><span class="ct">&#128680; Cross-Sector Risk Radar</span>';
       out+='<span style="font-size:11px;color:var(--text3)">High risk, overdue, stalled, and objections per sector</span></div>';
@@ -10862,7 +10862,7 @@ function renderExecOverview(){
       out+='<th style="text-align:center;padding:8px 6px;font-size:10px;font-weight:800;color:#D97706">Overdue</th>';
       out+='<th style="text-align:center;padding:8px 6px;font-size:10px;font-weight:800;color:#7C3AED">Stalled</th>';
       out+='<th style="text-align:center;padding:8px 6px;font-size:10px;font-weight:800;color:#991B1B">Objected</th></tr>';
-      ['Corporate Services','Finance','Legal','Customer Services'].forEach(function(sec){
+      ['Residency Services','Entry Permits','Ports Affairs','Amer Centers'].forEach(function(sec){
         var reqs=REQUESTS.filter(function(r){return r.sector===sec&&r.status!=='Closed'&&r.status!=='Rejected';});
         var high=reqs.filter(function(r){return r.riskLevel==='High'||r.riskLevel==='Critical';}).length;
         var overdue=reqs.filter(function(r){return daysToDeadline(r)<0;}).length;
@@ -10934,8 +10934,8 @@ function renderExecAccountability(){
   }
 
   // ── SECTION 2: BU Readiness Scorecard ───────────────────────
-  var sectors=["Corporate Services","Finance","Legal","Customer Services"];
-  var sectorCols={"Corporate Services":"#1D4ED8","Finance":"#059669","Legal":"#7C3AED","Customer Services":"#0891B2"};
+  var sectors=["Residency Services","Entry Permits","Ports Affairs","Amer Centers"];
+  var sectorCols={"Residency Services":"#1D4ED8","Entry Permits":"#059669","Ports Affairs":"#7C3AED","Amer Centers":"#0891B2"};
   var buReadiness = "";
   for(var _si=0;_si<sectors.length;_si++){
     var sec=sectors[_si];
@@ -11100,8 +11100,8 @@ function renderExecReport(){
   var mandateDelivPct=mandates.length?Math.round(mandates.reduce(function(s,m){return s+(m.total?m.delivered/m.total:0);},0)/mandates.length*100):0;
 
   // BU readiness per sector
-  var sectors=["Corporate Services","Finance","Legal","Customer Services"];
-  var sectorCols={"Corporate Services":"#1D4ED8","Finance":"#059669","Legal":"#7C3AED","Customer Services":"#0891B2"};
+  var sectors=["Residency Services","Entry Permits","Ports Affairs","Amer Centers"];
+  var sectorCols={"Residency Services":"#1D4ED8","Entry Permits":"#059669","Ports Affairs":"#7C3AED","Amer Centers":"#0891B2"};
 
   // Top 5 stalled (bottlenecks)
   var STALL=14;
@@ -11393,8 +11393,8 @@ function renderExecFlow(){
 function openConsultModal(reqId){
   var r=REQUESTS.find(function(x){return x.id===reqId;}); if(!r) return;
   var old=document.getElementById("consult-modal"); if(old) old.remove();
-  var DEPTS=["Finance","Legal","Media","Data Privacy","Compliance",
-             "Procurement","Risk","HR","IT Security"];
+  var DEPTS=["Entry Permits","Ports Affairs","Media","Data Privacy","Compliance",
+             "Licensing","Risk","HR","IT Security"];
   var html='<div id="consult-modal" class="modal-bg" style="z-index:500"><div class="modal" style="max-width:460px">'
     +'<div class="mhd"><div><div class="mttl">Consult Department</div>'
     +'<div class="msub">'+r.id+' \u2014 '+escH(r.title)+'</div></div>'
@@ -11563,7 +11563,7 @@ function wizSubmit(){
     id:"REQ-"+String(Date.now()).slice(-4),
     title:WF.title||"",
     system:WF.system||"",
-    sector:(ROLES_CONFIG[currentRole]||{}).sublabel||"Corporate Services",
+    sector:(ROLES_CONFIG[currentRole]||{}).sublabel||"Residency Services",
     reason:WF.reason||"",
     benefit:WF.benefit||"",
     moscow:(function(){
@@ -11827,7 +11827,7 @@ var selectedTimelineId=null;
 // ─── TIMELINE PAGE (BU / all roles) ──────────────────────────────
 function renderTimelinePage(){
   var rc = ROLES_CONFIG[currentRole]||ROLES_CONFIG.bu;
-  var mySector = rc.sublabel||"Corporate Services";
+  var mySector = rc.sublabel||"Residency Services";
   var mine = REQUESTS.filter(function(r){return r.sector===mySector;})
     .sort(function(a,b){return getK(b)-getK(a);});
 
@@ -12114,7 +12114,7 @@ var DEMO_SCENARIOS = [
         body:"The mandate strip shows Smart Dubai (30%), UAE Digital Gov (30%), Cybersecurity (60% — On Track), and 2 others before \'+10 more\'. Each row: RAG dot · name · issuing body · 60px bar · % · View ↗. Click \'+10 more\' to expand all 15 inline. No modal, no page change — just the data.",
         screen:"dashboard", role:"bu", highlight:"demo-bu-initiatives", action:null },
       { title:"Digital Transformation Progress",
-        body:"Below the mandates: <b>DX Progress</b> at 46% for Corporate Services, with 5 service cards — Customer Onboarding 50%, Customer Self-Service 38%, Vendor Management 100% (Digitalized), Contract Management 25%, Performance Reporting 0%.",
+        body:"Below the mandates: <b>DX Progress</b> at 46% for Corporate Services, with 5 service cards — Customer Onboarding 50%, Customer Self-Service 38%, Typing Center Management 100% (Digitalized), Contract Management 25%, Performance Reporting 0%.",
         screen:"dashboard", role:"bu", highlight:"demo-bu-dx", action:null },
       { title:"In Sprint & Coming Next",
         body:"<b>In Sprint Now</b> shows the 3 requests actively being built in Cycle 18. <b>Coming Next</b> shows Cycle 19 confirmed nominations. The BU Director sees what IT is doing with their requests without opening a single ticket.",
@@ -12123,7 +12123,7 @@ var DEMO_SCENARIOS = [
         body:"The <b>Needs Your Attention</b> panel surfaces action items requiring the BU Director personally: scope estimates to confirm, clarification questions from IT, UAT sign-offs, and requests pending outcome recording. All actionable from this panel.",
         screen:"dashboard", role:"bu", highlight:"demo-bu-attn", action:null },
       { title:"Request Modal — Mandate Chip Strip",
-        body:"Open REQ-003 (Vendor Portal Auto-Renewal). Scroll to the bottom of the modal. The <b>UAE & Dubai Mandates</b> section shows chips: \"🔗 Dubai Paperless Str... 0%\" and \"🔗 UAE Digital Govern... 30%\" as solid blue (BU-linked), plus 2 auto-matched chips. Click a chip — a detail panel expands inline showing the mandate name, issuing body, delivery progress bar, and View ↗ link. No navigation away.",
+        body:"Open REQ-003 (Typing Center Portal Auto-Renewal). Scroll to the bottom of the modal. The <b>UAE & Dubai Mandates</b> section shows chips: \"🔗 Dubai Paperless Str... 0%\" and \"🔗 UAE Digital Govern... 30%\" as solid blue (BU-linked), plus 2 auto-matched chips. Click a chip — a detail panel expands inline showing the mandate name, issuing body, delivery progress bar, and View ↗ link. No navigation away.",
         screen:"my-requests", role:"bu", action:"openReq(\'REQ-003\')", highlight:null },
       { title:"SLA Chips — Every Request Has a Deadline",
         body:"In the <b>My Requests</b> table, the Needed By column now shows live SLA chips: green (on track), amber (due in 21 days), red (overdue). REQ-001 shows \"⚠ Overdue 348d\". These are real dates — the prototype uses today\'s date, so any 2025 deadline is genuinely overdue. Exactly the signal a BU Director needs.",
@@ -12140,7 +12140,7 @@ var DEMO_SCENARIOS = [
         body:"Yousuf opens the <b>Governance Overview</b>. The page fills the entire screen — no right-side gap. At the top: a single unified card with <b>DX Progress</b> (green, left) and <b>UAE & Dubai Mandates</b> (blue, right) side by side. Both panels at natural height, no empty stretching.",
         screen:"ou-dashboard", role:"ou", highlight:"demo-ou-dashboard", action:null },
       { title:"UAE Mandates — Compact Row Design",
-        body:"The right panel shows 5 mandate rows: Smart Dubai 30%, UAE Digital Gov 30%, CBUAE 10%, ADGM 0%, UAE Customer Exp 13%. Each row is a single line: RAG dot · name · body · mini bar · % · ↗. Click \'+10 more\' to reveal all 15 inline. The OU Lead can see the full national mandate picture without leaving the dashboard.",
+        body:"The right panel shows 5 mandate rows: Smart Dubai 30%, UAE Digital Gov 30%, ICP 10%, ADGM 0%, UAE Customer Exp 13%. Each row is a single line: RAG dot · name · body · mini bar · % · ↗. Click \'+10 more\' to reveal all 15 inline. The OU Lead can see the full national mandate picture without leaving the dashboard.",
         screen:"ou-dashboard", role:"ou", highlight:"demo-ou-dashboard", action:null },
       { title:"Review Queue — Action-Sorted",
         body:"Below: <b>OU Review Queue</b> (60% width) alongside <b>Digital Transformation Goals</b>. Queue shows 5 open requests sorted by urgency — blocked float first, then by K-score. Each row shows the next required action and an Open button.",
@@ -12194,7 +12194,7 @@ var DEMO_SCENARIOS = [
         body:"Switch to IT. REQ-007 is now in the sprint To Do column. Layla sees <b>partner capacity</b>, effort, UAT status, and Jira tickets across all 5 columns. One click advances any card.",
         screen:"it-sprint", role:"it", highlight:"demo-sprint-board", action:null },
       { title:"BU Delivery Room — Acceptance Testing",
-        body:"REQ-002 (Vendor Auto-Renewal) has finished building and is in <b>Acceptance Testing</b>. The BU opens it, tests the delivered solution, and approves for deployment.",
+        body:"REQ-002 (Typing Center Auto-Renewal) has finished building and is in <b>Acceptance Testing</b>. The BU opens it, tests the delivered solution, and approves for deployment.",
         screen:"delivery", role:"bu", highlight:"demo-delivery-sections", action:"openReq('REQ-002')" },
       { title:"Jira & Partner Tracker",
         body:"IT's Jira screen shows every request tracked against partner tickets. Unit colour badges show which sector each request belongs to. Inline actions: Send to UAT · Approve UAT · Deploy · Create Ticket.",
@@ -12207,14 +12207,14 @@ var DEMO_SCENARIOS = [
     desc:"Finance Director raises a budget objection on REQ-007, blocking it from proceeding to IT until the CFO signs off.",
     steps:[
       { title:"Department Approvals Inbox",
-        body:"Departments — Finance, Legal, IT Security, Procurement — each have their own inbox. They review requests that affect their domain and either <b>approve or raise an objection</b>.",
+        body:"Departments — Finance, Legal, IT Security, Licensing — each have their own inbox. They review requests that affect their domain and either <b>approve or raise an objection</b>.",
         screen:"dept-inbox", role:"dept", highlight:"demo-dept-inbox", action:null },
       { title:"REQ-007: Contract Lifecycle — Budget Issue",
         body:"Finance is reviewing REQ-007. The CLM licence costs AED 180,000 — not pre-approved in the annual budget. Finance is about to <b>raise a formal objection</b> before this proceeds to IT.",
         screen:"dept-inbox", role:"dept", highlight:"demo-dept-inbox", action:null },
       { title:"Objection Raised — Request Frozen",
         body:"Finance blocks the request: <i>'CLM licence (AED 180k) not pre-approved. Requires CFO sign-off via finance exception form.'</i> The request cannot move to IT until this is resolved or escalated.",
-        screen:"dept-inbox", role:"dept", highlight:null, action:"deptBlockApproval('REQ-007','Finance')" },
+        screen:"dept-inbox", role:"dept", highlight:null, action:"deptBlockApproval('REQ-007','Entry Permits')" },
       { title:"OU Sees the Blocker",
         body:"Back in the OU dashboard, REQ-007 shows a <b>Finance objection flag</b>. The OU Lead sees it immediately and can escalate, request a CFO override, or return the request to the BU.",
         screen:"ou-dashboard", role:"ou", highlight:"demo-ou-dashboard", action:null },
@@ -12293,7 +12293,7 @@ var DEMO_SCENARIOS = [
         body:"Each card shows the <b>Business case from BU</b> — the reason for the request and the expected benefit. IT doesn't need to open a separate document or email to understand why this was submitted.",
         screen:"it-queue", highlight:"demo-it-card-REQ-008" },
       { title:"K-score + urgency + deadline",
-        body:"<b>REQ-008</b> has K=47 (Critical priority) — a CBUAE regulatory compliance requirement. The K-score, urgency level, and deadline are all visible without opening the request. IT can triage immediately.",
+        body:"<b>REQ-008</b> has K=47 (Critical priority) — a ICP regulatory compliance requirement. The K-score, urgency level, and deadline are all visible without opening the request. IT can triage immediately.",
         screen:"it-queue", highlight:"demo-it-card-REQ-008" },
       { title:"5 requests waiting — sorted by priority",
         body:"There are currently 5 OU-approved requests waiting for IT: REQ-004, 008, 017, 025, 029. Use the <b>filter tabs</b> at the top of the queue to isolate this step, or the sector/K-score sort to prioritise.",
@@ -12539,10 +12539,10 @@ var DEMO_SCENARIOS = [
   {
     id:"uc-14-e2e", label:"UC-14 — Full End-to-End: OU Approval → Deployed", icon:"&#127775;",
     color:"#DC2626", bg:"#FEF2F2", role:"it",
-    desc:"The complete IT lifecycle of REQ-008 (CBUAE Regulatory Reporting, K=47 Critical) — from IT receiving it to sprint deployment. All 5 screens. Best used as the closing demonstration.",
+    desc:"The complete IT lifecycle of REQ-008 (ICP Regulatory Reporting, K=47 Critical) — from IT receiving it to sprint deployment. All 5 screens. Best used as the closing demonstration.",
     steps:[
       { title:"Act 1 — IT receives from OU",
-        body:"<b>REQ-008</b> (Regulatory Reporting Automation — CBUAE, K=47 Critical) has just been approved by OU. It's now in <b>Step 1</b> of IT's queue. Start with the <b>IT Dashboard</b> — show '5 New from OU' in the Incoming Work card.",
+        body:"<b>REQ-008</b> (Regulatory Reporting Automation — ICP, K=47 Critical) has just been approved by OU. It's now in <b>Step 1</b> of IT's queue. Start with the <b>IT Dashboard</b> — show '5 New from OU' in the Incoming Work card.",
         screen:"it-dashboard", role:"it", highlight:"demo-it-command" },
       { title:"Act 1 — Assign BA, start analysis",
         body:"Open the <b>Work Queue</b>. Find REQ-008 in Step 1. Click <b>👤 Assign BA</b> to manually select a specialist. Then click <b>▶ Start Analysis</b>. The card moves to Step 2 — IT Analysis Underway.",
@@ -12692,7 +12692,7 @@ var DEMO_SCENARIOS = [
     desc:"Once governance is complete, OU approves the request and forwards it to IT. The risk gate ensures high-risk requests have proper sign-off first.",
     steps:[
       { title:"Open a fully-reviewed request",
-        body:"On the <b>Incoming</b> screen, open <b>REQ-015</b> (Supplier Performance Dashboard) — it's in <em>Department Approvals</em> with sign-offs underway. Once complete, it's ready to forward.",
+        body:"On the <b>Incoming</b> screen, open <b>REQ-015</b> (Amer Partner Performance Dashboard) — it's in <em>Department Approvals</em> with sign-offs underway. Once complete, it's ready to forward.",
         screen:"ou-incoming", role:"ou", action:"openOU360('REQ-015')" },
       { title:"Approve & send to IT",
         body:"In the 360° panel, click <b>Send to IT</b>. The system checks two gates: all required sign-offs complete, AND (for High/Critical risk) a Risk or IT Security sign-off is present.",
@@ -12812,10 +12812,10 @@ var DEMO_SCENARIOS = [
     desc:"Every request in HARMONY shows which UAE and Dubai mandates it contributes to — as interactive chips with live delivery data. Click to expand, View to open official page.",
     steps:[
       { title:"BU Dashboard — Mandates Always Visible",
-        body:"The BU Dashboard opens with the <b>UAE & Dubai Mandates strip</b> at the top — 15 active mandates, 88 requests contributing. Five rows visible: Smart Dubai 30% (In Progress), UAE Digital Gov 30%, CBUAE 10%, ADGM 0%, UAE Customer Exp 13%. This is the BU Director\'s mandate footprint before they open a single request.",
+        body:"The BU Dashboard opens with the <b>UAE & Dubai Mandates strip</b> at the top — 15 active mandates, 88 requests contributing. Five rows visible: Smart Dubai 30% (In Progress), UAE Digital Gov 30%, ICP 10%, ADGM 0%, UAE Customer Exp 13%. This is the BU Director\'s mandate footprint before they open a single request.",
         screen:"dashboard", role:"bu", highlight:"demo-bu-initiatives", action:null },
       { title:"Open a Request with Linked Mandates",
-        body:"Open <b>REQ-003</b> (Vendor Portal Auto-Renewal). Scroll to the bottom. The <b>UAE & Dubai Mandates section</b> shows: header with \"2 linked · 2 suggested\" badges and the tagline \"Strengthens your business case\". Four chips in a row — solid blue for BU-linked, dashed grey for auto-matched.",
+        body:"Open <b>REQ-003</b> (Typing Center Portal Auto-Renewal). Scroll to the bottom. The <b>UAE & Dubai Mandates section</b> shows: header with \"2 linked · 2 suggested\" badges and the tagline \"Strengthens your business case\". Four chips in a row — solid blue for BU-linked, dashed grey for auto-matched.",
         screen:"my-requests", role:"bu", action:"openReq(\'REQ-003\')", highlight:null },
       { title:"Click a Chip — Inline Detail Panel",
         body:"Click the <b>\"Dubai Paperless Str... 0%\"</b> chip. A detail panel expands inline — no new page, no modal. Shows: \"LINKED BY BU\" badge · \"Dubai Paperless Strategy\" · Dubai Government · mandate delivery progress bar (0% delivered, 3 in flight, 1 pending) · description text · View ↗ link. Click a second chip and the first collapses automatically.",
@@ -12915,7 +12915,7 @@ var DEMO_SCENARIOS = [
         body:"Click <b>\'+10 more\'</b>. All 15 mandates expand inline — no modal, no scroll to new page. The card grows to accommodate them. Click again to collapse back to 5. The OU Lead gets the full mandate picture in the same viewport.",
         screen:"ou-dashboard", role:"ou", highlight:"demo-ou-dashboard", action:null },
       { title:"View Official Initiative",
-        body:"Click the <b>↗</b> link on any mandate row — the official government page opens in a new tab. Smart Dubai → smartdubai.ae. UAE Cybersecurity → cybersecurity.gov.ae. CBUAE Financial Sector → centralbank.ae. All links are live and point to real UAE government sources.",
+        body:"Click the <b>↗</b> link on any mandate row — the official government page opens in a new tab. Smart Dubai → smartdubai.ae. UAE Cybersecurity → cybersecurity.gov.ae. ICP Financial Sector → u.ae. All links are live and point to real UAE government sources.",
         screen:"ou-dashboard", role:"ou", highlight:"demo-ou-dashboard", action:null },
     ]
   },
@@ -12932,7 +12932,7 @@ var DEMO_SCENARIOS = [
         body:"Click <b>Accountability</b> in the DG nav. This screen answers the three questions every Dubai Gov DG gets asked: Are we delivering against UAE mandates? Are our BUs ready to transform? Who is blocking what?",
         screen:"exec-accountability", role:"exec", highlight:"demo-exec-accountability", action:null },
       { title:"UAE & Dubai Mandate Alignment — 15 Mandates",
-        body:"<b>15 national and emirate mandates</b> are linked to the portfolio — Smart Dubai, UAE Digital Government Strategy, CBUAE Financial Sector Strategy, UAE Cybersecurity, and more. Each shows delivered, in-flight, and pending count with a progress bar. UAE Cybersecurity is the only one On Track (60%).",
+        body:"<b>15 national and emirate mandates</b> are linked to the portfolio — Smart Dubai, UAE Digital Government Strategy, ICP Financial Sector Strategy, UAE Cybersecurity, and more. Each shows delivered, in-flight, and pending count with a progress bar. UAE Cybersecurity is the only one On Track (60%).",
         screen:"exec-accountability", role:"exec", highlight:"demo-exec-accountability", action:null },
       { title:"Business Unit Readiness — Four BUs, Four Stories",
         body:"<b>Corporate Services: Healthy (100).</b> Zero high-risk requests, pipeline moving, outcomes recorded. <b>Finance (80): Needs Attention</b> — 5 of 7 requests are High or Critical risk. <b>Legal (80): Needs Attention</b> — 3 High/Critical. <b>Customer Services (64): Needs Attention</b> — 2 submissions not yet picked up by OU. Each signal is named, not aggregated.",
@@ -13066,7 +13066,7 @@ function runDemoStep(){
   if(step.role && step.role !== currentRole){
     // Real switchRole navigates to defaultScreen — we override with nav() after
     currentRole = step.role==='dept'?'dept':step.role;
-    if(step.role==='dept') currentDept='Finance';
+    if(step.role==='dept') currentDept='Entry Permits';
     document.body.setAttribute('data-role', currentRole);
     buildRoleBtn();
     renderSidebar();
@@ -13538,7 +13538,7 @@ function showRoleInfo(role){
        desc:'All incoming requests waiting for your action — sorted by K-score. Open the 360° view on each request to review the business case, add sign-offs, ask BU for clarification, or send to IT.'},
       {icon:'&#9989;',color:'#16A34A',bg:'#F0FDF4',border:'#BBF7D0',
        title:'Department Sign-offs',
-       desc:'Requests that need Finance, Legal, IT Security, or Procurement sign-off. An objection here blocks the request until resolved or escalated to the DG.'},
+       desc:'Requests that need Finance, Legal, IT Security, or Licensing sign-off. An objection here blocks the request until resolved or escalated to the DG.'},
       {icon:'&#9201;',color:'#D97706',bg:'#FFFBEB',border:'#FDE68A',
        title:'SLA & Aging',
        desc:'Requests over 14 days in governance are flagged. Decide: return to BU, escalate to a department, or escalate to the Director General.'},
@@ -13588,7 +13588,7 @@ function showRoleInfo(role){
     ],
   };
   var items=itemSets[role]||[];
-  var roleLabels={ou:'Operations Unit \u2014 Governance Hub',it:'IT / Digital Services \u2014 Delivery Team',exec:'Director General \u2014 Executive View'};
+  var roleLabels={ou:'Operations Unit \u2014 Governance Hub',it:'Smart Services Sector \u2014 GDRFA Dubai',exec:'Director General \u2014 Executive View'};
   var roleCols={ou:'#0F766E',it:'#4338CA',exec:'#7C3AED'};
   var roleBgs={ou:'#F0FDFA',it:'#EEF2FF',exec:'#F5F3FF'};
   var h='<div id="role-info-modal" class="modal-bg" style="z-index:500" onclick="if(event.target===this)closeModal(\'role-info-modal\')">';
