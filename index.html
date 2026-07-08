@@ -6855,7 +6855,14 @@ async function harmonyReadStream(resp){
     }
   }
   if(errMsg) throw new Error(errMsg);
-  return { stop_reason:stop, content:blocks.filter(Boolean) };
+  // Emit CLEAN content blocks — a tool_use block replayed with a stray text field
+  // is rejected by the API (tool_use.text: Extra inputs are not permitted).
+  var clean=blocks.filter(Boolean).map(function(b){
+    if(b.type==='tool_use') return {type:'tool_use',id:b.id,name:b.name,input:b.input||{}};
+    if(b.type==='text') return {type:'text',text:b.text||''};
+    return b;
+  });
+  return { stop_reason:stop, content:clean };
 }
 function harmonyStreamSlot(){
   var live=visionLiveEl(); if(!live) return null;
