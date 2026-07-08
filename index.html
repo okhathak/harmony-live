@@ -7006,7 +7006,7 @@ function agentCommand(text){
     HARMONY_TYPING=false;
     if(res.error){
       showChatLive('');
-      chatPush({who:'harmony',err:true,text:res.error});
+      chatPush({who:'harmony',err:true,text:res.error,connect:/not connected/i.test(res.error)});
       jcoreSet('idle'); updateEngineBadge(); refreshAgentStats();
       return;
     }
@@ -7867,6 +7867,21 @@ function visionToggle(){
     var inp=document.getElementById('vw-input'); if(inp) inp.focus();
   }
 }
+function visionConnect(){
+  try{
+    if(typeof voiceLabOpen==='function' && document.getElementById('voicelab-modal')){ voiceLabOpen(); return; }
+  }catch(e){}
+  var k=window.prompt(TT('Paste your Anthropic API key (sk-ant-\u2026). It is stored only in this browser.','\u0623\u062f\u062e\u0644 \u0645\u0641\u062a\u0627\u062d Anthropic (sk-ant-\u2026)'));
+  if(k===null) return;
+  k=(k||'').trim();
+  if(!/^sk-ant-/.test(k)){ toast(TT('That does not look like an Anthropic key (starts with sk-ant-).','\u0627\u0644\u0645\u0641\u062a\u0627\u062d \u063a\u064a\u0631 \u0635\u0627\u0644\u062d'),'warn'); return; }
+  ANTHROPIC.key=k; try{ localStorage.setItem('hv_anthropic_key',k); }catch(e){}
+  try{ if(ANTHROPIC.base==='/claude') ANTHROPIC.base='https://api.anthropic.com'; }catch(e){}
+  updateEngineBadge();
+  var eng=document.getElementById('vw-engine'); if(eng) eng.innerHTML=harmonyEngineBadgeHTML();
+  toast(TT('Claude connected \u2014 Vision is live on this device.','\u062a\u0645 \u0631\u0628\u0637 Claude'),'info');
+  chatPush({who:'harmony',text:TT('Connected. Say that again and I\u2019ll act on it.','\u062a\u0645 \u0627\u0644\u0631\u0628\u0637. \u0623\u0639\u062f \u0627\u0644\u0623\u0645\u0631 \u0648\u0633\u0623\u0646\u0641\u0651\u0630\u0647.')});
+}
 function visionSend(){ var inp=document.getElementById('vw-input'); if(!inp) return; var t=inp.value.trim(); if(!t) return; agentCommand(t); }
 function harmonyMic(){
   if(!harmonySupportsSTT()){ toast('Voice input needs Chrome, Edge or Safari with a microphone.','warn'); return; }
@@ -8261,7 +8276,9 @@ function renderChatMsgHTML(m,idx,arr){
   if(m.who==='user'){
     h+='<div style="display:flex;justify-content:flex-end;margin-bottom:9px"><div style="max-width:82%;background:#2563EB;color:#fff;padding:8px 13px;border-radius:14px 14px 4px 14px;font-size:12.5px;line-height:1.45">'+escH(m.text)+'</div></div>';
   } else if(m.err){
-    h+='<div style="display:flex;gap:10px;margin-bottom:9px;align-items:flex-start"><span class="havatar">&#9888;&#65039;</span><div class="hbot herr" style="max-width:82%;background:rgba(220,38,38,.07);border:1px solid rgba(220,38,38,.45);padding:8px 13px;border-radius:14px 14px 14px 4px;font-size:12.5px;line-height:1.5;color:#DC2626;white-space:pre-wrap">'+escH(m.text)+'</div></div>';
+    h+='<div style="display:flex;gap:10px;margin-bottom:9px;align-items:flex-start"><span class="havatar">&#9888;&#65039;</span><div style="max-width:82%"><div class="hbot herr" style="background:rgba(220,38,38,.07);border:1px solid rgba(220,38,38,.45);padding:8px 13px;border-radius:14px 14px 14px 4px;font-size:12.5px;line-height:1.5;color:#DC2626;white-space:pre-wrap">'+escH(m.text)+'</div>';
+    if(m.connect){ h+='<button onclick="visionConnect()" class="btn btn-sm" style="margin-top:7px;background:var(--accent);color:#fff;border-color:var(--accent);font-weight:800">&#128273; '+TT('Connect Claude','ربط Claude')+'</button>'; }
+    h+='</div></div>';
   } else {
     h+='<div style="display:flex;gap:10px;margin-bottom:9px;align-items:flex-start"><span class="havatar">&#129302;</span><div class="hbot" style="max-width:82%;background:#fff;border:1px solid var(--border);padding:8px 13px;border-radius:14px 14px 14px 4px;font-size:12.5px;line-height:1.5;color:var(--text);white-space:pre-wrap">'+escH(m.text)+'</div></div>';
     var showActs=m.actions&&m.actions.length&&(arr===undefined||idx===arr.length-1);
