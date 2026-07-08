@@ -65,11 +65,11 @@
 <style>
 
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--navy:#0A1628;--blue:#2563EB;--teal:#0891B2;--gold:#D97706;--green:#16A34A;--red:#DC2626;--purple:#7C3AED;--bg:#F4F7FB;--card:#FFFFFF;--border:#E4EAF2;--border2:#EDF1F7;--text:#0A1628;--text2:#4A5568;--text3:#8A9BB0;--r:12px;--r-sm:8px;--r-lg:16px;--sh-sm:0 1px 2px rgba(16,30,54,.05),0 1px 3px rgba(16,30,54,.05);--sh:0 1px 3px rgba(16,30,54,.04),0 6px 16px -4px rgba(16,30,54,.07);--sh2:0 4px 12px -2px rgba(16,30,54,.08),0 12px 28px -6px rgba(16,30,54,.1);--sh-lg:0 12px 32px -8px rgba(16,30,54,.14),0 24px 56px -16px rgba(16,30,54,.16);--ease:cubic-bezier(.4,0,.2,1);--accent:#1D4ED8;--accent-pale:#EFF6FF;--accent-rgb:29,78,216;}
+:root{--navy:#0A1628;--blue:#2563EB;--teal:#0891B2;--gold:#D97706;--green:#16A34A;--red:#DC2626;--purple:#7C3AED;--bg:#F4F7FB;--card:#FFFFFF;--border:#E4EAF2;--border2:#EDF1F7;--text:#0A1628;--text2:#3D4759;--text3:#5E6B80;--r:12px;--r-sm:8px;--r-lg:16px;--sh-sm:0 1px 2px rgba(16,30,54,.05),0 1px 3px rgba(16,30,54,.05);--sh:0 1px 3px rgba(16,30,54,.04),0 6px 16px -4px rgba(16,30,54,.07);--sh2:0 4px 12px -2px rgba(16,30,54,.08),0 12px 28px -6px rgba(16,30,54,.1);--sh-lg:0 12px 32px -8px rgba(16,30,54,.14),0 24px 56px -16px rgba(16,30,54,.16);--ease:cubic-bezier(.4,0,.2,1);--accent:#1D4ED8;--accent-pale:#EFF6FF;--accent-rgb:29,78,216;}
 body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(--text,#0F172A);font-size:13px;line-height:1.5;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}
 ::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#CBD5E1;border-radius:99px;border:2.5px solid transparent;background-clip:padding-box}::-webkit-scrollbar-thumb:hover{background:#94A3B8;background-clip:padding-box}
 #shell{display:flex;height:100vh;overflow:hidden}
-#sidebar{width:226px;background:linear-gradient(180deg,var(--sb-top,#0F2A6B) 0%,var(--navy) 52%,#070E1C 100%);display:flex;flex-direction:column;flex-shrink:0;box-shadow:1px 0 0 rgba(255,255,255,.04),4px 0 24px -12px rgba(8,16,34,.5)}
+#sidebar{width:226px;background:linear-gradient(180deg,var(--sb-top,#0F2A6B) 0%,#12244C 58%,#0E1E3C 100%);display:flex;flex-direction:column;flex-shrink:0;box-shadow:1px 0 0 rgba(255,255,255,.05),4px 0 24px -12px rgba(8,16,34,.5)}
 #main{flex:1;display:flex;flex-direction:column;overflow:hidden}
 #topbar{height:56px;background:rgba(255,255,255,.72);backdrop-filter:blur(16px) saturate(1.25);-webkit-backdrop-filter:blur(16px) saturate(1.25);border-bottom:1px solid rgba(180,200,235,.45);display:flex;align-items:center;padding:0 24px;gap:12px;flex-shrink:0;position:relative;z-index:20}
 #content-el{flex:1;overflow-y:auto;background:radial-gradient(820px circle at 6% -6%,rgba(99,102,241,.09),transparent 58%),radial-gradient(720px circle at 98% 0%,rgba(56,130,246,.07),transparent 54%),radial-gradient(680px circle at 55% 118%,rgba(34,211,238,.06),transparent 55%),linear-gradient(180deg,#F3F6FE 0%,#EBEFFA 100%)}
@@ -77,25 +77,31 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(-
 .sb-brand{padding:14px 15px 12px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:10px}
 .sb-mark{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#3B82F6,#1D4ED8);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#fff;font-family:'DM Mono',monospace;flex-shrink:0}
 .sb-name{font-size:13.5px;font-weight:800;color:#fff;letter-spacing:-.2px}
-.sb-subt{font-size:9px;color:rgba(255,255,255,.28);letter-spacing:.4px;text-transform:uppercase;margin-top:1px}
-.sb-sec{margin:9px 9px 4px;padding:9px 11px;background:rgba(255,255,255,.05);border-radius:8px;border:1px solid rgba(255,255,255,.07)}
-.sb-sl{font-size:9px;color:rgba(255,255,255,.27);font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:3px}
+.sb-subt{font-size:9px;color:rgba(255,255,255,.5);letter-spacing:.4px;text-transform:uppercase;margin-top:1px}
+.sb-sec{margin:9px 9px 4px;padding:9px 11px;background:rgba(255,255,255,.07);border-radius:8px;border:1px solid rgba(255,255,255,.12)}
+.sb-sl{font-size:9px;color:rgba(255,255,255,.52);font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:3px}
 .sb-sn{font-size:12.5px;font-weight:700;color:#fff}
-.sb-ss{font-size:10px;color:rgba(255,255,255,.28);margin-top:2px}
+.sb-ss{font-size:10px;color:rgba(255,255,255,.5);margin-top:2px}
 .sb-nav{padding:3px 7px;flex:1;overflow-y:auto}
-.sbi{display:flex;align-items:center;gap:9px;padding:7px 10px;width:100%;border:none;background:transparent;color:rgba(255,255,255,.42);font-size:12.5px;font-weight:500;cursor:pointer;border-radius:7px;margin-bottom:1px;text-align:left;font-family:'DM Sans',inherit;transition:all .12s}
-.sbi:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.8)}
+.sbi{display:flex;align-items:center;gap:9px;padding:7px 10px;width:100%;border:none;background:transparent;color:rgba(255,255,255,.76);font-size:12.5px;font-weight:600;cursor:pointer;border-radius:7px;margin-bottom:1px;text-align:left;font-family:'DM Sans',inherit;transition:all .12s}
+.sbi:hover{background:rgba(255,255,255,.1);color:#fff}
 .sbi.act{background:rgba(37,99,235,.38);color:#fff;font-weight:600}
 .sbi-ico{width:15px;text-align:center;flex-shrink:0}
 .sbi-bdg{margin-left:auto;background:#DC2626;color:#fff;font-size:9px;font-weight:800;padding:1px 5px;border-radius:99px}
 .sbi.act .sbi-bdg{background:rgba(255,255,255,.25)}
-.sb-cyc{margin:7px 9px 8px;padding:9px 11px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:8px}
-.sb-cl{font-size:9px;color:rgba(255,255,255,.26);font-weight:700;letter-spacing:.7px;text-transform:uppercase;margin-bottom:3px}
+.sb-cyc{margin:7px 9px 8px;padding:9px 11px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.11);border-radius:8px}
+.sb-cl{font-size:9px;color:rgba(255,255,255,.52);font-weight:700;letter-spacing:.7px;text-transform:uppercase;margin-bottom:3px}
 .sb-cn{font-size:12.5px;font-weight:700;color:#fff}
-.sb-cd{font-size:10px;color:rgba(255,255,255,.26);margin-top:2px}
-.sb-cbar{margin-top:6px;height:3px;background:rgba(255,255,255,.09);border-radius:99px}
+.sb-cd{font-size:10px;color:rgba(255,255,255,.5);margin-top:2px}
+.sb-cbar{margin-top:6px;height:3px;background:rgba(255,255,255,.14);border-radius:99px}
 .sb-cf{height:100%;border-radius:99px;background:#3B82F6;width:43%}
-.sb-ci{display:flex;justify-content:space-between;margin-top:4px;font-size:9px;color:rgba(255,255,255,.26)}
+.sb-ci{display:flex;justify-content:space-between;margin-top:4px;font-size:9px;color:rgba(255,255,255,.5)}
+/* role identity block (previously unstyled) */
+.sb-role{margin:10px 11px 6px;padding:11px 13px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:10px;box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+.sb-rl{font-size:9px;font-weight:800;letter-spacing:.9px;text-transform:uppercase;color:rgba(255,255,255,.56)}
+.sb-rn{font-size:13.5px;font-weight:800;color:#fff;margin-top:3px;letter-spacing:-.1px}
+.sb-rs{font-size:11px;font-weight:500;color:rgba(255,255,255,.68);margin-top:1px}
+.sb-role #sb-user-id{color:rgba(255,255,255,.5)!important;border-top-color:rgba(255,255,255,.12)!important}
 /* topbar */
 .tb-ttl{font-size:14.5px;font-weight:700;color:var(--text,#0F172A);flex:1}
 .tb-cyc{display:flex;align-items:center;gap:7px;padding:5px 12px;background:var(--bg);border:1px solid var(--border);border-radius:7px;font-size:11.5px;color:var(--text2)}
@@ -693,6 +699,13 @@ select.fi{cursor:pointer;appearance:none;
 .hact{background:#EEF3FB;border:1px solid #DCE6F5;color:#1D4ED8;border-radius:99px;padding:5px 13px;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s}
 .hact:hover{background:#E0EAFB;border-color:#B9CEF0}
 .hact-lbl{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:1px}
+/* ── chat dialog polish: entrance motion + refined bubbles ── */
+@keyframes hmsgin{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+.hmsg{animation:hmsgin .3s cubic-bezier(.22,.61,.36,1) both}
+.huser{max-width:82%;background:linear-gradient(135deg,#3B7BFF,#2563EB);color:#fff;padding:9px 14px;border-radius:15px 15px 5px 15px;font-size:12.5px;line-height:1.5;box-shadow:0 5px 16px -7px rgba(37,99,235,.6);word-break:break-word;overflow-wrap:anywhere}
+html[dir="rtl"] .huser{border-radius:15px 15px 15px 5px}
+.havatar{transition:transform .2s ease}
+.hmsg:hover .havatar{transform:scale(1.06)}
 /* ============ FUTURISTIC UPLIFT (command center) ============ */
 .tac{background:
   radial-gradient(760px circle at 8% -10%, rgba(56,130,246,.09), transparent 60%),
@@ -793,6 +806,10 @@ body[data-role="it"] input::placeholder, body[data-role="it"] textarea::placehol
 body[data-role="it"] .btn-s{background:#0E1B30!important;color:var(--text)!important;border-color:var(--border)!important}
 body[data-role="it"] .btn-s:hover{background:#13233D!important}
 body[data-role="it"] .btn-g{background:#0C1626!important;color:var(--text2)!important;border-color:var(--border)!important}
+/* plain text-style .btn falls back to the UA ButtonFace grey — give it a dark surface so semantic-coloured labels read on dark */
+body[data-role="it"] .btn[style*="color:#"]:not([style*="background"]):not(.btn-s):not(.btn-g):not(.btn-p):not(.btn-ok){background:#3A3833!important}
+/* solid-colour buttons declare color:#fff; a matching border-colour (e.g. border-color:#16A34A) trips the substring color-remaps and turns the label the border hue on itself — force white back */
+body[data-role="it"] .btn[style*="color:#fff"]{color:#fff!important}
 body[data-role="it"] .modal{background:#0C1626!important;border:1px solid var(--border)!important}
 body[data-role="it"] .modal-bg{background:rgba(2,6,14,.7)!important}
 body[data-role="it"] .stepper{background:#0A1322!important;border-bottom-color:var(--border)!important}
@@ -800,7 +817,8 @@ body[data-role="it"] .s-circ.todo{background:#0C1626!important;border-color:var(
 /* Inline light-surface conversion (hardcoded styles -> dark equivalents) */
 body[data-role="it"] [style*="background:#fff"]{background:#0E1A2F!important}
 body[data-role="it"] [style*="background:#F8FAFC"], body[data-role="it"] [style*="background:#F1F5F9"], body[data-role="it"] [style*="background:#F4F7FB"]{background:#0A1424!important}
-body[data-role="it"] [style*="background:#EFF6FF"], body[data-role="it"] [style*="background:#DBEAFE"], body[data-role="it"] [style*="background:#E0F2FE"], body[data-role="it"] [style*="background:#E8F0FF"]{background:rgba(76,141,255,.13)!important}
+body[data-role="it"] [style*="background:#EFF6FF"], body[data-role="it"] [style*="background:#DBEAFE"], body[data-role="it"] [style*="background:#E0F2FE"], body[data-role="it"] [style*="background:#E8F0FF"], body[data-role="it"] [style*="background:#F0F7FF"], body[data-role="it"] [style*="background:#EFF3FF"]{background:rgba(76,141,255,.13)!important}
+body[data-role="it"] [style*="background:#ECFEFF"], body[data-role="it"] [style*="background:#E0F7FA"], body[data-role="it"] [style*="background:#CFFAFE"]{background:rgba(34,211,238,.12)!important}
 body[data-role="it"] [style*="background:#EEF2FF"], body[data-role="it"] [style*="background:#F5F3FF"], body[data-role="it"] [style*="background:#FDF4FF"]{background:rgba(167,139,250,.14)!important}
 body[data-role="it"] [style*="background:#FFFBEB"], body[data-role="it"] [style*="background:#FEF3C7"]{background:rgba(245,165,36,.13)!important}
 body[data-role="it"] [style*="background:#F0FDF4"], body[data-role="it"] [style*="background:#DCFCE7"]{background:rgba(59,227,138,.12)!important}
@@ -817,13 +835,17 @@ body[data-role="it"] [style*="#FECACA"]{border-color:rgba(255,107,107,.4)!import
 body[data-role="it"] [style*="#BBF7D0"]{border-color:rgba(59,227,138,.4)!important}
 body[data-role="it"] [style*="#DDD6FE"]{border-color:rgba(167,139,250,.42)!important}
 /* Inline dark-text conversion */
-body[data-role="it"] [style*="color:#0A1628"], body[data-role="it"] [style*="color:#0F172A"], body[data-role="it"] [style*="color:#111"], body[data-role="it"] [style*="color:#334155"], body[data-role="it"] [style*="color:#1E293B"]{color:var(--text)!important}
-body[data-role="it"] [style*="color:#1D4ED8"], body[data-role="it"] [style*="color:#1E40AF"], body[data-role="it"] [style*="color:#2563EB"]{color:#8FC4FF!important}
-body[data-role="it"] [style*="color:#B45309"], body[data-role="it"] [style*="color:#D97706"], body[data-role="it"] [style*="color:#92400E"]{color:#FFC46B!important}
-body[data-role="it"] [style*="color:#16A34A"], body[data-role="it"] [style*="color:#15803D"], body[data-role="it"] [style*="color:#166534"]{color:#4ADE80!important}
+body[data-role="it"] [style*="color:#0A1628"], body[data-role="it"] [style*="color:#0F172A"], body[data-role="it"] [style*="color:#111"], body[data-role="it"] [style*="color:#334155"], body[data-role="it"] [style*="color:#1E293B"], body[data-role="it"] [style*="color:#374151"], body[data-role="it"] [style*="color:#1F2937"], body[data-role="it"] [style*="color:#4B5563"]{color:var(--text)!important}
+body[data-role="it"] [style*="color:#1D4ED8"], body[data-role="it"] [style*="color:#1E40AF"], body[data-role="it"] [style*="color:#2563EB"], body[data-role="it"] [style*="color:#0052CC"], body[data-role="it"] [style*="color:#1E3A8A"], body[data-role="it"] [style*="color:#0E7490"]{color:#8FC4FF!important}
+body[data-role="it"] [style*="color:#B45309"], body[data-role="it"] [style*="color:#D97706"], body[data-role="it"] [style*="color:#92400E"], body[data-role="it"] [style*="color:#854D0E"], body[data-role="it"] [style*="color:#78350F"], body[data-role="it"] [style*="color:#713F12"], body[data-role="it"] [style*="color:#A16207"]{color:#FFC46B!important}
+body[data-role="it"] [style*="color:#16A34A"], body[data-role="it"] [style*="color:#15803D"], body[data-role="it"] [style*="color:#166534"], body[data-role="it"] [style*="color:#14532D"], body[data-role="it"] [style*="color:#065F46"], body[data-role="it"] [style*="color:#047857"], body[data-role="it"] [style*="color:#064E3B"], body[data-role="it"] [style*="color:#166D3F"], body[data-role="it"] [style*="color:#059669"], body[data-role="it"] [style*="color:#10B981"], body[data-role="it"] [style*="color:#22C55E"]{color:#5EE79B!important}
 body[data-role="it"] [style*="color:#DC2626"], body[data-role="it"] [style*="color:#B91C1C"], body[data-role="it"] [style*="color:#991B1B"]{color:#FF8787!important}
-body[data-role="it"] [style*="color:#7C3AED"], body[data-role="it"] [style*="color:#6D28D9"], body[data-role="it"] [style*="color:#5B21B6"]{color:#C4B0FF!important}
-body[data-role="it"] [style*="color:#0F766E"], body[data-role="it"] [style*="color:#0891B2"]{color:#5EEAD4!important}
+body[data-role="it"] [style*="color:#7C3AED"], body[data-role="it"] [style*="color:#6D28D9"], body[data-role="it"] [style*="color:#5B21B6"], body[data-role="it"] [style*="color:#4338CA"], body[data-role="it"] [style*="color:#3730A3"], body[data-role="it"] [style*="color:#4F46E5"]{color:#C4B0FF!important}
+body[data-role="it"] [style*="color:#0F766E"], body[data-role="it"] [style*="color:#0891B2"], body[data-role="it"] [style*="color:#155E75"], body[data-role="it"] [style*="color:#0369A1"], body[data-role="it"] [style*="color:#0E7490"]{color:#5EEAD4!important}
+/* muted label greys — lift out of near-invisibility on dark surfaces */
+body[data-role="it"] [style*="color:#64748B"], body[data-role="it"] [style*="color:#475569"], body[data-role="it"] [style*="color:#64748B"], body[data-role="it"] [style*="color:#9FB2C8"]{color:#9AA7B8!important}
+/* value-hero gradient (light-green) → clean dark green-tint tile */
+body[data-role="it"] [style*="linear-gradient(135deg,#F0FDF4"]{background:linear-gradient(135deg,rgba(94,231,155,.14),rgba(94,231,155,.06))!important;border-bottom-color:rgba(94,231,155,.24)!important}
 /* Command center pieces (beat earlier light-glass overrides) */
 body[data-role="it"] .tac{background:transparent!important}
 body[data-role="it"] .tac .card{background:linear-gradient(180deg,rgba(18,30,54,.92),rgba(10,19,36,.94))!important;border:1px solid rgba(90,130,200,.22)!important;backdrop-filter:none;-webkit-backdrop-filter:none}
@@ -1210,7 +1232,7 @@ body[data-role="it"] #topbar{backdrop-filter:blur(16px) saturate(1.1);-webkit-ba
 body[data-role="it"] ::selection{background:rgba(217,119,87,.35);color:#FAF9F5}
 /* conversation, claude.ai style: assistant text sits on the surface, no bubble */
 body[data-role="it"] #harmony-chat .hbot:not(.herr){background:transparent!important;border:none!important;padding:2px 0!important;max-width:96%!important;font-size:13px!important;line-height:1.68!important;color:#EDEBE2!important;border-radius:0!important}
-body[data-role="it"] #harmony-chat div[style*="background:#2563EB"]{background:#3B3936!important;color:#F0EEE5!important;border:1px solid rgba(250,249,245,.08)!important;border-radius:16px 16px 6px 16px!important;padding:9px 14px!important}
+body[data-role="it"] #harmony-chat .huser{background:#3B3936!important;color:#F0EEE5!important;border:1px solid rgba(250,249,245,.08)!important;border-radius:16px 16px 6px 16px!important;padding:9px 14px!important;box-shadow:none!important}
 body[data-role="it"] #harmony-chat{padding:16px 18px 10px!important}
 /* composer: large rounded field with a coral focus ring */
 body[data-role="it"] #agent-cmd{padding:12px 16px!important;font-size:13.5px!important;border-radius:16px!important;transition:border-color .18s,box-shadow .18s}
@@ -1481,7 +1503,7 @@ function toggleNotif(){
   h+='<span style="font-size:13px;font-weight:800;color:var(--text)">Notifications</span>';
   h+='<span style="font-size:11px;font-weight:700;color:#64748B">'+items.length+' action'+(items.length!==1?'s':'')+'</span></div>';
   if(!items.length){
-    h+='<div style="padding:28px 16px;text-align:center;color:#94A3B8;font-size:12.5px">&#9989; You\'re all caught up</div>';
+    h+='<div style="padding:28px 16px;text-align:center;color:#64748B;font-size:12.5px">&#9989; You\'re all caught up</div>';
   } else {
     h+='<div style="max-height:380px;overflow-y:auto">';
     items.slice(0,10).forEach(function(it){
@@ -2600,7 +2622,7 @@ function buildInitiativesPanel(mode){
       // Name + body
       +'<div style="flex:1;min-width:0">'
       +'<span style="font-size:11.5px;font-weight:700;color:#0F172A">'+escH(nameShort)+'</span>'
-      +'<span style="font-size:10px;color:#94A3B8;margin-left:5px">'+escH(item.body)+'</span>'
+      +'<span style="font-size:10px;color:#64748B;margin-left:5px">'+escH(item.body)+'</span>'
       +'</div>'
       // Mini bar
       +'<div style="width:60px;height:4px;background:#E2E8F0;border-radius:99px;overflow:hidden;flex-shrink:0">'
@@ -2840,7 +2862,7 @@ function renderDashboard(){
       +'<div style="font-size:10.5px;font-weight:700;color:'+dotColor+'">'+statusLabel+'</div>'
       +(p.done||p.active||p.planned
         ?'<div style="font-size:10px;color:var(--text3)">'+(p.done?p.done+' delivered ':'')+''+(p.active?p.active+' building ':'')+''+(p.planned?p.planned+' planned':'')+' </div>'
-        :'<div style="font-size:10px;color:#94A3B8">No initiatives yet</div>')
+        :'<div style="font-size:10px;color:#64748B">No initiatives yet</div>')
       +'</div>';
   });
   h+='</div>'; // end Row B
@@ -2883,7 +2905,7 @@ function renderDashboard(){
   if(dxActive.length){
     dxActive.forEach(function(r){h+=dxReqRow(r,"#1D4ED8");});
   } else {
-    h+='<div style="padding:20px;text-align:center;font-size:12px;color:#94A3B8">'
+    h+='<div style="padding:20px;text-align:center;font-size:12px;color:#64748B">'
       +'Nothing in the current sprint.<br>'
       +'<span style="font-size:11px;color:var(--text3)">Nominate from your backlog to get things moving.</span>'
       +'</div>';
@@ -2916,7 +2938,7 @@ function renderDashboard(){
         +'</div>';
     });
   } else {
-    h+='<div style="padding:16px;text-align:center;font-size:12px;color:#94A3B8">'
+    h+='<div style="padding:16px;text-align:center;font-size:12px;color:#64748B">'
       +'Nothing planned yet.<br>'
       +'<button class="btn-lk" onclick="nav(&apos;shuffle&apos;)" style="color:#7C3AED;margin-top:6px;font-size:11.5px">Nominate from backlog \u2192</button>'
       +'</div>';
@@ -3661,7 +3683,7 @@ function renderShuffle(){
       +' ondrop="this.classList.remove(\'drag-over\');handleDrop(event,\''+cyc+'\')"'
       +' style="background:'+bg+';border:1.5px solid '+col+'22;border-top:none;border-radius:0 0 10px 10px;padding:8px;min-height:260px">';
     if(!arr.length){
-      h+='<div style="padding:30px 0;text-align:center;font-size:11px;color:#94A3B8">Drop requests here</div>';
+      h+='<div style="padding:30px 0;text-align:center;font-size:11px;color:#64748B">Drop requests here</div>';
     } else {
       arr.sort(function(a,b){return getK(b)-getK(a);}).forEach(function(r){
         h+=dragCard(r, cyc);
@@ -3678,7 +3700,7 @@ function renderShuffle(){
   h+='<span style="font-size:11px;font-weight:800;color:var(--text);text-transform:uppercase;letter-spacing:.5px">\u{1F4E6} Backlog</span>';
   h+='<span style="font-size:10px;font-weight:700;background:#F1F5F9;color:#64748B;padding:1px 8px;border-radius:99px">'+backlog.length+' requests</span>';
   h+='</div>';
-  h+='<span style="font-size:10.5px;color:#94A3B8">Drag to a cycle above to schedule</span>';
+  h+='<span style="font-size:10.5px;color:#64748B">Drag to a cycle above to schedule</span>';
   h+='</div>';
   h+='<div class="sb-lane-body" data-lane="backlog"'
     +' ondragover="event.preventDefault();this.classList.add(\'drag-over\')"'
@@ -3686,7 +3708,7 @@ function renderShuffle(){
     +' ondrop="this.classList.remove(\'drag-over\');handleDrop(event,\'backlog\')"'
     +' style="padding:8px;min-height:60px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">';
   if(!backlog.length){
-    h+='<div style="grid-column:1/-1;padding:20px;text-align:center;font-size:12px;color:#94A3B8">All requests scheduled \u2714</div>';
+    h+='<div style="grid-column:1/-1;padding:20px;text-align:center;font-size:12px;color:#64748B">All requests scheduled \u2714</div>';
   } else {
     backlog.forEach(function(r){ h+=backlogCard(r); });
   }
@@ -5940,7 +5962,7 @@ function renderPlanning(){
   }
 
   if(backlog.length){
-    h+='<div style="font-size:12px;font-weight:800;color:#94A3B8;text-transform:uppercase;letter-spacing:.5px;margin:16px 0 12px">';
+    h+='<div style="font-size:12px;font-weight:800;color:#64748B;text-transform:uppercase;letter-spacing:.5px;margin:16px 0 12px">';
     h+='<span style="background:#F8FAFC;padding:3px 10px;border-radius:99px;border:1px solid #E2E8F0">Backlog ('+backlog.length+')</span></div>';
     backlog.slice().sort(function(a,b){return getK(b)-getK(a);}).forEach(function(r){h+=planCard(r,true,'Cycle 19');});
   }
@@ -6025,7 +6047,7 @@ function renderJira(){
     h+='<div style="display:flex;gap:10px;font-size:10px;color:var(--text3)">';
     h+='<span style="color:#16A34A;font-weight:700">&#9679; '+done+' done</span>';
     h+='<span style="color:'+pc+';font-weight:700">&#9679; '+active+' active</span>';
-    h+='<span style="color:#94A3B8;font-weight:700">&#9679; '+todo+' to do</span>';
+    h+='<span style="color:#64748B;font-weight:700">&#9679; '+todo+' to do</span>';
     h+='</div>';
     h+='</div>';
   });
@@ -7086,8 +7108,15 @@ function harmonySanitizeSpeech(text){
     .replace(/\bAED\b/g,'A E D')
     .replace(/\bBU\s*\/\s*OU\b/g,'Business Unit and Operating Unit').replace(/\bBU\b/g,'Business Unit').replace(/\bOU\b/g,'Operating Unit')
     .replace(/(\d+)\s*\/\s*(\d+)/g,'$1 of $2')
+    .replace(/[–―]/g,', ')                 // en/horizontal dash → pause
+    .replace(/&/g,' and ').replace(/%/g,' percent').replace(/\bvs\.?\b/gi,'versus')
+    .replace(/@/g,' at ').replace(/\+/g,' plus ')
+    .replace(/[*_`#^~|\\]+/g,'')                       // markdown + stray symbols
+    .replace(/[“”‘’"]/g,'')        // smart/straight quotes
+    .replace(/[()\[\]{}<>=]/g,' ')                     // brackets/equals → pause
+    .replace(/\//g,' ')                                // remaining slashes → pause
     .replace(/:/g,',')
-    .replace(/\s*\n+\s*/g,'. ').replace(/\s+,/g,',').replace(/,{2,}/g,',').replace(/\s{2,}/g,' ').trim();
+    .replace(/\s*\n+\s*/g,'. ').replace(/\s+([,.])/g,'$1').replace(/,{2,}/g,',').replace(/\.{2,}/g,'.').replace(/\s{2,}/g,' ').trim();
 }
 function harmonyStopSpeech(){
   try{ if(window.speechSynthesis) window.speechSynthesis.cancel(); }catch(e){}
@@ -7109,11 +7138,11 @@ function harmonySpeak(text){
     return;
   }
   if(harmonyPiperActive()){ piperSpeak(clean); return; }   // free offline neural voice, auto-detected
-  var fired=false;
-  var go=function(){ if(fired) return; fired=true; _speakRun(clean, harmonyResolveVoice()); };
+  var fired=false, _t=null;
+  var go=function(){ if(fired) return; fired=true; if(_t){clearTimeout(_t);_t=null;} _speakRun(clean, harmonyResolveVoice()); };
   if(!harmonyVoiceList().length){
     try{ window.speechSynthesis.onvoiceschanged=function(){ window.speechSynthesis.onvoiceschanged=null; go(); }; }catch(e){}
-    setTimeout(go,300);
+    _t=setTimeout(go,1200); // wait for the real voice list; a 300ms fallback fired before voices loaded and picked a throwaway voice (audible switch on the next line)
   } else go();
 }
 function _speakRun(clean, voice){
@@ -7258,19 +7287,19 @@ function harmonyOpeningSpoken(){
     var recsA=agentRecommendations();
     var directA=recsA.filter(function(x){return x.direct;}).length;
     var hrA=new Date().getHours(); var gA=hrA<12?'صباح الخير':'مساء الخير';
-    var headA=gA+' يا عمر، فيجن جاهز في خدمتك.';
-    if(directA>0){ return headA+' لديّ '+directA+' إجراءً آمناً جاهزاً — هل أشغّلها؟'; }
-    return headA+' اللوحة تحت السيطرة.';
+    var headA=gA+'. منظومة هارموني متصلة، وخط الإنجاز في وضعه الطبيعي.';
+    if(directA>0){ return headA+' هناك '+directA+' طلباً جاهزاً للتنفيذ بانتظار اعتمادكم.'; }
+    return headA+' جميع الطلبات ضمن المسار المحدد. في خدمتكم.';
   }
   var hr=new Date().getHours(); var greet=hr<12?'Good morning':hr<18?'Good afternoon':'Good evening';
   var recs=agentRecommendations();
   var direct=recs.filter(function(x){return x.direct;}).length;
   var risk=recs.filter(function(x){var dl=agentDaysLeft(x.r);return dl!==99999&&dl<=14;}).length;
-  var head=_pick(['Systems online. '+greet+', Omar.',greet+', Omar \u2014 Vision online and standing ready.','At your command, Omar. '+greet+'.',greet+', Omar. All systems nominal.']);
+  var head=greet+'. HARMONY is online \u2014 the GDRFA delivery pipeline is nominal.';
   var body;
-  if(direct>0){ body=_pick([direct+' safe action'+(direct!==1?'s are':' is')+' ready. Shall I run them?','I\u2019m holding '+direct+' move'+(direct!==1?'s':'')+' \u2014 want them through?','I took the liberty of lining up '+direct+' safe move'+(direct!==1?'s':'')+'. Say the word and they\u2019re done.']); }
-  else if(risk>0){ body=_pick([risk+' item'+(risk!==1?'s':'')+' at SLA risk \u2014 say the word and I\u2019ll pull the detail.',risk+' item'+(risk!==1?'s':'')+' drifting toward the SLA line, Omar. I\u2019d suggest a look before anyone notices.']); }
-  else { body=_pick(['The board is clean, Omar. Standing by for orders.','All quiet, Omar. I\u2019ll flag anything that needs you.']); }
+  if(direct>0){ body=direct+' request'+(direct!==1?'s are':' is')+' cleared for delivery and awaiting your authorisation.'; }
+  else if(risk>0){ body=risk+' request'+(risk!==1?'s are':' is')+' approaching the service deadline and need'+(risk!==1?'':'s')+' your attention.'; }
+  else { body='All requests are on track. Standing by for your instructions.'; }
   return head+' '+body;
 }
 var HARMONY_VOICE_PROFILES={
@@ -7517,7 +7546,7 @@ function anthropicSectionHTML(){
   var live=aiReady(), srv=!!ANTHROPIC.serverKey;
   var lbl=live?(srv?'LIVE · SERVER KEY':'LIVE · THIS BROWSER'):'OFF';
   var h='<div style="border:1px solid rgba(34,197,94,'+(live?'.5':'.3')+');border-radius:12px;padding:10px 12px;margin-bottom:10px;background:rgba(34,197,94,'+(live?'.09':'.05')+')">';
-  h+='<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><b style="font-size:12.5px">&#129504; Vision’s brain — Claude Opus 4.8</b><span style="font-size:10px;font-weight:800;padding:1px 8px;border-radius:99px;'+(live?'background:rgba(34,197,94,.18);color:#16A34A':'background:rgba(148,163,184,.18);color:#94A3B8')+'">'+(live?'● '+lbl:lbl)+'</span></div>';
+  h+='<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><b style="font-size:12.5px">&#129504; Vision’s brain — Claude Opus 4.8</b><span style="font-size:10px;font-weight:800;padding:1px 8px;border-radius:99px;'+(live?'background:rgba(34,197,94,.18);color:#16A34A':'background:rgba(148,163,184,.18);color:#64748B')+'">'+(live?'● '+lbl:lbl)+'</span></div>';
   if(srv){
     h+='<div style="font-size:10.5px;color:var(--text3);margin:5px 0 2px;line-height:1.5">✅ The Claude engine is live on the server — Vision reasons and acts with real Claude on <b>every device and link</b>, with no key stored in any browser. Nothing to set up here.</div>';
   } else {
@@ -7638,7 +7667,7 @@ function visionWelcome(){
             ou:((b.ouNew||0)+(b.ouApprv||0))+' item'+(((b.ouNew||0)+(b.ouApprv||0))!==1?'s':'')+' in your governance queue',
             dept:(b.deptNew||0)+' consultation'+((b.deptNew||0)!==1?'s':'')+' in your inbox',
             exec:REQUESTS.filter(function(r){return r.status!=='Closed'&&r.status!=='Rejected';}).length+' active requests across the pipeline'}[currentRole]||'';
-  HARMONY_CHAT.push({who:'harmony',text:'Marhaba '+((P.name||'').split(' ')[0])+' \u2014 I\u2019m Vision. '+(mine?mine+'. ':'')+'Ask me anything in your domain, or give me a task.'});
+  HARMONY_CHAT.push({who:'harmony',text:'Welcome, '+((P.name||'').split(' ')[0])+'. This is Vision, your HARMONY delivery assistant. '+(mine?mine+'. ':'')+'How may I assist?'});
   harmonyFeedSave();
 }
 function visionToggle(){
@@ -7939,7 +7968,20 @@ function renderAgent(){
       if(b){ b.classList.add('off'); setTimeout(function(){ if(b.parentNode) b.parentNode.removeChild(b); },480); }
       var nodes=document.querySelectorAll('#harmony-chat .hbot');
       if(nodes.length===1 && HARMONY_CHAT.length && HARMONY_CHAT[0].who==='harmony'){ harmonyStreamLast(HARMONY_CHAT[0].text); }
-      if(HARMONY_VOICE.on){ harmonySpeak(harmonyOpeningSpoken()); }
+      if(HARMONY_VOICE.on){
+        // Don't speak until the voice engine has settled — otherwise the opening starts in
+        // one voice (browser fallback) and switches to another (loaded/neural) mid-intro.
+        var _spoke=false, _sp0=Date.now();
+        var _speakOpen=function(){ if(_spoke) return; _spoke=true; harmonySpeak(harmonyOpeningSpoken()); };
+        var _waitVoice=function(){
+          if(_spoke) return;
+          var voicesReady=harmonyVoiceList().length>0;
+          var engineSettled=PIPER.ready || elevenReady() || voicesReady; // a neural engine or the browser list is decided
+          if(engineSettled || Date.now()-_sp0>1400) _speakOpen();
+          else setTimeout(_waitVoice,150);
+        };
+        _waitVoice();
+      }
       if(HARMONY_WAKE.saved && !HARMONY_WAKE.on && !(navigator&&navigator.webdriver)){ HARMONY_WAKE.on=true; _wakeStart(); _wakeUI(); }
       if(!window._speakUnlock){
         window._speakUnlock=true;
@@ -8061,13 +8103,13 @@ function updateEngineBadge(){ var e=document.getElementById('chat-engine'); if(e
 function renderChatMsgHTML(m,idx,arr){
   var h='';
   if(m.who==='user'){
-    h+='<div style="display:flex;justify-content:flex-end;margin-bottom:9px"><div style="max-width:82%;background:#2563EB;color:#fff;padding:8px 13px;border-radius:14px 14px 4px 14px;font-size:12.5px;line-height:1.45">'+escH(m.text)+'</div></div>';
+    h+='<div class="hmsg" style="display:flex;justify-content:flex-end;margin-bottom:9px"><div class="huser">'+escH(m.text)+'</div></div>';
   } else if(m.err){
-    h+='<div style="display:flex;gap:10px;margin-bottom:9px;align-items:flex-start"><span class="havatar">&#9888;&#65039;</span><div style="max-width:82%"><div class="hbot herr" style="background:rgba(220,38,38,.07);border:1px solid rgba(220,38,38,.45);padding:8px 13px;border-radius:14px 14px 14px 4px;font-size:12.5px;line-height:1.5;color:#DC2626;white-space:pre-wrap">'+escH(m.text)+'</div>';
+    h+='<div class="hmsg" style="display:flex;gap:10px;margin-bottom:9px;align-items:flex-start"><span class="havatar">&#9888;&#65039;</span><div style="max-width:82%"><div class="hbot herr" style="background:rgba(220,38,38,.07);border:1px solid rgba(220,38,38,.45);padding:8px 13px;border-radius:14px 14px 14px 4px;font-size:12.5px;line-height:1.5;color:#DC2626;white-space:pre-wrap">'+escH(m.text)+'</div>';
     if(m.connect){ h+='<button onclick="visionConnect()" class="btn btn-sm" style="margin-top:7px;background:var(--accent);color:#fff;border-color:var(--accent);font-weight:800">&#128273; '+TT('Connect Claude','ربط Claude')+'</button>'; }
     h+='</div></div>';
   } else {
-    h+='<div style="display:flex;gap:10px;margin-bottom:9px;align-items:flex-start"><span class="havatar">&#129302;</span><div class="hbot" style="max-width:82%;background:#fff;border:1px solid var(--border);padding:8px 13px;border-radius:14px 14px 14px 4px;font-size:12.5px;line-height:1.5;color:var(--text);white-space:pre-wrap">'+escH(m.text)+'</div></div>';
+    h+='<div class="hmsg" style="display:flex;gap:10px;margin-bottom:9px;align-items:flex-start"><span class="havatar">&#129302;</span><div class="hbot" style="max-width:82%;background:#fff;border:1px solid var(--border);padding:8px 13px;border-radius:14px 14px 14px 4px;font-size:12.5px;line-height:1.5;color:var(--text);white-space:pre-wrap">'+escH(m.text)+'</div></div>';
     var showActs=m.actions&&m.actions.length&&(arr===undefined||idx===arr.length-1);
     if((m.cards&&m.cards.length)||showActs){
       h+='<div class="hgen">';
@@ -8078,8 +8120,8 @@ function renderChatMsgHTML(m,idx,arr){
   }
   return h;
 }
-function renderTypingHTML(){ return '<div style="display:flex;gap:8px;align-items:flex-start"><span style="font-size:17px;flex-shrink:0">&#129302;</span><div class="hbot" style="background:#fff;border:1px solid var(--border);padding:11px 14px;border-radius:14px 14px 14px 4px"><span class="htyping"><span></span><span></span><span></span></span></div></div>'; }
-function renderWorkHTML(){ return '<div style="display:flex;gap:8px;align-items:flex-start"><span style="font-size:17px;flex-shrink:0">&#129302;</span><div class="hwork"><div style="font-size:12.5px;font-weight:700">Working on it\u2026</div><div id="hwork-steps"><div class="hwstep"><span class="dot"></span>Scanning the pipeline</div><div class="hwstep"><span class="dot"></span>Applying the changes</div><div class="hwstep"><span class="dot"></span>Updating the audit trail</div><div class="hwstep"><span class="dot"></span>Refreshing the board</div></div><div class="hwbar-track"><div id="hwork-bar"></div></div></div></div>'; }
+function renderTypingHTML(){ return '<div class="hmsg" style="display:flex;gap:8px;align-items:flex-start"><span style="font-size:17px;flex-shrink:0">&#129302;</span><div class="hbot" style="background:#fff;border:1px solid var(--border);padding:11px 14px;border-radius:14px 14px 14px 4px"><span class="htyping"><span></span><span></span><span></span></span></div></div>'; }
+function renderWorkHTML(){ return '<div class="hmsg" style="display:flex;gap:8px;align-items:flex-start"><span style="font-size:17px;flex-shrink:0">&#129302;</span><div class="hwork"><div style="font-size:12.5px;font-weight:700">Working on it\u2026</div><div id="hwork-steps"><div class="hwstep"><span class="dot"></span>Scanning the pipeline</div><div class="hwstep"><span class="dot"></span>Applying the changes</div><div class="hwstep"><span class="dot"></span>Updating the audit trail</div><div class="hwstep"><span class="dot"></span>Refreshing the board</div></div><div class="hwbar-track"><div id="hwork-bar"></div></div></div></div>'; }
 function renderFeedHTML(){
   var h='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><span style="font-size:12px;font-weight:800;color:var(--text3);letter-spacing:.5px">RECENT AGENT ACTIVITY</span>'+(AGENT_LOG.length?'<span style="font-size:11px;color:var(--text3)">'+AGENT_LOG.length+' total</span>':'')+'</div>';
   if(!AGENT_LOG.length){
@@ -8479,38 +8521,38 @@ function openReq(id){
     +'<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px">'
     +(r.effortHours?
       '<div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:8px;padding:8px 11px">'
-      +'<div style="font-size:9.5px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">Effort</div>'
+      +'<div style="font-size:9.5px;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">Effort</div>'
       +'<div style="font-size:16px;font-weight:900;font-family:monospace;color:#0F172A">'+r.effortHours+'h</div>'
       +'</div>'
     :"")
     +(r.complexity?
       '<div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:8px;padding:8px 11px">'
-      +'<div style="font-size:9.5px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Complexity</div>'
+      +'<div style="font-size:9.5px;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Complexity</div>'
       +complexityPill(r.complexity)
       +'</div>'
     :"")
     +(r.cycle?
       '<div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:8px;padding:8px 11px">'
-      +'<div style="font-size:9.5px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">Sprint</div>'
+      +'<div style="font-size:9.5px;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">Sprint</div>'
       +'<div style="font-size:13px;font-weight:800;color:#4338CA">'+r.cycle+'</div>'
       +'</div>'
     :"")
     +(r.baAssigned?
       '<div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:8px;padding:8px 11px">'
-      +'<div style="font-size:9.5px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">Analyst</div>'
+      +'<div style="font-size:9.5px;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">Analyst</div>'
       +'<div style="font-size:12.5px;font-weight:700;color:#0F172A">'+r.baAssigned+'</div>'
       +'</div>'
     :"")
     +(p?
       '<div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:8px;padding:8px 11px">'
-      +'<div style="font-size:9.5px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">Partner</div>'
+      +'<div style="font-size:9.5px;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">Partner</div>'
       +'<div style="font-size:12px;font-weight:700;color:#4338CA">'+p.name+'</div>'
       +'<div style="font-size:10.5px;color:#64748B">'+p.contact+'</div>'
       +'</div>'
     :"")
     +(r.neededBy&&r.neededBy!=='undefined'?
       '<div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:8px;padding:8px 11px">'
-      +'<div style="font-size:9.5px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">Needed by</div>'
+      +'<div style="font-size:9.5px;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">Needed by</div>'
       +'<div style="font-size:12.5px;font-weight:700;color:#0F172A">'+r.neededBy+'</div>'
       +'</div>'
     :"")
@@ -8690,7 +8732,7 @@ function openReq(id){
           +'<div style="display:flex;gap:10px;margin-top:4px">'
           +'<span style="font-size:10.5px;color:#16A34A;font-weight:700">&#10003; '+stats.delivered+' delivered</span>'
           +'<span style="font-size:10.5px;color:#D97706;font-weight:700">&#9679; '+stats.inFlight+' in flight</span>'
-          +'<span style="font-size:10.5px;color:#94A3B8">&#9711; '+(stats.total-stats.delivered-stats.inFlight)+' pending</span>'
+          +'<span style="font-size:10.5px;color:#64748B">&#9711; '+(stats.total-stats.delivered-stats.inFlight)+' pending</span>'
           +'</div>'
           +'</div>'
           // Description
@@ -8708,7 +8750,7 @@ function openReq(id){
         +(linkedCount?'<span style="font-size:9.5px;font-weight:800;background:#DBEAFE;color:#1E40AF;padding:1px 8px;border-radius:99px">'+linkedCount+' linked</span>':'')
         +(autoCount?'<span style="font-size:9.5px;font-weight:700;background:#F1F5F9;color:#64748B;padding:1px 7px;border-radius:99px">'+autoCount+' suggested</span>':'')
         +'</div>'
-        +'<span style="font-size:10.5px;color:#94A3B8;font-style:italic">Strengthens your business case</span>'
+        +'<span style="font-size:10.5px;color:#64748B;font-style:italic">Strengthens your business case</span>'
         +'</div>'
         +'<div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px">'+chips+'</div>'
         +'<div>'+panels+'</div>'
@@ -9596,7 +9638,7 @@ function renderITQueue(){
   h+='<div style="font-size:24px;flex-shrink:0">&#9889;</div>';
   h+='<div>';
   h+='<div style="font-size:13px;font-weight:800;color:#fff;margin-bottom:3px">IT Delivery Authority</div>';
-  h+='<div style="font-size:12px;color:#94A3B8;line-height:1.5">BU and OU priorities are visible and respected — but IT assigns cycles based on sprint capacity, technical dependencies, and partner availability. Every card shows the BU\'s request alongside IT\'s decision.</div>';
+  h+='<div style="font-size:12px;color:#64748B;line-height:1.5">BU and OU priorities are visible and respected — but IT assigns cycles based on sprint capacity, technical dependencies, and partner availability. Every card shows the BU\'s request alongside IT\'s decision.</div>';
   h+='</div>';
   var totalCap=REQUESTS.filter(function(r){return r.cycle==='Cycle 18';}).reduce(function(s,r){return s+(r.effortHours||estHrs(r));},0);
   var capPct=Math.min(Math.round(totalCap/60*100),100);
@@ -9808,7 +9850,7 @@ function renderDeptDashboard(){
     h+='<div style="background:#fff;border:1.5px solid '+k.col+'33;border-radius:12px;padding:16px 18px">';
     h+='<div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">'+k.label+'</div>';
     h+='<div style="font-size:30px;font-weight:900;color:'+k.col+';font-family:monospace;line-height:1">'+k.val+'</div>';
-    h+='<div style="font-size:11px;color:#94A3B8;margin-top:4px">'+k.sub+'</div>';
+    h+='<div style="font-size:11px;color:#64748B;margin-top:4px">'+k.sub+'</div>';
     h+='</div>';
   });
   h+='</div>';
@@ -9831,7 +9873,7 @@ function renderDeptDashboard(){
   h+=(pending.length?'<span style="font-size:10px;font-weight:800;background:#FEF3C7;color:#92400E;padding:3px 10px;border-radius:99px">'+pending.length+' pending</span>':'<span style="font-size:10px;font-weight:800;background:#DCFCE7;color:#166534;padding:3px 10px;border-radius:99px">All clear</span>');
   h+='</div>';
   if(!pending.length){
-    h+='<div style="padding:28px;text-align:center;color:#94A3B8;font-size:13px">&#9989; No pending sign-offs &mdash; you\'re up to date</div>';
+    h+='<div style="padding:28px;text-align:center;color:#64748B;font-size:13px">&#9989; No pending sign-offs &mdash; you\'re up to date</div>';
   } else {
     h+='<div style="padding:8px 12px 12px">';
     pending.forEach(function(r){
@@ -9840,7 +9882,7 @@ function renderDeptDashboard(){
       h+='<div onclick="openReq(\''+r.id+'\')" style="display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:1px solid #F8FAFC;cursor:pointer">';
       h+='<div style="flex:1"><div style="display:flex;gap:8px;align-items:center;margin-bottom:2px">';
       h+='<span style="font-size:10.5px;font-family:monospace;font-weight:800;color:'+accent+'">'+r.id+'</span>';
-      h+='<span style="font-size:9.5px;color:#94A3B8">'+escH(r.sector)+'</span></div>';
+      h+='<span style="font-size:9.5px;color:#64748B">'+escH(r.sector)+'</span></div>';
       h+='<div style="font-size:12.5px;font-weight:700">'+escH(r.title)+'</div></div>';
       h+='<span style="font-size:10.5px;font-weight:700;color:'+(breach?"#DC2626":"#94A3B8")+';background:'+(breach?"#FEF2F2":"#F8FAFC")+';padding:3px 9px;border-radius:99px;white-space:nowrap">'+(breach?"&#9888; ":"")+days+'d pending</span>';
       h+='<button onclick="event.stopPropagation();openReq(\''+r.id+'\')" class="btn btn-sm" style="font-size:11px;background:'+accent+';color:#fff;border:none;font-weight:700">Review &rsaquo;</button>';
@@ -10036,7 +10078,7 @@ function showSaveBar(){
       +'<span id="ssb-msg" style="font-size:13.5px;font-weight:600;color:#fff"></span>'
       +'<div id="ssb-chips" style="display:flex;gap:6px;flex-wrap:wrap"></div>'
       +'</div>'
-      +'<button onclick="discardPlan()" style="background:transparent;color:#94A3B8;border:1px solid #334155;'
+      +'<button onclick="discardPlan()" style="background:transparent;color:#64748B;border:1px solid #334155;'
       +'border-radius:7px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">Discard</button>'
       +'<button onclick="savePlan()" style="background:#0F766E;color:#fff;border:none;'
       +'border-radius:7px;padding:8px 20px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">'
@@ -10562,7 +10604,7 @@ function renderExecOverview(){
           +'<div style="display:flex;align-items:center;gap:6px;margin-bottom:3px">'
           +'<span style="font-size:11px;font-family:monospace;font-weight:800;color:var(--accent)">'+d.req.id+'</span>'
           +(k>0?'<span style="font-size:9.5px;font-weight:800;color:'+kl.dot+';background:'+kl.bg+';padding:1px 6px;border-radius:99px">K='+k+'</span>':'')
-          +(d.req.sector?'<span style="font-size:9.5px;color:#94A3B8">'+escH(d.req.sector)+'</span>':'')
+          +(d.req.sector?'<span style="font-size:9.5px;color:#64748B">'+escH(d.req.sector)+'</span>':'')
           +'</div>'
           +'<div style="font-size:12.5px;font-weight:700;color:#0F172A;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:3px">'+escH(d.req.title)+'</div>'
           +'<div style="font-size:11px;color:'+d.color+';line-height:1.4">'+d.action+'</div>'
@@ -10626,7 +10668,7 @@ function renderExecOverview(){
     +'<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:12px">'
     +'<div><div style="font-size:11px;font-weight:700;color:#818CF8;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:5px">The HARMONY Model</div>'
     +'<div style="font-size:19px;font-weight:900;letter-spacing:-.3px">IT Command of Demand</div>'
-    +'<div style="font-size:12px;color:#94A3B8;margin-top:3px;max-width:520px">Every request from every business unit flows through one pipeline. IT controls scheduling and capacity &mdash; business priorities are inputs, not commitments.</div></div>'
+    +'<div style="font-size:12px;color:#64748B;margin-top:3px;max-width:520px">Every request from every business unit flows through one pipeline. IT controls scheduling and capacity &mdash; business priorities are inputs, not commitments.</div></div>'
     +'<button onclick="switchRole(\'it\')" style="background:#4338CA;color:#fff;border:none;border-radius:9px;padding:9px 18px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;flex-shrink:0">Open IT Command &rarr;</button>'
     +'</div>'
     // 4-stage pipeline funnel
@@ -10829,7 +10871,7 @@ function renderExecAccountability(){
     mandateHTML += '<div style="display:flex;gap:10px;align-items:center">';
     mandateHTML += '<span style="font-size:10.5px;color:#16A34A;font-weight:700">&#10003; '+_init.delivered+' delivered</span>';
     mandateHTML += '<span style="font-size:10.5px;color:#0891B2;font-weight:700">&#9679; '+_init.inFlight+' in flight</span>';
-    mandateHTML += '<span style="font-size:10.5px;color:#94A3B8;font-weight:600">&#9711; '+_init.pending+' pending</span>';
+    mandateHTML += '<span style="font-size:10.5px;color:#64748B;font-weight:600">&#9711; '+_init.pending+' pending</span>';
     mandateHTML += '<a href="'+_init.url+'" target="_blank" style="margin-left:auto;font-size:10px;font-weight:700;color:'+_rag.c+';text-decoration:none;flex-shrink:0">View &#8599;</a>';
     mandateHTML += '</div></div>';
   }
@@ -11069,7 +11111,7 @@ function renderExecReport(){
     h+='<td style="font-size:12px;font-weight:700">'+escH(m.name)+'</td>';
     h+='<td style="text-align:center;font-weight:800;color:#16A34A">'+m.delivered+'</td>';
     h+='<td style="text-align:center;font-weight:800;color:#0891B2">'+m.inFlight+'</td>';
-    h+='<td style="text-align:center;color:#94A3B8">'+pending+'</td>';
+    h+='<td style="text-align:center;color:#64748B">'+pending+'</td>';
     h+='<td><div style="height:6px;background:#E2E8F0;border-radius:99px;overflow:hidden"><div style="width:'+pct+'%;height:100%;background:'+ragC+';border-radius:99px"></div></div></td>';
     h+='<td><span style="font-size:10px;font-weight:800;color:'+ragC+';background:'+ragC+'18;padding:2px 8px;border-radius:99px">'+ragL+'</span></td>';
     h+='</tr>';
@@ -11169,7 +11211,7 @@ function renderExecReport(){
   h+='</div></div>';
 
   // ── Report Footer ─────────────────────────────────────────────
-  h+='<div style="text-align:center;font-size:10.5px;color:#94A3B8;padding:12px 0;border-top:1px solid var(--border);margin-top:4px">';
+  h+='<div style="text-align:center;font-size:10.5px;color:#64748B;padding:12px 0;border-top:1px solid var(--border);margin-top:4px">';
   h+='HARMONY Change &amp; Delivery Hub &nbsp;&middot;&nbsp; Director General Report &nbsp;&middot;&nbsp; Generated '+reportDate;
   h+='</div>';
 
@@ -13020,7 +13062,7 @@ function renderDemoHUD(){
   html += '<div style="font-size:10px;font-weight:700;color:'+sc.color+';text-transform:uppercase;letter-spacing:.5px">'+sc.label+'</div>';
   html += '<div style="font-size:14px;font-weight:800;color:#1E293B;margin-top:1px">'+step.title+'</div>';
   html += '</div></div>';
-  html += '<button onclick="exitDemo()" style="background:none;border:none;font-size:16px;cursor:pointer;color:#94A3B8;line-height:1;padding:2px">&#10005;</button>';
+  html += '<button onclick="exitDemo()" style="background:none;border:none;font-size:16px;cursor:pointer;color:#64748B;line-height:1;padding:2px">&#10005;</button>';
   html += '</div>';
 
   // Body
@@ -13033,12 +13075,12 @@ function renderDemoHUD(){
 
   // Controls
   html += '<div style="display:flex;align-items:center;justify-content:space-between">';
-  html += '<div style="font-size:11.5px;color:#94A3B8;font-weight:600">Step '+stepN+' of '+totalN+'</div>';
+  html += '<div style="font-size:11.5px;color:#64748B;font-weight:600">Step '+stepN+' of '+totalN+'</div>';
   html += '<div style="display:flex;gap:8px">';
   if(!isFirst) html += '<button onclick="demoPrev()" style="padding:6px 14px;border:1.5px solid #E2E8F0;border-radius:7px;background:#fff;font-size:12px;font-weight:600;cursor:pointer;color:#475569">&#8592; Back</button>';
   html += '<button onclick="'+(isLast?'showDemoComplete()':'demoNext()')+'" style="padding:6px 16px;border:none;border-radius:7px;background:'+sc.color+';font-size:12px;font-weight:700;cursor:pointer;color:#fff">'+(isLast?'Finish &#10003;':'Next &#8594;')+'</button>';
   html += '</div></div>';
-  html += '<div style="font-size:10px;color:#94A3B8;text-align:center;margin-top:8px">&#8592;&#8594; arrow keys to navigate &nbsp;&middot;&nbsp; Esc to exit</div>';
+  html += '<div style="font-size:10px;color:#64748B;text-align:center;margin-top:8px">&#8592;&#8594; arrow keys to navigate &nbsp;&middot;&nbsp; Esc to exit</div>';
   html += '</div>'; // end tooltip
 
   // Scenario dots — inline in card
@@ -13142,7 +13184,7 @@ function openExecIntro(){
     h+='<div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:11px;padding:13px 14px;text-align:center">';
     h+='<div style="font-size:24px;font-weight:900;font-family:monospace;color:'+k.c+';line-height:1">'+k.v+'</div>';
     h+='<div style="font-size:11px;font-weight:700;color:#334155;margin-top:5px">'+k.l+'</div>';
-    h+='<div style="font-size:10px;color:#94A3B8;margin-top:1px">'+k.s+'</div>';
+    h+='<div style="font-size:10px;color:#64748B;margin-top:1px">'+k.s+'</div>';
     h+='</div>';
   });
   h+='</div></div>';
@@ -13193,7 +13235,7 @@ function resetDemo(){
     var n=REQUESTS.filter(function(r){return r.cycle===cyc;}).length;
     h+='<button onclick="resetCycle(\''+cyc+'\')" style="text-align:left;background:#fff;border:1.5px solid #E2E8F0;border-radius:8px;padding:9px 12px;font-size:12px;font-weight:600;color:var(--text);cursor:pointer;font-family:inherit;display:flex;justify-content:space-between;align-items:center">';
     h+='<span>&#8635; Reset '+cyc+' assignments</span>';
-    h+='<span style="font-size:10px;color:#94A3B8">'+n+' req</span></button>';
+    h+='<span style="font-size:10px;color:#64748B">'+n+' req</span></button>';
   });
 
   h+='</div>';
@@ -13756,7 +13798,7 @@ function openCycleManager(){
   // Header
   h+='<div style="display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:#0F172A;border-bottom:2px solid #334155;flex-shrink:0">';
   h+='<div>';
-  h+='<div style="font-size:16px;font-weight:800;color:#fff">&#128197; Cycle Manager &nbsp; <span style="font-size:11px;font-weight:600;color:#94A3B8;background:#1E293B;padding:2px 9px;border-radius:99px">IT controls sprint scheduling</span></div>';
+  h+='<div style="font-size:16px;font-weight:800;color:#fff">&#128197; Cycle Manager &nbsp; <span style="font-size:11px;font-weight:600;color:#64748B;background:#1E293B;padding:2px 9px;border-radius:99px">IT controls sprint scheduling</span></div>';
   h+='<div style="font-size:12px;color:#64748B;margin-top:3px">Move requests between cycles · Add urgent items to Cycle 18 · Override any assignment</div>';
   h+='</div>';
   h+='<button onclick="closeModal(\'cycle-mgr-modal\')" style="background:none;border:none;font-size:20px;cursor:pointer;color:#64748B">&#10005;</button>';
