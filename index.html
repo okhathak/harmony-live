@@ -1096,6 +1096,18 @@ body[data-role="it"] .tac-hero::after{background:
   radial-gradient(440px circle at 100% -12%, rgba(217,119,87,.22), transparent 55%),
   radial-gradient(380px circle at -6% 118%, rgba(217,119,87,.12), transparent 55%),
   radial-gradient(300px circle at 50% 60%, rgba(250,249,245,.05), transparent 60%)}
+/* ===== MOBILE VOICE & COMMUNICATION (2026-07-08) ===== */
+@media (max-width:760px){
+  /* 16px stops iOS Safari's zoom-jump when the command input gains focus */
+  #agent-cmd{font-size:16px!important;min-height:44px}
+  /* thumb-sized mic + send targets */
+  #harmony-mic{min-width:52px!important;min-height:44px;font-size:20px!important}
+  .hbar button{min-height:44px}
+  .t5-ctl .t5-pill{padding:12px 18px;font-size:13px}
+  body[data-role="it"] .jcore-panel{width:100%!important;max-width:340px;margin:0 auto}
+  body[data-role="it"] .jcore{width:170px;height:170px}
+  .jc-eng{max-width:88vw}
+}
 </style>
 </head>
 <body data-role="bu">
@@ -7683,16 +7695,27 @@ function harmonyMic(){
   if(HARMONY_VOICE.listening && HARMONY_VOICE.rec){ try{HARMONY_VOICE.rec.stop();}catch(e){} return; }
   _wakeSuspend(); // hands-free and push-to-talk can't share the recognizer
   var rec; try{ rec=new SR(); }catch(e){ _wakeResume(); toast('Could not access voice input.','warn'); return; }
-  HARMONY_VOICE.rec=rec; rec.lang=(HARMONY_LANG==='ar')?'ar-AE':'en-US'; rec.interimResults=false; rec.maxAlternatives=1;
+  // interimResults on: live transcript in the input while speaking (essential feedback on mobile).
+  // Execution happens in onend from the ACCUMULATED finals — mobile Chrome/Safari deliver
+  // results in multiple events, so acting on results[0] mid-stream drops words.
+  HARMONY_VOICE.rec=rec; rec.lang=(HARMONY_LANG==='ar')?'ar-AE':'en-US'; rec.interimResults=true; rec.maxAlternatives=1;
+  var finalTxt='', hadErr=false;
   rec.onstart=function(){ HARMONY_VOICE.listening=true; harmonySound('listen'); jcoreSet('listening'); harmonyMicUI(true); };
-  rec.onerror=function(e){ HARMONY_VOICE.listening=false; harmonySound('alert'); jcoreSet('idle'); harmonyMicReset(); harmonySttError((e&&e.error)||'unknown'); };
-  rec.onend=function(){ HARMONY_VOICE.listening=false; jcoreSet('idle'); harmonyMicReset(); _wakeResume(); };
+  rec.onerror=function(e){ hadErr=true; HARMONY_VOICE.listening=false; harmonySound('alert'); jcoreSet('idle'); harmonyMicReset(); harmonySttError((e&&e.error)||'unknown'); };
+  rec.onend=function(){
+    HARMONY_VOICE.listening=false; jcoreSet('idle'); harmonyMicReset(); _wakeResume();
+    var t=finalTxt.replace(/\s+/g,' ').trim(); finalTxt='';
+    if(t && !hadErr){
+      var inp=document.getElementById('agent-cmd'); if(inp) inp.value=t;
+      harmonySpeak(_pick(['On it, Omar.','Consider it done.','Executed.']));
+      agentCommand(t);
+    }
+  };
   rec.onresult=function(ev){
-    var t=''; try{ t=ev.results[0][0].transcript||''; }catch(e){}
-    t=t.trim(); if(!t) return;
-    var inp=document.getElementById('agent-cmd'); if(inp) inp.value=t;
-    harmonySpeak(_pick(['On it, Omar.','Consider it done.','Executed.']));
-    agentCommand(t);
+    var interim='';
+    try{ for(var i=ev.resultIndex;i<ev.results.length;i++){ var r=ev.results[i]; if(r.isFinal) finalTxt+=r[0].transcript+' '; else interim+=r[0].transcript; } }catch(e){}
+    var live=(finalTxt+interim).replace(/\s+/g,' ').trim();
+    var inp=document.getElementById('agent-cmd'); if(inp&&live) inp.value=live;
   };
   try{ rec.start(); }catch(e){ toast('Voice input is already active.','info'); }
 }
@@ -7839,7 +7862,7 @@ function jcoreHTML(closedN,inDelN,queuedN){
   return '<div class="jcore-panel'+cls+'" id="jcore-wrap">'
     +HUD_CORNERS+'<span class="hud-scan"></span>'
     +'<div class="jc-top"><span>V.I.S.I.O.N · CORE</span><span class="jc-state" id="jc-state">'+((HARMONY_WORK&&HARMONY_WORK.active)?'EXECUTING':'STANDBY')+'</span></div>'
-    +'<div class="jcore"><div class="jc-halo"></div><canvas class="jc-globe" id="jc-globe-cv"></canvas><div class="jc-topic" id="jc-topic"></div></div>'
+    +'<div class="jcore" onclick="harmonyMic()" style="cursor:pointer" title="Tap to give a voice order"><div class="jc-halo"></div><canvas class="jc-globe" id="jc-globe-cv"></canvas><div class="jc-topic" id="jc-topic"></div></div>'
     +'<div class="jc-wave">'+bars+'</div>'
     +'<div class="jc-caption" id="jc-caption"></div>'
     +'<div class="jc-plate"><div class="jc-p-l">ENGINEERING OUTPUT \u00b7 DELIVERED</div><div class="jc-num" id="jv-num">\u2026</div>'
@@ -7948,11 +7971,11 @@ function renderAgent(){
       if(HARMONY_WAKE.saved && !HARMONY_WAKE.on && !(navigator&&navigator.webdriver)){ HARMONY_WAKE.on=true; _wakeStart(); _wakeUI(); }
       if(!window._speakUnlock){
         window._speakUnlock=true;
-        var _fl=function(){ document.removeEventListener('click',_fl); document.removeEventListener('keydown',_fl);
+        var _fl=function(){ document.removeEventListener('click',_fl); document.removeEventListener('keydown',_fl); document.removeEventListener('touchstart',_fl);
           var _c=harmonyAudioCtx();
           if(window._pendingSound && _c){ var ps=window._pendingSound; window._pendingSound=null; _c.resume().then(function(){ harmonySound(ps); }).catch(function(){}); }
           if(window._pendingSpeak && !window._pendingAudio){ var t=window._pendingSpeak; window._pendingSpeak=null; harmonySpeak(t); } };
-        document.addEventListener('click',_fl); document.addEventListener('keydown',_fl);
+        document.addEventListener('click',_fl); document.addEventListener('keydown',_fl); document.addEventListener('touchstart',_fl);
       }
     },2600);
   }
