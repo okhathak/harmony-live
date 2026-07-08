@@ -2395,7 +2395,9 @@ function deptChip(dept,info){var cls={Approved:"dept-approved",Pending:"dept-pen
 function escH(s){return s?(s+"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"):""; }
 function closeModal(id){var el=document.getElementById(id);if(el)el.remove();}
 function toast(msg,type){var el=document.getElementById("toast-el");el.innerHTML=(type==="warn"?"&#9888; ":"&#10003; ")+msg;el.style.display="flex";el.style.opacity="1";clearTimeout(window._tt);window._tt=setTimeout(function(){el.style.opacity="0";setTimeout(function(){el.style.display="none";},300);},3200);}
-function addAudit(action,reqId,comments){AUDIT.unshift({dt:nowTs(),user:"System",action:action,reqId:reqId,comments:comments||""});}
+function addAudit(action,reqId,comments){AUDIT.unshift({dt:nowTs(),user:"System",action:action,reqId:reqId,comments:comments||""});
+  // every data mutation flows through here — stamp the assistant's live-context freshness
+  window._ctxStamp=Date.now(); var _cs=document.getElementById('ctx-stamp'); if(_cs) _cs.textContent='CTX '+new Date().toTimeString().slice(0,8);}
 function today(){return new Date().toLocaleDateString("en-GB",{day:"2-digit",month:"short",year:"numeric"});}
 // DATA
 
@@ -6393,44 +6395,18 @@ function agentRoute(id){
 var AGENT_FILTER = null;   // {type:'sla'|'waiting'|'k'|'sector', ...}
 var AGENT_MSG = null;      // {t:'ok'|'info'|'warn', m:'...'}
 var HARMONY_CHAT = [];
+// Persistent feed: restore on load; saved on every push; wiped ONLY by harmonyFeedClear().
+(function(){ try{ var s=localStorage.getItem('hv_feed_v1'); if(s){ var j=JSON.parse(s); if(j&&j.msgs&&j.msgs.length){ HARMONY_CHAT=j.msgs; window._feedRestored=true; } } }catch(e){} })();
+function harmonyFeedSave(){ try{ localStorage.setItem('hv_feed_v1',JSON.stringify({msgs:HARMONY_CHAT.slice(-60),t:Date.now()})); }catch(e){} }
+function harmonyFeedClear(){
+  HARMONY_CHAT=[]; try{ localStorage.removeItem('hv_feed_v1'); }catch(e){}
+  var c=document.getElementById('harmony-chat'); if(c) c.innerHTML='<div id="chat-live"></div>';
+  toast('Conversation cleared.','info');
+}
 var HARMONY_TYPING = false;
 var HARMONY_WORK = { active:false };
 function scrollChatBottom(){ var c=document.getElementById('harmony-chat'); if(c) c.scrollTop=c.scrollHeight; }
 function _pick(a){ if(!a||!a.length) return ''; if(a.length===1) return a[0]; var i,v,g=0; do{ i=Math.floor(Math.random()*a.length); v=a[i]; }while(v===window._lastPick && ++g<8); window._lastPick=v; return v; }
-function _statusLine(){
-  var inDel=REQUESTS.filter(function(r){return r.status==='In Delivery';}).length;
-  var risk=REQUESTS.filter(function(r){return r.status!=='Closed'&&r.status!=='Rejected'&&agentDaysLeft(r)!==99999&&agentDaysLeft(r)<=14;}).length;
-  return inDel+' in delivery, '+risk+' at SLA risk.';
-}
-function _leadLine(){ var recs=agentRecommendations(); var d=recs.filter(function(x){return x.direct;}).length; return d?'Just say \u201crun all safe actions\u201d and I\u2019ll advance '+d+' of them.':'Nothing needs action right now.'; }
-function _list(ids){ if(ids.length===1)return ids[0]; if(ids.length===2)return ids[0]+' and '+ids[1]; return ids.slice(0,-1).join(', ')+' and '+ids[ids.length-1]; }
-function _verb(a){ return ({'Start analysis':'started analysis on','Begin build':'moved','Send to UAT':'sent','Deploy':'deployed','Send scope to BU':'sent scope to BU for'})[a]||('applied '+a+' to'); }
-function _tail(a){ return ({'Begin build':' into delivery','Send to UAT':' to UAT'})[a]||''; }
-function _narrateMoves(moves){
-  var byA={}; moves.forEach(function(m){ (byA[m.action]=byA[m.action]||[]).push(m.id); });
-  var L={'Start analysis':'into analysis','Begin build':'into delivery','Send to UAT':'to UAT','Deploy':'deployed','Send scope to BU':'scoped to BU'};
-  var parts=Object.keys(byA).map(function(a){ var ids=byA[a]; var lbl=L[a]||a.toLowerCase(); return (ids.length<=2?ids.join(' & '):ids.length)+' '+lbl; });
-  var joined = parts.length===1?parts[0]:(parts.slice(0,-1).join(', ')+' and '+parts[parts.length-1]);
-  if(moves.length===1) return _pick(['On it, Omar \u2014 ','Consider it done \u2014 ','Executed \u2014 ','Handled \u2014 '])+joined+'.';
-  return _pick(['Consider it done.','Executed.','Orders carried out.'])+' Advanced '+moves.length+' \u2014 '+joined+(moves.length>=4?'. All logged.':'.');
-}
-function _narrateFilter(){
-  var recs=agentRecommendations(), f=AGENT_FILTER||{}, shown=recs, label='in the pipeline';
-  if(f.type==='sla'){ shown=recs.filter(function(x){var dl=agentDaysLeft(x.r);return dl!==99999&&dl<=14;}); label='at SLA risk'; }
-  else if(f.type==='waiting'){ shown=recs.filter(function(x){return !x.actionable;}); label='waiting on BU or OU'; }
-  else if(f.type==='k'){ shown=recs.filter(function(x){return getK(x.r)>=(f.min||40);}); label='critical (K\u2265'+(f.min||40)+')'; }
-  else if(f.type==='sector'){ shown=recs.filter(function(x){return x.r.sector===f.value;}); label='in '+f.value; }
-  if(!shown.length) return 'Nothing '+label+' right now \u2014 you\u2019re clear.';
-  var top=shown[0].r;
-  return (shown.length===1?'1 request ':shown.length+' requests ')+label+'. Top is '+top.id+' (K='+getK(top)+(top.urgent?', urgent':'')+'). Shall I act?';
-}
-var HARMONY_PERSONAS={
-  bu:{name:'Hamad Al Nuaimi',role:'BU Lead',sector:'Corporate Services'},
-  ou:{name:'Yousuf Al Hameli',role:'OU \u2014 Change Governance',sector:'Corporate Services'},
-  it:{name:'Omar Al Ahrari',role:'IT Delivery Lead',sector:'Corporate Services'},
-  dept:{name:'Sultan Al Dhaheri',role:'Finance Dept Head',sector:'Finance'},
-  exec:{name:'Khalid Al Falasi',role:'Director General',sector:'Corporate Services'}
-};
 function harmonyCreateRequest(spec){
   var num=REQUESTS.reduce(function(m,r){var x=parseInt(String(r.id||'').replace(/\D/g,''),10);return isNaN(x)?m:Math.max(m,x);},0)+1;
   var id='REQ-'+('000'+num).slice(-3);
@@ -6622,54 +6598,7 @@ function harmonyAsk(raw){
   }
   return null;
 }
-function harmonyRespondAr(raw){
-  var t=(raw||'').trim(); if(!/[\u0600-\u06FF]/.test(t)) return null;
-  if(/^(مرحبا|مرحباً|أهلا|أهلاً|السلام عليكم|هلا|صباح الخير|مساء الخير)/.test(t)) return 'أهلاً يا عمر. '+harmonySitrepSpokenAr();
-  if(/(شكرا|شكراً|مشكور)/.test(t)) return 'في الخدمة دائماً يا عمر.';
-  if(/(من أنت|من انت|عرف نفسك|ما اسمك)/.test(t)) return 'أنا فيجن — وكيل التسليم في منظومة هارموني. أراقب خط الإنجاز وأتصرف ضمن قواعد الحوكمة، ولا أعتمد نيابةً عن وحدات الأعمال.';
-  if(/(الإيجاز|إيجاز|الملخص|ملخص|التقرير|الوضع|وضعنا|أخبار)/.test(t)) return harmonySitrepSpokenAr();
-  if(/(شغّل|شغل|نفّذ|نفذ).*(الآمنة|الامنة|الإجراءات|الاجراءات)/.test(t)){
-    var b=AGENT_LOG.length; agentCommandCore('run all safe actions'); var k=AGENT_LOG.length-b;
-    return k>0 ? ('نفّذت '+k+' إجراءً بأمان. '+harmonySitrepSpokenAr()) : 'لا يوجد ما يمكن تنفيذه بأمان حالياً.';
-  }
-  if(/(المخاطر|الخطر|متأخر|المتأخرة|مهدد)/.test(t)){
-    var rk=agentRecommendations().filter(function(x){var d=agentDaysLeft(x.r);return d!==99999&&d<=14;});
-    agentCommandCore('show at-risk');
-    return rk.length ? (rk.length+' طلبات معرّضة للخطر — عرضتها لك الآن. أبرزها '+rk[0].r.id+'.') : 'لا مخاطر على اللوحة — كل شيء تحت السيطرة.';
-  }
-  if(/(افتح|اعرض|روح).*(السبرنت|لوحة السبرنت)/.test(t)){ nav('it-sprint'); return 'فتحت لوحة السبرنت.'; }
-  if(/(افتح|اعرض).*(الطابور|قائمة العمل|قائمة المهام)/.test(t)){ nav('it-queue'); return 'فتحت قائمة العمل.'; }
-  if(/(افتح|اعرض).*(اللوحة|لوحة القيادة|الرئيسية)/.test(t)){ nav('it-dashboard'); return 'فتحت لوحة القيادة.'; }
-  if(/(مساعدة|ماذا تستطيع|شو تقدر)/.test(t)) return 'جرّب: «الإيجاز» — «شغّل الإجراءات الآمنة» — «ما المخاطر؟» — «افتح السبرنت». وبالإنجليزية أفهم كل شيء.';
-  return 'لم أفهم تماماً يا عمر — جرّب: «الإيجاز»، «شغّل الإجراءات الآمنة»، أو «ما المخاطر؟»';
-}
-function harmonyRespond(text){
-  var _ar=harmonyRespondAr(text); if(_ar) return _ar;
-  var t=(text||'').toLowerCase().trim();
-  if(/^(hi|hello|hey|yo|salam|salaam|good (morning|afternoon|evening))\b/.test(t)) return _pick(['Omar.','At your command, Omar.','Standing ready, Omar.','Go ahead, Omar.'])+' '+_statusLine()+' '+_pick(['What are your orders?','What shall we tackle first?','Where do you want me?','Your move.']);
-  if(/(^| )(thanks|thank you|thx|shukran|appreciate)( |$|!|\.)/.test(t)) return _pick(['Anytime, Omar.','Happy to help, Omar.','You got it, Omar.','Standing by for orders.']);
-  if(/(who are you|what are you|your name|about you)/.test(t)) return 'I\u2019m Vision \u2014 HARMONY\u2019s delivery agent. I watch the IT pipeline and act within the governance rails: start analysis, assign cycles and delivery partners, move builds into UAT, and deploy. I never approve on behalf of BU or OU. Just tell me what you need.';
-  if(/(help|what can you|what do you do|commands|options|how do i)/.test(t)) return 'Here\u2019s what I can do on command:\n\u2022 \u201crun all safe actions\u201d \u2014 advance everything that\u2019s safe\n\u2022 \u201cwho\u2019s delaying?\u201d / \u201cwhat\u2019s stuck\u201d \u2014 the bottlenecks and who we\u2019re waiting on\n\u2022 \u201cwhat needs my decision?\u201d\n\u2022 \u201cstart analysis\u201d, \u201cassign partners\u201d / \u201cassign cycles\u201d\n\u2022 \u201csend to UAT\u201d, \u201cdeploy\u201d, \u201csend scope\u201d\n\u2022 \u201cshow at-risk\u201d, \u201cshow Finance / Legal\u2026\u201d, \u201cwaiting on BU\u201d\n\u2022 \u201ccreate a CR for Finance\u201d / \u201craise a request as Legal: <title>\u201d\nOr just ask me \u201cwhat\u2019s going on?\u201d and I\u2019ll brief you.';
-  var _ask=harmonyAsk(text); if(_ask) return _ask;
-  if(/(how are things|how'?s it going|status|sitrep|what'?s going on|what'?s happening|update me|brief me|summary|overview|where do we stand)/.test(t)) return harmonyBriefing()+' What should I tackle?';
-  var _cr=harmonyParseCreate(text);
-  if(_cr){ var _out=harmonyCreateRequest(_cr);
-    return _pick(['Done \u2014 ','Raised \u2014 ','Logged \u2014 '])+_out.r.id+' \u201C'+_out.r.title+'\u201D for '+_out.r.sector+', submitted as '+_out.persona.name+(_cr.urgency?' \u00b7 '+_cr.urgency:'')+'.';
-  }
-  if(/(delay|bottleneck|stuck|blocked|blocking|holding up|who is waiting|waiting longest|longest waiting|who do we wait)/.test(t)) return harmonyBlockers();
-  if(/(need(s)? (my|your) (decision|call|approval|sign)|what needs me|my decisions?|decisions? (needed|pending))/.test(t)) return harmonyDecisions();
-  // otherwise run the command engine and narrate the outcome
-  var before=AGENT_LOG.length;
-  agentCommandCore(text);
-  var k=AGENT_LOG.length-before;
-  if(k>0) return _narrateMoves(AGENT_LOG.slice(0,k));
-  if(AGENT_FILTER) return _narrateFilter();
-  var m=(AGENT_MSG&&AGENT_MSG.m)||'';
-  if(!m || /recognis|not sure|couldn|didn/i.test(m)) return 'I didn\u2019t quite catch that. You can say \u201crun all safe actions\u201d, \u201cstart analysis\u201d, \u201cshow at-risk\u201d, or ask me \u201cwhat\u2019s going on?\u201d';
-  return m;
-}
 var HARMONY_AI = { on:true };
-function harmonyToggleAI(){ HARMONY_AI.on=!HARMONY_AI.on; toast(HARMONY_AI.on?'Live AI conversation on.':'Using offline command engine.','info'); var b=document.getElementById('btn-ai'); if(b){ b.innerHTML=HARMONY_AI.on?'&#129504; AI on':'&#129504; AI off'; b.style.color=HARMONY_AI.on?'#4ADE80':'#8FA6C0'; } updateEngineBadge(); }
 function harmonySystemPrompt(){
   var recs=agentRecommendations();
   var atrisk=recs.filter(function(x){var dl=agentDaysLeft(x.r);return dl!==99999&&dl<=14;}).slice(0,6).map(function(x){return x.r.id+' ('+x.r.sector+', K='+getK(x.r)+(x.r.urgent?', urgent':'')+')';}).join('; ')||'none';
@@ -6681,6 +6610,7 @@ function harmonySystemPrompt(){
   return "You are Vision, the AI delivery agent of HARMONY — a UAE government IT Change & Delivery command center. You are talking with Omar Al Ahrari, the IT Delivery Lead. Speak concisely and professionally, like a sharp operations chief of staff. Keep spoken replies to 1-2 short sentences (under ~40 words); summarise by count, never dump long ID lists. Reply in the language the user writes or speaks \u2014 Arabic (concise Modern Standard) or English.\n\n"
     +"You can ACT by calling the provided tools \u2014 run pipeline actions, advance or create requests, assign partners and cycles, file Jira, add to sprint, filter or open any screen, switch role, and send notifications. Compose several tool calls when a request needs multiple steps, and resolve references like \u2018the health portal one\u2019 or \u2018REQ 14\u2019 to an ID from the list below. After acting, confirm briefly what you did. For questions or chat, just answer \u2014 no tool needed.\n\n"
     +"GOVERNANCE (hard rules): never approve, sign off, or confirm a change on behalf of BU or OU \u2014 those approvals are theirs. The advance and deploy tools enforce the delivery guards (a partner is required before delivery; UAT approval is required before deploy); if a step is blocked, say so rather than forcing it.\n\n"
+    +"GROUNDING (hard rules): every number, ID, and status you state must come from the live pipeline data below \u2014 it reflects the app\u2019s state at this exact moment (data refreshed "+new Date().toTimeString().slice(0,8)+"). If the data doesn\u2019t contain what\u2019s asked, say so plainly instead of estimating or inventing. No filler, no pleasantries padding, no invented history.\n\n"
     +"Live pipeline:\n- In active delivery: "+inDel+"\n- In UAT with BU: "+inUAT+"\n- Safe to auto-advance now: "+safe+"\n- Waiting on BU/OU: "+waiting+"\n- At SLA risk: "+atrisk+"\n\nActive requests (id, sector, status): "+active+".";
 }
 var HARMONY_TOOLS=[
@@ -6734,9 +6664,17 @@ function harmonyRunTool(name,inp){
 }
 async function harmonyAICall(){
   if(!aiReady()) throw new Error('no key');
-  var msgs=HARMONY_CHAT.slice(-8).map(function(m){return {role:m.who==='user'?'user':'assistant',content:m.text};});
+  // Rolling memory: last 12 turns verbatim; older turns condensed into a compact context
+  // block so long conversations stay under token limits without losing the thread.
+  var _hist=HARMONY_CHAT.filter(function(m){ return !m.err && m.text; });
+  var _win=_hist.slice(-12);
+  while(_win.length && _win[0].who!=='user') _win.shift(); // transcript must start with a user turn
+  var _older=_hist.slice(0,_hist.length-_win.length);
+  var _digest=_older.slice(-40).map(function(m){ return (m.who==='user'?'Omar: ':'Vision: ')+String(m.text).replace(/\s+/g,' ').slice(0,160); }).join('\n').slice(-2400);
+  var msgs=_win.map(function(m){return {role:m.who==='user'?'user':'assistant',content:m.text};});
   if(!msgs.length||msgs[msgs.length-1].role!=='user') throw new Error('no user turn');
   var sys=harmonySystemPrompt(), finalText='';
+  if(_digest) sys+='\n\nEarlier conversation (condensed, oldest first):\n'+_digest;
   for(var it=0; it<6; it++){
     var _h={"Content-Type":"application/json","anthropic-version":"2023-06-01"};
     // Direct mode needs the browser key + the direct-access opt-in; via the /claude relay the proxy
@@ -6758,7 +6696,13 @@ async function harmonyAICall(){
   }
   return {reply:finalText||'Done.', cmd:null};
 }
-var HARMONY_PENDING=null, HARMONY_REPLY_ACTIONS=null;
+var HARMONY_PERSONAS={
+  bu:{name:'Hamad Al Nuaimi',role:'BU Lead',sector:'Corporate Services'},
+  ou:{name:'Yousuf Al Hameli',role:'OU \u2014 Change Governance',sector:'Corporate Services'},
+  it:{name:'Omar Al Ahrari',role:'IT Delivery Lead',sector:'Corporate Services'},
+  dept:{name:'Sultan Al Dhaheri',role:'Finance Dept Head',sector:'Finance'},
+  exec:{name:'Khalid Al Falasi',role:'Director General',sector:'Corporate Services'}
+};
 function harmonySendNotification(roleKey,note,reqId){
   var arr=HARMONY_SENT_NOTIFS[roleKey]||(HARMONY_SENT_NOTIFS[roleKey]=[]);
   arr.unshift({icon:'\u{1F4E3}',color:'#4F46E5',title:note,sub:(reqId?reqId+' \u2014 ':'')+'sent by HARMONY \u00b7 '+nowTs(),action:reqId?"openReq('"+reqId+"')":'closeNotif()'});
@@ -6802,44 +6746,6 @@ function harmonyTopicOf(userText,reply,moves){
   if(/caught up|all clear|clean|nothing pending|standing by/.test(s)) return 'ok';
   return null;
 }
-function harmonyMakeOffer(moves){
-  if(!moves||!moves.length) return null;
-  function ids(a){ return moves.filter(function(m){return m.action===a;}).map(function(m){return m.id;}); }
-  function L(x){ return x.length<=2?x.join(' & '):x.length+' items'; }
-  var created=ids('Created request'), uat=ids('Send to UAT'), scope=ids('Send scope to BU'), dep=ids('Deploy');
-  if(created.length) return {pending:{kind:'notify',to:'ou',ids:created,note:'New request awaiting your review'},
-    ask:'It\u2019s with Yousuf (OU) for review \u2014 want me to send him a notification?',
-    chips:[{label:'\u2713 Yes \u2014 notify Yousuf',cmd:'yes'},{label:'Not now',cmd:'no'}]};
-  if(uat.length) return {pending:{kind:'notify',to:'bu',ids:uat,note:'Ready for your UAT'},
-    ask:L(uat)+' now sit'+(uat.length===1?'s':'')+' with Hamad (BU) for acceptance \u2014 notify him?',
-    chips:[{label:'\u2713 Yes \u2014 notify Hamad',cmd:'yes'},{label:'Not now',cmd:'no'}]};
-  if(scope.length) return {pending:{kind:'notify',to:'bu',ids:scope,note:'Scope awaiting your confirmation'},
-    ask:'Scope for '+L(scope)+' is with Hamad (BU) \u2014 send him a notification?',
-    chips:[{label:'\u2713 Yes \u2014 notify Hamad',cmd:'yes'},{label:'Not now',cmd:'no'}]};
-  if(dep.length) return {pending:{kind:'notify',to:'bu',ids:dep,note:'Deployed \u2014 record the outcome'},
-    ask:L(dep)+' deployed \u2014 ask Hamad (BU) to record the outcome?',
-    chips:[{label:'\u2713 Yes \u2014 notify Hamad',cmd:'yes'},{label:'Not now',cmd:'no'}]};
-  return null;
-}
-function harmonyConfirmPending(){
-  var p=HARMONY_PENDING; HARMONY_PENDING=null;
-  if(!p) return {reply:'There\u2019s nothing pending \u2014 tell me what you need.',cmd:null};
-  if(p.kind==='runsafe'){
-    var before=AGENT_LOG.length;
-    agentCommandCore('run all safe actions');
-    var moves=AGENT_LOG.slice(0,AGENT_LOG.length-before);
-    var reply=moves.length?_narrateMoves(moves):'Nothing was safe to advance.';
-    var off=harmonyMakeOffer(moves);
-    if(off){ reply+='\n'+off.ask; HARMONY_PENDING=off.pending; HARMONY_REPLY_ACTIONS=off.chips; }
-    return {reply:reply,cmd:null};
-  }
-  if(p.kind==='notify'){
-    var who=(HARMONY_PERSONAS[p.to]||{}).name||p.to.toUpperCase();
-    p.ids.forEach(function(id){ harmonySendNotification(p.to,p.note,id); });
-    return {reply:'Sent \u2014 '+who+'\u2019s bell is lit for '+(p.ids.length<=2?p.ids.join(' & '):p.ids.length+' items')+'. Anything else?',cmd:null};
-  }
-  return {reply:'Done.',cmd:null};
-}
 function harmonyVoiceLabel(){
   if(HARMONY_VOICE.engine==='eleven' && elevenReady()) return {t:'ElevenLabs \u00b7 '+(((ELEVEN.vname||'').split(' \u2014 ')[0].split(' (')[0])||'neural'),warn:false};
   if(harmonyPiperActive()) return {t:(PIPER.vname||'Piper (neural)'),warn:false};
@@ -6858,17 +6764,31 @@ function updateVoiceLabel(){
   e.textContent='VOICE \u00b7 '+L.t;
   e.className='jc-eng'+(L.warn?' warn':'');
 }
+// REAL replies only. Every answer comes from a live Claude call; failures surface as
+// real error states in the feed — there is no canned fallback and no fake success.
 async function harmonyGetReply(t){
-  var low=(t||'').toLowerCase().trim();
-  if(HARMONY_PENDING){
-    if(/^(yes|yeah|yep|sure|ok(ay)?|do it|go ahead|please( do)?|send( it| them)?|confirm|run( them| it| all)?)\b/.test(low) || /^(نعم|أجل|تمام|طبعاً|طبعا|نفّذ|نفذ|شغّلها|شغلها)/.test(low)) return harmonyConfirmPending();
-    if(/^(no+|nah|not now|skip|later|cancel|don'?t)\b/.test(low) || /^(لا|ليس الآن|لاحقاً|لاحقا|إلغاء)/.test(low)){ HARMONY_PENDING=null; return { reply:_pick(['Understood \u2014 standing by, Omar.','No problem \u2014 parked, Omar.','Understood \u2014 I\u2019ll hold.']), cmd:null }; }
-    HARMONY_PENDING=null;
-  } else if(/^(yes|yeah|yep|no+|nah)\b/.test(low)){
-    return { reply:'There\u2019s nothing pending \u2014 tell me what you\u2019d like me to do.', cmd:null };
+  if(!aiReady()){
+    return { reply:null, error:(ANTHROPIC.base==='/claude'
+      ? 'Claude engine is not connected — the local proxy holds no key. Run set-claude-key.cmd, or add your Anthropic key in Voice Lab.'
+      : 'Claude engine is not connected — add your Anthropic API key (tap the engine badge).') };
   }
-  if(HARMONY_AI.on && aiReady()){ try{ var r=await harmonyAICall(); if(r&&r.reply) return r; }catch(e){ if(!window._aiWarned){ window._aiWarned=1; toast('Live AI call failed — using the offline engine. Check the Claude key in Voice Lab.','warn'); } } }
-  return { reply: harmonyRespond(t), cmd:null };  // offline fallback (also executes the action itself)
+  try{
+    var r=await harmonyAICall();
+    if(r&&r.reply) return r;
+    return { reply:null, error:'Claude returned an empty reply — please try again.' };
+  }catch(e){ return { reply:null, error:harmonyAIErrorText(e) }; }
+}
+function harmonyAIErrorText(e){
+  var m=(e&&e.message)||'';
+  if(/http 401/.test(m)) return 'Claude rejected the API key (401) — re-enter it in Voice Lab.';
+  if(/http 402|credit balance/i.test(m)) return 'The Anthropic account is out of credits (402) — top up at console.anthropic.com.';
+  if(/http 403/.test(m)) return 'The Claude API refused the request (403) — check the key’s permissions.';
+  if(/http 429/.test(m)) return 'Rate-limited by the Claude API (429) — give it a moment and retry.';
+  if(/http (5\d\d)/.test(m)) return 'The Claude API is unavailable ('+m.replace('http ','')+') — retry shortly.';
+  if(/failed to fetch|networkerror|load failed|network/i.test(m)) return (ANTHROPIC.base==='/claude'
+    ? 'Cannot reach the local proxy on 127.0.0.1 — is the secure proxy running?'
+    : 'Network error — cannot reach the Claude API from this device.');
+  return 'Claude call failed — '+(m||'unknown error')+'.';
 }
 function agentCommand(text){
   var t=(text||'').trim(); if(!t) return;
@@ -6880,19 +6800,19 @@ function agentCommand(text){
   var before=AGENT_LOG.length;
   harmonyGetReply(t).then(function(res){
     HARMONY_TYPING=false;
-    if(res.cmd){ agentCommandCore(res.cmd); }
+    if(res.error){
+      showChatLive('');
+      chatPush({who:'harmony',err:true,text:res.error});
+      jcoreSet('idle'); updateEngineBadge(); refreshAgentStats();
+      return;
+    }
     var did=AGENT_LOG.length-before;
-    var reply=res.reply||'Done.';
+    var reply=res.reply;
     if(HARMONY_VOICE.on) harmonySpeak(reply);
     var _mv=did>0?AGENT_LOG.slice(0,did):[];
-    if(did>0 && !HARMONY_PENDING){
-      var _off=harmonyMakeOffer(_mv);
-      if(_off){ reply+='\n'+_off.ask; HARMONY_PENDING=_off.pending; HARMONY_REPLY_ACTIONS=_off.chips; }
-    }
     jcoreTopic(harmonyTopicOf(t,reply,_mv));
-    var extra={ cards:harmonyContextCards(t), actions: HARMONY_REPLY_ACTIONS || (/^(anytime|happy to help|you got it|no problem|standing by|understood)/i.test(reply)?[]:harmonySuggested()) };
-    HARMONY_REPLY_ACTIONS=null;
-    if(did>0){ harmonyWorkThenStream(reply, extra); } else { showChatLive(''); harmonyStreamReply(reply, extra); }
+    var extra={ cards:harmonyContextCards(t), actions:harmonySuggested() };
+    showChatLive(''); harmonyStreamReply(reply, extra);
     refreshAgentStats();
   });
 }
@@ -6980,10 +6900,7 @@ function renderHCard(cd){
   return h;
 }
 function agentCardApply(id){
-  var mv=agentApply(id); AGENT_LAST_MOVES=mv?[mv]:[];
-  if(mv){ chatPush({who:'harmony',text:'Done \u2014 '+_verb(mv.action)+' '+id+_tail(mv.action)+'.',actions:harmonySuggested()}); }
-  else { chatPush({who:'harmony',text:id+' has no safe next step for me right now \u2014 it\u2019s waiting on BU or OU.'}); }
-  refreshAgentStats();
+  agentCommand('Advance '+id+' to its next stage.');
 }
 function harmonyAutopilot(){
   var recs=agentRecommendations().filter(function(x){return x.direct;});
@@ -7092,7 +7009,7 @@ function harmonySound(kind){ if(!HARMONY_FX.on) return; var ctx=harmonyAudioCtx(
 }
 function harmonyToggleFX(){ HARMONY_FX.on=!HARMONY_FX.on; try{localStorage.setItem('hv_fx',HARMONY_FX.on?'on':'off');}catch(e){} if(HARMONY_FX.on) harmonySound('blip'); var b=document.getElementById('btn-fx'); if(b){ b.innerHTML=HARMONY_FX.on?'&#127898;':'&#128263;'; b.classList.toggle('off',!HARMONY_FX.on); b.style.color=''; } toast(HARMONY_FX.on?'HUD sound FX on.':'HUD sound FX off.','info'); }
 // Single source of truth for the mic listening UI (drives #harmony-mic + #btn-vcmd + input placeholder).
-function harmonyMicUI(on){ var m=document.getElementById('harmony-mic'); if(m){ m.classList.toggle('listening',on); m.innerHTML=on?'&#128308;':'&#127908;'; } var vc=document.getElementById('btn-vcmd'); if(vc){ vc.classList.toggle('listening',on); vc.innerHTML=on?'&#128308; Listening…':'&#127908; Voice Command'; } var inp=document.getElementById('agent-cmd'); if(inp) inp.placeholder=on?'Listening… speak your order':'Give an order…'; }
+function harmonyMicUI(on){ var m=document.getElementById('harmony-mic'); if(m){ m.classList.toggle('listening',on); m.innerHTML=on?'&#128308;':'&#127908;'; } var inp=document.getElementById('agent-cmd'); if(inp) inp.placeholder=on?'Listening… speak your order':'Give an order…'; }
 var ELEVEN=(function(){ try{ return { key:localStorage.getItem('hv_el_key')||'', voice:localStorage.getItem('hv_el_voice')||'JBFqnCBsd6RMkjVDRZzb', vname:localStorage.getItem('hv_el_vname')||'George (British \u2014 Vision register)', voiceAr:localStorage.getItem('hv_el_voice_ar')||'JBFqnCBsd6RMkjVDRZzb', vnameAr:localStorage.getItem('hv_el_vname_ar')||'George (Arabic \u2014 multilingual)', voices:null }; }catch(e){ return {key:'',voice:'JBFqnCBsd6RMkjVDRZzb',vname:'George (British \u2014 Vision register)',voiceAr:'JBFqnCBsd6RMkjVDRZzb',vnameAr:'George (Arabic \u2014 multilingual)',voices:null}; } })();
 // Sultan is a Voice-Library "professional" voice: ElevenLabs free tier 402s on it. Migrate any
 // cached Sultan selection to George, who speaks Arabic via multilingual_v2 on the free tier.
@@ -7131,7 +7048,6 @@ function aiReady(){ return !!(ANTHROPIC.key||ANTHROPIC.serverKey); }
 if(ANTHROPIC.base==='/claude'){ try{ fetch('/claude-status',{cache:'no-store'}).then(function(r){return r.ok?r.json():null;}).then(function(j){
   if(j&&j.serverKey){ ANTHROPIC.serverKey=true; HARMONY_AI.on=true;
   if(!window._aiKeyToast){ window._aiKeyToast=1; toast('Live Claude engine active (server key) — Vision is thinking for real.','info'); }
-  var b=document.getElementById('btn-ai'); if(b){ b.innerHTML='&#129504; AI on'; b.style.color='#4ADE80'; }
   updateEngineBadge(); }
   else if(!j){ ANTHROPIC.base='https://api.anthropic.com'; } // relay absent → allow direct browser-key path
 }).catch(function(){ ANTHROPIC.base='https://api.anthropic.com'; }); }catch(e){} }
@@ -7306,7 +7222,7 @@ function harmonySitrepSpoken(){
   // 3 — progress as one flowing sentence
   p.push('On delivery: '+inDel+' being built, '+inUAT+' with Hamad in acceptance testing, and '+closed+' already delivered.');
   // 4 — one clear offer, or a clean close
-  if(direct>0){ p.push('I can safely advance '+direct+' item'+(direct!==1?'s':'')+' right now — shall I run them?'); HARMONY_PENDING={kind:'runsafe'}; }
+  if(direct>0){ p.push('I can safely advance '+direct+' item'+(direct!==1?'s':'')+' right now — shall I run them?'); }
   else if(waiting.length){ p.push('The rest is waiting on business sign-offs — say the word and I\u2019ll send reminders.'); }
   else { p.push('Nothing needs my hand at the moment.'); }
   return p.join(' ');
@@ -7332,7 +7248,7 @@ function harmonySitrepSpokenAr(){
     if(riskArr.length>1) p.push('و'+(riskArr.length-1)+' طلبات أخرى تقترب من مواعيدها.');
   }
   p.push('على صعيد التنفيذ: '+inDel+' قيد البناء، و'+inUAT+' في اختبار القبول مع حمد، و'+closed+' تم تسليمها.');
-  if(direct>0){ p.push('أستطيع تنفيذ '+direct+' إجراءً آمناً الآن — هل أنفّذها؟'); HARMONY_PENDING={kind:'runsafe'}; }
+  if(direct>0){ p.push('أستطيع تنفيذ '+direct+' إجراءً آمناً الآن — هل أنفّذها؟'); }
   else if(waiting.length){ p.push('البقية بانتظار اعتمادات وحدات الأعمال — أرسل تذكيرات إن أردت.'); }
   else { p.push('لا شيء يحتاج تدخلي حالياً.'); }
   return p.join(' ');
@@ -7343,7 +7259,7 @@ function harmonyOpeningSpoken(){
     var directA=recsA.filter(function(x){return x.direct;}).length;
     var hrA=new Date().getHours(); var gA=hrA<12?'صباح الخير':'مساء الخير';
     var headA=gA+' يا عمر، فيجن جاهز في خدمتك.';
-    if(directA>0){ HARMONY_PENDING={kind:'runsafe'}; return headA+' لديّ '+directA+' إجراءً آمناً جاهزاً — هل أشغّلها؟'; }
+    if(directA>0){ return headA+' لديّ '+directA+' إجراءً آمناً جاهزاً — هل أشغّلها؟'; }
     return headA+' اللوحة تحت السيطرة.';
   }
   var hr=new Date().getHours(); var greet=hr<12?'Good morning':hr<18?'Good afternoon':'Good evening';
@@ -7352,7 +7268,7 @@ function harmonyOpeningSpoken(){
   var risk=recs.filter(function(x){var dl=agentDaysLeft(x.r);return dl!==99999&&dl<=14;}).length;
   var head=_pick(['Systems online. '+greet+', Omar.',greet+', Omar \u2014 Vision online and standing ready.','At your command, Omar. '+greet+'.',greet+', Omar. All systems nominal.']);
   var body;
-  if(direct>0){ body=_pick([direct+' safe action'+(direct!==1?'s are':' is')+' ready. Shall I run them?','I\u2019m holding '+direct+' move'+(direct!==1?'s':'')+' \u2014 want them through?','I took the liberty of lining up '+direct+' safe move'+(direct!==1?'s':'')+'. Say the word and they\u2019re done.']); HARMONY_PENDING={kind:'runsafe'}; }
+  if(direct>0){ body=_pick([direct+' safe action'+(direct!==1?'s are':' is')+' ready. Shall I run them?','I\u2019m holding '+direct+' move'+(direct!==1?'s':'')+' \u2014 want them through?','I took the liberty of lining up '+direct+' safe move'+(direct!==1?'s':'')+'. Say the word and they\u2019re done.']); }
   else if(risk>0){ body=_pick([risk+' item'+(risk!==1?'s':'')+' at SLA risk \u2014 say the word and I\u2019ll pull the detail.',risk+' item'+(risk!==1?'s':'')+' drifting toward the SLA line, Omar. I\u2019d suggest a look before anyone notices.']); }
   else { body=_pick(['The board is clean, Omar. Standing by for orders.','All quiet, Omar. I\u2019ll flag anything that needs you.']); }
   return head+' '+body;
@@ -7707,7 +7623,6 @@ function harmonyMic(){
     var t=finalTxt.replace(/\s+/g,' ').trim(); finalTxt='';
     if(t && !hadErr){
       var inp=document.getElementById('agent-cmd'); if(inp) inp.value=t;
-      harmonySpeak(_pick(['On it, Omar.','Consider it done.','Executed.']));
       agentCommand(t);
     }
   };
@@ -7934,9 +7849,8 @@ function renderAgent(){
   h+='<span class="t5-stat" title="'+TT('Pipeline health','\u0635\u062d\u0629 \u062e\u0637 \u0627\u0644\u0625\u0646\u062c\u0627\u0632')+'"><b id="gv-health">'+_health+'%</b>'+TT('Health','\u0627\u0644\u0635\u062d\u0629')+'</span>';
   h+='</div>';
   h+='<div class="t5-ctl">';
-  h+='<button id="btn-vcmd" onclick="harmonyMic()" class="t5-pill pri" title="'+TT('Speak a command \u2014 e.g. \u2018what is at risk?\u2019, \u2018run all safe actions\u2019','قل أمراً — مثال: ما المخاطر؟ / شغّل الإجراءات الآمنة')+'">&#127908; '+TT('Voice Command','أمر صوتي')+'</button>';
   h+='<button onclick="harmonyAutopilot()" class="t5-pill ghost" title="'+TT('Watch HARMONY optimise the whole pipeline autonomously','شاهد النظام يحسّن خط الإنجاز تلقائياً')+'">\u26A1 '+TT('Autopilot','الطيار الآلي')+'</button>';
-  h+='<button onclick="harmonySpeak(harmonySitrepSpoken())" class="t5-pill ghost" title="'+TT('Hear the full spoken briefing (SITREP)','استمع إلى الإيجاز الكامل')+'">&#128266; '+TT('Briefing','الإيجاز')+'</button>';
+  h+='<button onclick="agentCommand(&apos;Give me a crisp status briefing of the pipeline.&apos;)" class="t5-pill ghost" title="'+TT('Hear the full spoken briefing (SITREP)','استمع إلى الإيجاز الكامل')+'">&#128266; '+TT('Briefing','الإيجاز')+'</button>';
   h+='<button id="btn-wake" onclick="harmonyToggleWake()" class="t5-pill ghost'+(HARMONY_WAKE.on?' on':'')+'" title="'+TT('Hands-free mode — say “Hey Vision, what’s at risk?” with no buttons','وضع حر — قل: يا فيجن، ما المخاطر؟')+'">&#128066; '+TT('Hey Vision','يا فيجن')+(HARMONY_WAKE.on?' ✓':'')+'</button>';
   h+='</div>';
   h+='</div>';
@@ -7949,8 +7863,7 @@ function renderAgent(){
   if(!HARMONY_CHAT.length){
     var _dr0=agentRecommendations().filter(function(x){return x.direct;}).length;
     var _seedTxt=harmonySitrep()+(_dr0?'\nWant me to run them?':'');
-    var _seedActs=_dr0?[{label:'\u26A1 Yes \u2014 run all safe ('+_dr0+')',cmd:'yes'},{label:'Show at-risk',cmd:'show at-risk'},{label:'Not now',cmd:'no'}]:harmonySuggested();
-    if(_dr0) HARMONY_PENDING={kind:'runsafe'};
+    var _seedActs=_dr0?[{label:'\u26A1 Run all safe actions ('+_dr0+')',cmd:'run all safe actions'},{label:'Show at-risk',cmd:'what is at risk right now?'}]:harmonySuggested();
     HARMONY_CHAT.push({who:'harmony',text:_seedTxt, actions:_seedActs});
   }
   ensureOpsClock();
@@ -7982,7 +7895,11 @@ function renderAgent(){
   h+='<div class="card" style="padding:0;margin-top:14px;overflow:hidden">';
   h+='<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;border-bottom:1px solid var(--border);background:#fff">';
   h+='<div style="display:flex;align-items:center;gap:9px"><span class="havatar" style="width:30px;height:30px;font-size:16px">&#129302;</span><div><div style="font-size:12.5px;font-weight:800;color:var(--text);line-height:1.1">Vision</div><div style="font-size:10px;color:var(--text3)">'+TT('AI Delivery Agent','وكيل الإنجاز الذكي')+'</div></div></div>';
-  h+='<div id="chat-engine" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end">'+harmonyEngineBadgeHTML()+'</div>';
+  h+='<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end">'
+    +'<span id="ctx-stamp" title="'+TT('Live context — refreshes whenever pipeline data changes','السياق الحي — يتحدث مع كل تغيير في البيانات')+'" style="font-family:\'DM Mono\',monospace;font-size:9px;letter-spacing:.8px;color:var(--text3)">CTX '+new Date().toTimeString().slice(0,8)+'</span>'
+    +'<div id="chat-engine" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end">'+harmonyEngineBadgeHTML()+'</div>'
+    +'<button onclick="harmonyFeedClear()" class="btn btn-sm" title="'+TT('Clear conversation','مسح المحادثة')+'" style="min-width:30px;padding:3px 8px;font-size:12px">&#128465;</button>'
+    +'</div>';
   h+='</div>';
   h+='<div id="harmony-chat" style="max-height:340px;overflow:auto;padding:14px 16px;background:#F8FAFC">';
   h+=HARMONY_CHAT.map(renderChatMsgHTML).join('');
@@ -8073,12 +7990,12 @@ function renderTickerHTML(M){
   return tk+tk;
 }
 function harmonyEngineBadgeHTML(){
-  var live=aiReady() && (typeof HARMONY_AI==='undefined' || HARMONY_AI.on!==false);
+  var live=aiReady();
   var brain = live
-    ? '<span title="'+TT('Vision is reasoning with real Claude Opus 4.8','فيجن يفكّر باستخدام Claude الحقيقي')+'" style="display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:800;padding:3px 9px;border-radius:99px;background:rgba(34,197,94,.16);color:#16A34A;border:1px solid rgba(34,197,94,.35)"><span class="live-dot"></span>'+TT('Claude · live','Claude · مباشر')+'</span>'
-    : '<span title="'+TT('Using the built-in offline command engine','المحرك المدمج دون اتصال')+'" style="display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;padding:3px 9px;border-radius:99px;background:rgba(148,163,184,.16);color:#64748B;border:1px solid rgba(148,163,184,.3)">'+TT('Offline engine','محرك محلي')+'</span>';
+    ? '<span title="'+TT('Vision is reasoning with real Claude \u2014 every reply is a live call','فيجن يفكّر باستخدام Claude الحقيقي')+'" style="display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:800;padding:3px 9px;border-radius:99px;background:rgba(34,197,94,.16);color:#16A34A;border:1px solid rgba(34,197,94,.35)"><span class="live-dot"></span>'+TT('Claude \u00b7 live','Claude \u00b7 مباشر')+'</span>'
+    : '<span onclick="voiceLabOpen()" title="'+TT('Not connected \u2014 add your Anthropic key or start the proxy','غير متصل — أضف مفتاح Anthropic')+'" style="cursor:pointer;display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:800;padding:3px 9px;border-radius:99px;background:rgba(220,38,38,.12);color:#DC2626;border:1px solid rgba(220,38,38,.4)">\u26A0 '+TT('Claude \u00b7 not connected','Claude \u00b7 غير متصل')+'</span>';
   var vl=harmonyVoiceLabel();
-  var vt=(vl.t||'').replace(/ · auto$/,'').split(' · ')[0];
+  var vt=(vl.t||'').replace(/ \u00b7 auto$/,'').split(' \u00b7 ')[0];
   var voice = '<span title="'+TT('Speaking voice','صوت النطق')+'" style="display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:3px 9px;border-radius:99px;background:rgba(37,99,235,.10);color:#2563EB;border:1px solid rgba(37,99,235,.25)">&#128266; '+escH(vt||'voice')+'</span>';
   return brain+voice;
 }
@@ -8087,6 +8004,8 @@ function renderChatMsgHTML(m,idx,arr){
   var h='';
   if(m.who==='user'){
     h+='<div style="display:flex;justify-content:flex-end;margin-bottom:9px"><div style="max-width:82%;background:#2563EB;color:#fff;padding:8px 13px;border-radius:14px 14px 4px 14px;font-size:12.5px;line-height:1.45">'+escH(m.text)+'</div></div>';
+  } else if(m.err){
+    h+='<div style="display:flex;gap:10px;margin-bottom:9px;align-items:flex-start"><span class="havatar">&#9888;&#65039;</span><div class="hbot herr" style="max-width:82%;background:rgba(220,38,38,.07);border:1px solid rgba(220,38,38,.45);padding:8px 13px;border-radius:14px 14px 14px 4px;font-size:12.5px;line-height:1.5;color:#DC2626;white-space:pre-wrap">'+escH(m.text)+'</div></div>';
   } else {
     h+='<div style="display:flex;gap:10px;margin-bottom:9px;align-items:flex-start"><span class="havatar">&#129302;</span><div class="hbot" style="max-width:82%;background:#fff;border:1px solid var(--border);padding:8px 13px;border-radius:14px 14px 14px 4px;font-size:12.5px;line-height:1.5;color:var(--text);white-space:pre-wrap">'+escH(m.text)+'</div></div>';
     var showActs=m.actions&&m.actions.length&&(arr===undefined||idx===arr.length-1);
@@ -8121,6 +8040,7 @@ function renderFeedHTML(){
 }
 function chatPush(m){
   HARMONY_CHAT.push(m);
+  harmonyFeedSave();
   var live=document.getElementById('chat-live');
   if(live){ var chat=document.getElementById('harmony-chat'); if(chat){ chat.querySelectorAll('.hact-lbl,.hact-row').forEach(function(el){ el.remove(); }); } live.insertAdjacentHTML('beforebegin', renderChatMsgHTML(m)); setTimeout(scrollChatBottom,15); }
   else if(currentScreen!=='it-agent'){ nav('it-agent'); }
