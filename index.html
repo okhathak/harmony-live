@@ -6604,6 +6604,31 @@ function harmonyPipelineAnalysis(){
     'Planned':'IT','In Delivery':'IT','Acceptance Testing':'BU','UAT Approved':'IT',
     'Deployed — Pending Closure':'BU'
   };
+  var PNAME={DSP:'Digital Solutions Partner',CORE:'CORE',DATA:'DATA'};
+  // the concrete reason a request sits where it does — so Vision can answer "WHY is X stuck"
+  function whyStuck(r){
+    var ap=r.deptApprovals||{};
+    var objected=Object.keys(ap).filter(function(k){var s=(ap[k]||{}).status;return s==='Blocked'||s==='Objected';});
+    var pending=Object.keys(ap).filter(function(k){return (ap[k]||{}).status==='Pending';});
+    var openClar=(r.clarifications||[]).filter(function(c){return c&&!c.resolved&&!c.answered;}).length;
+    if(openClar) return 'clarification pending from BU';
+    switch(r.status){
+      case 'Submitted': case 'Under Review': return 'awaiting OU validation';
+      case 'Awaiting Your Input': return 'awaiting BU reply to OU query';
+      case 'Department Approvals': return objected.length?('BLOCKED by '+objected.join(', ')+' objection'):(pending.length?('awaiting '+pending.join(', ')+' sign-off'):'in department sign-off');
+      case 'OU Approved': case 'Queued for IT': return 'cleared to IT — awaiting IT to start analysis';
+      case 'Under Analysis': return 'IT BA analysis in progress'+(r.baAssigned?(' ('+r.baAssigned+')'):' (no BA assigned yet)');
+      case 'Scope Confirmed': return 'analysis done — awaiting IT to schedule a cycle';
+      case 'Awaiting BU Confirmation': return 'scope sent — awaiting BU to confirm';
+      case 'Returned to BU': return 'returned to BU for rework';
+      case 'Planned': return r.partnerId?('scheduled with '+(PNAME[r.partnerId]||r.partnerId)+' — awaiting build start'):'planned but NO delivery partner assigned';
+      case 'In Delivery': return 'in development'+(r.partnerId?(' with '+(PNAME[r.partnerId]||r.partnerId)):'')+(r.jiraId?(' ('+r.jiraId+')'):'');
+      case 'Acceptance Testing': return 'built — awaiting BU UAT sign-off';
+      case 'UAT Approved': return 'UAT-approved — awaiting IT to deploy';
+      case 'Deployed — Pending Closure': return 'live — awaiting BU to record outcome';
+      default: return r.status;
+    }
+  }
   var active=REQUESTS.filter(function(r){return ['Closed','Rejected','Deployed'].indexOf(r.status)<0;});
   var byOwner={IT:[],BU:[],OU:[],Dept:[]};
   active.forEach(function(r){ var o=OWN[r.status]||'IT'; (byOwner[o]||byOwner.IT).push(r); });
@@ -6613,8 +6638,7 @@ function harmonyPipelineAnalysis(){
       var o=OWN[r.status]||'IT', dl=agentDaysLeft(r);
       var age=(r.submittedDays!=null?r.submittedDays+'d in pipeline':'age n/a');
       var sla=(dl===99999?'no SLA date':(dl<0?('SLA OVERDUE '+Math.abs(dl)+'d'):(dl<=14?('SLA due in '+dl+'d'):(dl+'d to SLA'))));
-      var blk=(r.status==='Department Approvals'&&r.deptApprovals)?(' · '+(Object.keys(r.deptApprovals).filter(function(k){return r.deptApprovals[k]==='objected';}).join(',')||'')):'';
-      return r.id+' · '+r.sector+' · "'+(r.title||'').slice(0,42)+'" · '+r.status+' · HELD BY '+o+' · '+age+' · K='+getK(r)+' · '+sla+(r.urgent?' · URGENT':'')+blk;
+      return r.id+' · '+r.sector+' · "'+(r.title||'').slice(0,40)+'" · '+r.status+' · HELD BY '+o+' · '+age+' · K='+getK(r)+' · '+estHrs(r)+'h · '+sla+(r.urgent?' · URGENT':'')+' · WHY: '+whyStuck(r);
     });
   function summ(o){
     var a=byOwner[o]; if(!a.length) return o+' holds 0';
@@ -6623,7 +6647,21 @@ function harmonyPipelineAnalysis(){
     var risk=a.filter(function(r){var d=agentDaysLeft(r);return d!==99999&&d>=0&&d<=14;}).length;
     return o+' holds '+a.length+' (oldest '+oldest.id+' '+(oldest.submittedDays||'?')+'d'+(breach?', '+breach+' SLA-breached':'')+(risk?', '+risk+' at risk':'')+')';
   }
-  return { lines:lines, summary:['IT','OU','BU','Dept'].map(summ).join('; ') };
+  // partner load — who is carrying the build work, and hours
+  var load={};
+  active.filter(function(r){return ['Planned','Scope Confirmed','In Delivery'].indexOf(r.status)>-1&&r.partnerId;})
+    .forEach(function(r){ var k=r.partnerId; load[k]=load[k]||{n:0,h:0}; load[k].n++; load[k].h+=estHrs(r)||0; });
+  var partners=Object.keys(load).map(function(k){return (PNAME[k]||k)+': '+load[k].n+' active build'+(load[k].n!==1?'s':'')+' ('+load[k].h+'h)';}).join('; ')||'no partner-assigned builds active';
+  var noPartner=active.filter(function(r){return ['Planned','Scope Confirmed'].indexOf(r.status)>-1&&!r.partnerId;}).map(function(r){return r.id;});
+  // cycle-18 delivery capacity
+  var c18=(typeof harmonyC18Hours==='function')?harmonyC18Hours():0;
+  var cycle='Cycle 18 committed load '+c18+'h of 60h cap ('+(60-c18>=0?(60-c18)+'h free':Math.abs(60-c18)+'h OVER')+')';
+  return {
+    lines:lines,
+    summary:['IT','OU','BU','Dept'].map(summ).join('; '),
+    partners:partners+(noPartner.length?('; NO partner yet on '+noPartner.join(', ')):''),
+    cycle:cycle
+  };
 }
 function harmonySystemPrompt(){
   var recs=agentRecommendations();
@@ -6650,7 +6688,9 @@ function harmonySystemPrompt(){
     +"ANSWERING SCOPE: you may ALWAYS analyse and answer questions about ANY part of the pipeline — including IT delivery — regardless of the current role. Role limits apply ONLY to ACTIONS (advancing, deploying, approving, assigning, notifying); they never restrict analysis or explanation. Do not deflect a question with ‘that’s not in your workspace’.\n\n"
     +"Pipeline counts: in active delivery "+inDel+"; in UAT with BU "+inUAT+"; safe to auto-advance "+safe+"; waiting on BU/OU "+waiting+".\n"
     +"WHO HOLDS THE WORK (bottleneck summary): "+an.summary+".\n"
-    +"Active requests — id · sector · title · stage · current owner · time in pipeline · K-score · SLA (sorted oldest-first):\n"+an.lines.join('\n')+"\n\n"
+    +"DELIVERY CAPACITY: "+an.cycle+".\n"
+    +"PARTNER LOAD: "+an.partners+".\n"
+    +"Active requests — id · sector · title · stage · current owner · age · K-score · effort-hours · SLA · WHY it sits there (sorted oldest-first):\n"+an.lines.join('\n')+"\n\n"
     +"Deliver the conclusion concisely (spoken: 1–2 sentences), but make sure it is the product of the reasoning above — the specific bottleneck with its evidence, then at most one next-step offer.";
 }
 // Which tools each role may use — the widget is scoped to the role's real authority.
