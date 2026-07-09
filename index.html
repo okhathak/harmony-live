@@ -1313,6 +1313,137 @@ body[data-role="it"] [style*="background:#F8FAFC"]{background:#262624!important}
 body[data-role="it"] [style*="background:#EFF6FF"]{background:rgba(217,119,87,.12)!important}
 /* reduce motion for those who ask */
 @media (prefers-reduced-motion:reduce){ .t5-pill,body[data-role="it"] .hbar button{transition:none} }
+
+/* ═══════════════════════════════════════════════════════════════════
+   IT OFFICIAL LIGHT THEME (2026-07-09) — wins the cascade over every
+   earlier body[data-role="it"] dark rule. Makes the IT role consistent
+   with the light government theme used by BU/OU/Dept/Exec. Reversible:
+   delete this block to restore the dark "command center" skin.
+   ═══════════════════════════════════════════════════════════════════ */
+/* tokens → official light (indigo IT accent) */
+body[data-role="it"]{--navy:#0A1628;--bg:#F4F7FB;--card:#FFFFFF;--border:#E4EAF2;--border2:#EDF1F7;--text:#0A1628;--text2:#3D4759;--text3:#5E6B80;--accent:#4338CA;--accent-pale:#EEF2FF;--accent-rgb:67,56,202;--sb-top:#1E1B4B;--sb-act-bg:rgba(67,56,202,.42);--sb-mark1:#6366F1;--sb-mark2:#4338CA;--blue:#2563EB;--teal:#0891B2;--gold:#D97706;--green:#16A34A;--red:#DC2626;--purple:#7C3AED}
+/* ambient field behind screens → light */
+body[data-role="it"] #content-el{background:
+  radial-gradient(760px circle at 8% -10%, rgba(67,56,202,.06), transparent 60%),
+  radial-gradient(680px circle at 94% 2%, rgba(37,99,235,.05), transparent 55%),
+  #F4F7FB !important}
+body[data-role="it"] #main::after{background:none !important}
+body[data-role="it"] #topbar{background:rgba(255,255,255,.9)!important;border-bottom:1px solid var(--border)!important;backdrop-filter:blur(12px)}
+/* sidebar → base government navy (consistent with the other roles) */
+body[data-role="it"] #sidebar{background:linear-gradient(180deg,var(--sb-top,#1E1B4B) 0%,#12244C 58%,#0E1E3C 100%)!important}
+body[data-role="it"] .sbi.act{box-shadow:inset 3px 0 0 rgba(255,255,255,.85),0 6px 18px -8px rgba(0,0,0,.55)!important;color:#fff!important}
+/* cards / panels → white */
+body[data-role="it"] .card,body[data-role="it"] .tac .card{background:#fff!important;border:1px solid var(--border)!important;border-radius:16px!important;box-shadow:var(--sh)!important}
+body[data-role="it"] .card::before{background:none !important}
+/* command-center hero → light, indigo accent */
+body[data-role="it"] .t5hero{color:var(--text)!important}
+body[data-role="it"] .t5-greet{color:var(--text)!important}
+body[data-role="it"] .t5-grad{background:none!important;-webkit-background-clip:initial!important;background-clip:initial!important;-webkit-text-fill-color:initial!important;color:var(--accent)!important;font-style:italic}
+body[data-role="it"] .t5-micro{color:var(--accent)!important}
+body[data-role="it"] .t5-micro .sep{color:var(--text3)!important}
+body[data-role="it"] .t5-micro b{color:var(--text)!important}
+body[data-role="it"] .t5-sub,body[data-role="it"] .t5-stats{color:var(--text3)!important}
+body[data-role="it"] .t5-stat b{color:var(--text)!important}
+body[data-role="it"] .t5-pill.pri{background:var(--accent)!important;color:#fff!important;box-shadow:0 8px 26px -10px rgba(67,56,202,.5)!important}
+body[data-role="it"] .t5-pill.ghost{background:#fff!important;border:1px solid var(--border)!important;color:var(--text2)!important}
+body[data-role="it"] .t5-pill.ghost:hover{border-color:var(--accent)!important;color:var(--accent)!important;background:var(--accent-pale)!important}
+body[data-role="it"] .t5-pill.on{border-color:var(--accent)!important;color:var(--accent)!important;background:var(--accent-pale)!important;box-shadow:none!important}
+body[data-role="it"] .ops-clock{color:var(--accent)!important;background:var(--accent-pale)!important;border:1px solid #C7D2FE!important}
+body[data-role="it"] .ops-ticker{border-top:1px solid var(--border)!important;border-bottom:1px solid var(--border)!important}
+body[data-role="it"] .ops-tk,body[data-role="it"] .ops-threat .tt-l{color:var(--text3)!important}
+body[data-role="it"] .ptitle{color:var(--text)!important}
+body[data-role="it"] .psub{color:var(--text3)!important}
+/* chat surface → light bubbles */
+body[data-role="it"] #harmony-chat{padding:16px 18px 10px!important}
+body[data-role="it"] #harmony-chat .hbot,body[data-role="it"] #harmony-chat .hbot:not(.herr){background:#fff!important;border:1px solid var(--border)!important;color:var(--text)!important;border-radius:14px 14px 14px 4px!important;padding:8px 13px!important;max-width:82%!important;font-size:12.5px!important;line-height:1.5!important;box-shadow:0 1px 2px rgba(16,42,80,.05)!important}
+body[data-role="it"] #harmony-chat .huser{background:linear-gradient(135deg,#3B7BFF,#2563EB)!important;color:#fff!important;border:none!important;border-radius:15px 15px 5px 15px!important;box-shadow:0 5px 16px -7px rgba(37,99,235,.6)!important}
+body[data-role="it"] .hbar{border-top:1px solid var(--border)!important}
+body[data-role="it"] #agent-cmd{background:#fff!important;border:1px solid var(--border)!important;color:var(--text)!important;border-radius:14px!important}
+body[data-role="it"] .hact{background:#EEF3FB!important;border:1px solid #DCE6F5!important;color:#1D4ED8!important;font-family:inherit!important;text-transform:none!important;letter-spacing:normal!important;font-size:11px!important;padding:5px 13px!important}
+body[data-role="it"] .hact:hover{background:#E0EAFB!important;border-color:#B9CEF0!important;color:#1D4ED8!important}
+body[data-role="it"] .hact-lbl{color:var(--text3)!important;font-family:inherit!important;letter-spacing:.5px}
+body[data-role="it"] .hgen .hcard{background:#fff!important;border:1px solid var(--border)!important;border-left:3px solid var(--accent)!important;border-radius:11px!important;box-shadow:0 1px 3px rgba(16,42,80,.06)!important}
+body[data-role="it"] .hcard-h b{color:var(--accent)!important}
+body[data-role="it"] .hcard-btn{background:#16A34A!important;color:#fff!important}
+body[data-role="it"] .hwork{background:#fff!important;border:1px solid var(--border)!important;color:var(--text)!important}
+body[data-role="it"] .htyping span{background:#94A3B8!important}
+body[data-role="it"] .tchip{border:1px solid var(--border)!important;color:var(--text2)!important;background:#fff!important}
+body[data-role="it"] .tchip:hover{color:var(--accent)!important;border-color:var(--accent)!important;background:var(--accent-pale)!important}
+body[data-role="it"] .hbar button[style*="background:#2563EB"]{background:var(--accent)!important;color:#fff!important;border-radius:12px!important}
+body[data-role="it"] .hbar button[style*="background:#16A34A"]{background:#16A34A!important;color:#fff!important;border:none!important;border-radius:12px!important}
+/* modals → light */
+body[data-role="it"] .modal{background:#fff!important;border:1px solid var(--border)!important}
+body[data-role="it"] .modal-bg{background:rgba(16,30,54,.5)!important}
+body[data-role="it"] .mhd{border-bottom:1px solid var(--border)!important}
+body[data-role="it"] .mttl{color:var(--text)!important}
+body[data-role="it"] .msub{color:var(--text3)!important}
+body[data-role="it"] .modal .fi{background:#fff!important;border:1px solid var(--border)!important;color:var(--text)!important}
+body[data-role="it"] #toast-el{background:#fff!important;border:1px solid var(--border)!important;color:var(--text)!important}
+/* autopilot panel → light */
+body[data-role="it"] .ap-panel{background:#fff!important;border:1px solid var(--border)!important}
+body[data-role="it"] .ap-panel::after{background:radial-gradient(440px circle at 100% -12%,rgba(67,56,202,.08),transparent 55%)!important}
+body[data-role="it"] .ap-count{background:linear-gradient(92deg,#4F46E5,#2563EB)!important;-webkit-background-clip:text!important;background-clip:text!important}
+body[data-role="it"] .ap-bar{background:linear-gradient(90deg,#6366F1,#4338CA)!important;box-shadow:none!important}
+body[data-role="it"] .ap-line,body[data-role="it"] .ap-stat>div{background:#F8FAFC!important;border:1px solid var(--border)!important}
+body[data-role="it"] .ap-stat b{color:var(--accent)!important}
+body[data-role="it"] .ap-btn{background:var(--accent)!important;color:#fff!important;box-shadow:0 8px 26px -10px rgba(67,56,202,.5)!important}
+/* JCORE panel + plate → light; orb retinted indigo/blue */
+body[data-role="it"] .jcore-panel{background:linear-gradient(180deg,#fff,#F4F7FB)!important;border:1px solid var(--border)!important;box-shadow:var(--sh2)!important}
+body[data-role="it"] .jcore-panel::before{background:radial-gradient(150px circle at 50% 32%,rgba(67,56,202,.12),transparent 70%)!important}
+body[data-role="it"] .jc-plate{background:#F8FAFC!important;border:1px solid var(--border)!important}
+body[data-role="it"] .jc-num{color:var(--accent)!important;text-shadow:none!important}
+body[data-role="it"] .jc-p-l,body[data-role="it"] .jc-sub,body[data-role="it"] .jc-eng{color:var(--text3)!important}
+body[data-role="it"] .jc-sub b{color:var(--accent)!important}
+body[data-role="it"] .jc-eng:hover{color:var(--accent)!important}
+body[data-role="it"] .jc-halo{background:radial-gradient(circle,rgba(67,56,202,.30),rgba(37,99,235,.10) 55%,transparent 68%)!important}
+body[data-role="it"] .jc-sat::before{background:#4F46E5!important;box-shadow:0 0 10px 2px rgba(67,56,202,.7)!important}
+body[data-role="it"] .jc-wave i{background:linear-gradient(180deg,#6366F1,#4338CA)!important;box-shadow:0 0 6px rgba(67,56,202,.5)!important}
+body[data-role="it"] .jcore-panel .hud-fx b{border-color:rgba(67,56,202,.5)!important;filter:drop-shadow(0 0 5px rgba(67,56,202,.4))!important}
+body[data-role="it"] .jcore-panel .hud-scan{background:linear-gradient(90deg,transparent,rgba(67,56,202,.45),transparent)!important;box-shadow:0 0 10px rgba(67,56,202,.35)!important}
+body[data-role="it"] .jc-reticle::before{border-color:rgba(67,56,202,.35)!important}
+body[data-role="it"] .jc-ring2{background:conic-gradient(from 20deg,transparent 0 60deg,rgba(99,102,241,.6) 60deg 105deg,transparent 105deg 235deg,rgba(67,56,202,.55) 235deg 280deg,transparent 280deg 360deg)!important}
+body[data-role="it"] .hud-tog{background:rgba(67,56,202,.08)!important;border:1px solid rgba(67,56,202,.28)!important;color:var(--accent)!important}
+body[data-role="it"] .hud-tog:hover{border-color:var(--accent)!important;color:var(--accent)!important;box-shadow:none!important}
+body[data-role="it"] .jcore-panel.speaking{box-shadow:0 0 0 1px rgba(67,56,202,.25),0 0 34px -6px rgba(67,56,202,.4)!important}
+/* boot splash → light neutral */
+body[data-role="it"] #ops-boot{background:#0A1628!important}
+/* topbar role selector → light */
+body[data-role="it"] #role-btn{background:#fff!important;border:1px solid var(--border)!important}
+body[data-role="it"] #role-btn:hover{background:#F4F7FB!important}
+body[data-role="it"] #role-name{color:var(--text)!important}
+body[data-role="it"] #role-sub{color:var(--text3)!important}
+body[data-role="it"] #role-dropdown{background:#fff!important;border-color:var(--border)!important;box-shadow:var(--sh-lg)!important}
+body[data-role="it"] #topbar button[style*="background:#1D4ED8"]{background:var(--accent)!important}
+/* form controls → light */
+body[data-role="it"] input,body[data-role="it"] select,body[data-role="it"] textarea{background:#fff!important;border:1px solid var(--border)!important;color:var(--text)!important}
+body[data-role="it"] input::placeholder,body[data-role="it"] textarea::placeholder{color:var(--text3)!important}
+/* button variants → light */
+body[data-role="it"] .btn-s{background:#fff!important;color:var(--text)!important;border-color:var(--border)!important}
+body[data-role="it"] .btn-s:hover{background:#F4F7FB!important}
+body[data-role="it"] .btn-g{background:#fff!important;color:var(--text2)!important;border-color:var(--border)!important}
+body[data-role="it"] .btn-t{background:var(--accent)!important;color:#fff!important;border-color:var(--accent)!important}
+body[data-role="it"] .btn[style*="color:#"]:not([style*="background"]):not(.btn-s):not(.btn-g):not(.btn-p):not(.btn-ok){background:#fff!important}
+/* IT Delivery Authority banner → indigo (was dark slate) */
+body[data-role="it"] #demo-it-authority{background:linear-gradient(135deg,#EEF2FF 0%,#E0E7FF 100%)!important;border:1px solid #C7D2FE!important}
+body[data-role="it"] #demo-it-authority [style*="color:#fff"]{color:var(--text)!important}
+/* ── neutralise the dark-theme colour remaps (restore original light-safe colours) ── */
+body[data-role="it"] [style*="color:#0A1628"],body[data-role="it"] [style*="color:#0F172A"],body[data-role="it"] [style*="color:#111"],body[data-role="it"] [style*="color:#334155"],body[data-role="it"] [style*="color:#1E293B"]{color:var(--text)!important}
+body[data-role="it"] [style*="color:#1D4ED8"],body[data-role="it"] [style*="color:#1E40AF"],body[data-role="it"] [style*="color:#2563EB"],body[data-role="it"] [style*="color:#0052CC"],body[data-role="it"] [style*="color:#1E3A8A"]{color:#1D4ED8!important}
+body[data-role="it"] [style*="color:#B45309"],body[data-role="it"] [style*="color:#D97706"],body[data-role="it"] [style*="color:#92400E"]{color:#B45309!important}
+body[data-role="it"] [style*="color:#16A34A"],body[data-role="it"] [style*="color:#15803D"],body[data-role="it"] [style*="color:#166534"],body[data-role="it"] [style*="color:#14532D"],body[data-role="it"] [style*="color:#065F46"],body[data-role="it"] [style*="color:#047857"],body[data-role="it"] [style*="color:#064E3B"],body[data-role="it"] [style*="color:#166D3F"],body[data-role="it"] [style*="color:#059669"],body[data-role="it"] [style*="color:#10B981"],body[data-role="it"] [style*="color:#22C55E"]{color:#15803D!important}
+body[data-role="it"] [style*="color:#DC2626"],body[data-role="it"] [style*="color:#B91C1C"],body[data-role="it"] [style*="color:#991B1B"]{color:#DC2626!important}
+body[data-role="it"] [style*="color:#7C3AED"],body[data-role="it"] [style*="color:#6D28D9"],body[data-role="it"] [style*="color:#5B21B6"],body[data-role="it"] [style*="color:#4338CA"],body[data-role="it"] [style*="color:#3730A3"],body[data-role="it"] [style*="color:#4F46E5"]{color:#6D28D9!important}
+body[data-role="it"] [style*="color:#0F766E"],body[data-role="it"] [style*="color:#0891B2"],body[data-role="it"] [style*="color:#155E75"],body[data-role="it"] [style*="color:#0369A1"],body[data-role="it"] [style*="color:#0E7490"]{color:#0F766E!important}
+body[data-role="it"] [style*="color:#64748B"],body[data-role="it"] [style*="color:#475569"],body[data-role="it"] [style*="color:#94A3B8"],body[data-role="it"] [style*="color:#9FB2C8"]{color:#64748B!important}
+/* ── neutralise the dark-theme background darkening (restore pale tints) ── */
+body[data-role="it"] [style*="background:#F8FAFC"],body[data-role="it"] [style*="background:#F1F5F9"],body[data-role="it"] [style*="background:#F4F7FB"],body[data-role="it"] [style*="background:#F9FAFB"],body[data-role="it"] [style*="background:#FAFAFA"]{background:#F8FAFC!important}
+body[data-role="it"] [style*="background:#EEF2FF"],body[data-role="it"] [style*="background:#F5F3FF"],body[data-role="it"] [style*="background:#FDF4FF"],body[data-role="it"] [style*="background:#DDD6FE"],body[data-role="it"] [style*="background:#EDE9FE"],body[data-role="it"] [style*="background:#E0E7FF"]{background:#EEF2FF!important}
+body[data-role="it"] [style*="background:#FFFBEB"],body[data-role="it"] [style*="background:#FEF3C7"],body[data-role="it"] [style*="background:#FFEDD5"],body[data-role="it"] [style*="background:#FDE68A"]{background:#FFFBEB!important}
+body[data-role="it"] [style*="background:#F0FDF4"],body[data-role="it"] [style*="background:#DCFCE7"],body[data-role="it"] [style*="background:#D1FAE5"],body[data-role="it"] [style*="background:#ECFDF5"]{background:#F0FDF4!important}
+body[data-role="it"] [style*="background:#EFF6FF"],body[data-role="it"] [style*="background:#DBEAFE"],body[data-role="it"] [style*="background:#E0F2FE"],body[data-role="it"] [style*="background:#ECFEFF"],body[data-role="it"] [style*="background:#CFFAFE"]{background:#EFF6FF!important}
+body[data-role="it"] [style*="background:#FEF2F2"],body[data-role="it"] [style*="background:#FEE2E2"],body[data-role="it"] [style*="background:#FECACA"]{background:#FEF2F2!important}
+body[data-role="it"] [style*="background:#fff"],body[data-role="it"] [style*="background:#FFFFFF"],body[data-role="it"] [style*="background:#FFF"]{background:#fff!important}
+
 </style>
 </head>
 <body data-role="bu">
