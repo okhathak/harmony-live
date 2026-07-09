@@ -602,7 +602,7 @@ select.fi{cursor:pointer;appearance:none;
   /* segmented pipeline strip: even wrap instead of clipping segments */
   .ou-pipestrip{flex-wrap:wrap}
   .ou-pipestrip > button{flex:1 0 24% !important; min-width:84px}
-  /* wide tables scroll within their card rather than clipping the page */
+  /* wide tables scroll within their card rather than clipping the page (fallback) */
   #content-el table{display:block; overflow-x:auto; -webkit-overflow-scrolling:touch; white-space:nowrap; max-width:100%}
   /* create-wizard stepper: keep all circles + connectors, but show only the
      active step's label so the row fits (the others would clip) */
@@ -615,6 +615,17 @@ select.fi{cursor:pointer;appearance:none;
   #content-el .card{border-radius:14px}
   .t5-stats{gap:10px 16px}
   .ptitle{font-size:17px !important}
+}
+/* ── mobile: data tables become stacked cards (no sideways scroll) ── */
+@media (max-width:600px){
+  #content-el table{display:block !important; overflow:visible !important; white-space:normal !important; width:100% !important}
+  #content-el table thead{display:none}
+  #content-el table tbody{display:block}
+  #content-el table tr{display:block; background:#fff; border:1px solid var(--border); border-radius:12px; padding:8px 12px; margin-bottom:10px; box-shadow:var(--sh-sm)}
+  #content-el table td{display:flex; justify-content:space-between; gap:14px; align-items:baseline; padding:5px 0 !important; border:none !important; text-align:right; white-space:normal; font-size:12px}
+  #content-el table td::before{content:attr(data-label); font-weight:700; color:var(--text3); text-transform:uppercase; letter-spacing:.4px; font-size:10px; text-align:left; flex:0 0 40%}
+  #content-el table td:first-child{border-bottom:1px solid var(--border2) !important; padding-bottom:7px !important; margin-bottom:4px; font-weight:800}
+  #content-el table td:first-child::before{color:var(--accent)}
 }
 @media print {
   /* ── Hide all app chrome ────────────────────────────────── */
@@ -5675,7 +5686,7 @@ function nav(id){
   var el=document.getElementById("content-el"); if(!_sameScreen) el.scrollTop=0;
   el.classList.remove('screen-enter');
   // BU screens
-  function setScreen(html){ el.innerHTML=html; if(_sameScreen){ el.scrollTop=_savedTop; } else { (typeof requestAnimationFrame!=='undefined'?requestAnimationFrame:setTimeout)(function(){ el.classList.add('screen-enter'); },0); } }
+  function setScreen(html){ el.innerHTML=html; try{ harmonyLabelTables(el); }catch(e){} if(_sameScreen){ el.scrollTop=_savedTop; } else { (typeof requestAnimationFrame!=='undefined'?requestAnimationFrame:setTimeout)(function(){ el.classList.add('screen-enter'); },0); } }
   if(id==="dashboard")    {setScreen(renderDashboard());return;}
   if(id==="my-requests")  {setScreen(renderMyRequests());return;}
   if(id==="create"){var _dr=null;try{var _ds=sessionStorage.getItem('harmony_draft');if(_ds)_dr=JSON.parse(_ds);}catch(e){}WF=_dr||{step:1,title:'',system:'',reason:'',benefit:'',neededBy:'',expectedCycle:'',s:0,b:0,t:0,urgencyFlag:'Normal'};if(!WF.urgencyFlag)WF.urgencyFlag='Normal';setScreen(renderWizard());return;}
@@ -7331,6 +7342,17 @@ ANTHROPIC.base=(function(){ try{ if(location.protocol==='file:') return 'https:/
 function aiReady(){ return !!(ANTHROPIC.key||ANTHROPIC.serverKey); }
 // Live host = a public deployment (not file:// and not localhost). Presenter-only demo
 // controls (Reset) are hidden there so a visitor can't wipe the working pipeline state.
+// Label table cells with their column header so tables can render as stacked
+// cards on mobile (td::before shows the label). Generic across every table.
+function harmonyLabelTables(root){
+  try{ (root||document).querySelectorAll('table').forEach(function(tb){
+    var ths=tb.querySelectorAll('thead th'); if(!ths.length) return;
+    var labels=[].map.call(ths,function(th){ return (th.textContent||'').trim(); });
+    tb.querySelectorAll('tbody tr').forEach(function(tr){
+      [].forEach.call(tr.children,function(td,i){ if(labels[i]!==undefined && !td.getAttribute('data-label')) td.setAttribute('data-label',labels[i]); });
+    });
+  }); }catch(e){}
+}
 // Save the whole app as one standalone harmony.html the user can open anywhere / host on their own PC.
 function harmonyDownloadHTML(){
   function save(txt){

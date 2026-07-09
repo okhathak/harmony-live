@@ -8,6 +8,13 @@ on:
     branches: [main]
   workflow_dispatch:
 
+# Serialize deploys: never let a newer run cancel one in flight. Prevents the
+# GitHub Pages build queue from thrashing when several pushes land close
+# together (which previously left the site stuck on an older build).
+concurrency:
+  group: harmony-pages-publish
+  cancel-in-progress: false
+
 permissions:
   contents: write
 
