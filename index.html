@@ -8058,10 +8058,10 @@ function jcoreSet(state){
   var s=document.getElementById('jc-state');
   if(s) s.textContent=({speaking:'SPEAKING',listening:'LISTENING',working:'EXECUTING'})[state]||'STANDBY';
 }
-// ── VISION ARC REACTOR — Iron Man / JARVIS core on canvas jc-globe-cv ──
-// A blazing white-cyan core, a ring of glowing trapezoidal coil segments, a
-// metallic housing, a rotating HUD tick-ring, and state-reactive colour
-// (arc-cyan idle / bright cyan speaking / rose listening / amber working).
+// ── VISION ORB — soft volumetric sphere with a light-theme particle field ──
+// Deep indigo 3D sphere (glossy highlight, aurora swirl, rim light), two tilted
+// gyroscopic rings, and an elegant field of coloured particles tuned to read on
+// a WHITE background (indigo/violet glow dots, not white). State-reactive.
 function harmonyGlobe(){
   window._globeRAF=requestAnimationFrame(harmonyGlobe);
   var cv=document.getElementById('jc-globe-cv'); if(!cv) return;
@@ -8073,87 +8073,83 @@ function harmonyGlobe(){
       spk=wrap&&wrap.classList.contains('speaking'),
       lst=wrap&&wrap.classList.contains('listening'),
       wrk=wrap&&wrap.classList.contains('working');
-  window._globeT=(window._globeT||0)+(spk?0.02:wrk?0.014:0.008);
-  var t=window._globeT, cx=w/2, cy=h/2, R=Math.min(w,h)*0.34;
-  // Iron-Man palette: white-hot core, cyan energy, blue rim, steel housing.
-  var C = lst ? {glow:'255,90,130', energy:'255,140,170', metal:'150,120,130'}
-       : wrk ? {glow:'255,175,60',  energy:'255,205,120', metal:'150,135,105'}
-       : spk ? {glow:'90,220,255',  energy:'170,240,255', metal:'120,160,190'}
-             : {glow:'70,200,255',  energy:'150,230,255', metal:'120,150,185'};
-  var pulse = spk ? (1+0.06*Math.sin(t*9)) : (1+0.03*Math.sin(t*2.4));
+  window._globeT=(window._globeT||0)+(spk?0.018:wrk?0.012:0.006);
+  var t=window._globeT, cx=w/2, cy=h/2, R=Math.min(w,h)*0.29;
+  var P = lst ? {deep:'80,12,38',  mid:'225,29,72',   glow:'244,63,94',   hi:'255,225,232', part:'225,29,72'}
+       : wrk ? {deep:'92,42,10',   mid:'217,119,6',   glow:'234,140,20',  hi:'255,240,205', part:'217,119,6'}
+       : spk ? {deep:'20,44,110',  mid:'37,99,235',   glow:'59,130,246',  hi:'224,238,255', part:'37,99,235'}
+             : {deep:'40,34,110',  mid:'79,70,229',   glow:'99,102,241',  hi:'224,225,255', part:'99,102,241'};
+  var breathe = spk ? (1+0.045*Math.sin(t*8.5)) : (1+0.02*Math.sin(t*1.8));
+  var Rb = R*breathe;
+
+  // particle field (behind + around) — coloured glow dots that read on white
+  var PN = window._orbParts || (window._orbParts=(function(){var a=[];for(var i=0;i<20;i++){
+    a.push({ang:(i*0.618)*6.2832%6.2832, rad:1.16+((i*7)%9)/9*0.72, sp:(0.12+((i*13)%7)/7*0.28)*(i%2?1:-1), sz:0.9+((i*5)%6)/6*2.0, ph:(i*11)%10, yf:0.82+((i*3)%5)/5*0.3});}return a;})());
+  function dot(x,y,sz,al,col){ var g=ctx.createRadialGradient(x,y,0,x,y,sz*3.2);
+    g.addColorStop(0,'rgba('+col+','+al+')'); g.addColorStop(0.5,'rgba('+col+','+(al*0.35)+')'); g.addColorStop(1,'rgba('+col+',0)');
+    ctx.fillStyle=g; ctx.beginPath(); ctx.arc(x,y,sz*3.2,0,6.2832); ctx.fill();
+    ctx.fillStyle='rgba('+col+','+Math.min(1,al*1.3)+')'; ctx.beginPath(); ctx.arc(x,y,sz*0.7,0,6.2832); ctx.fill(); }
+  for(var i=0;i<PN.length;i++){ var pt=PN[i]; var a=pt.ang+t*pt.sp;
+    var pr=Rb*pt.rad, px=cx+Math.cos(a)*pr, py=cy+Math.sin(a)*pr*pt.yf;
+    var tw=0.35+0.4*(0.5+0.5*Math.sin(t*1.6+pt.ph));
+    dot(px,py,pt.sz,tw,P.part); }
 
   // 1) outer bloom
-  var bl=ctx.createRadialGradient(cx,cy,R*0.3,cx,cy,R*2.2);
-  bl.addColorStop(0,'rgba('+C.glow+','+(spk?0.4:0.28)+')');
-  bl.addColorStop(0.5,'rgba('+C.glow+',0.08)');
-  bl.addColorStop(1,'rgba('+C.glow+',0)');
-  ctx.fillStyle=bl; ctx.beginPath(); ctx.arc(cx,cy,R*2.2,0,6.2832); ctx.fill();
+  var bl=ctx.createRadialGradient(cx,cy,Rb*0.55,cx,cy,Rb*1.95);
+  bl.addColorStop(0,'rgba('+P.glow+','+(spk?0.3:0.2)+')');
+  bl.addColorStop(0.55,'rgba('+P.glow+',0.06)'); bl.addColorStop(1,'rgba('+P.glow+',0)');
+  ctx.fillStyle=bl; ctx.beginPath(); ctx.arc(cx,cy,Rb*1.95,0,6.2832); ctx.fill();
 
-  if(window._ringIgnite){
-    var ig=(performance.now()-window._ringIgnite)/1100;
-    if(ig<1){ var kf=1-ig; ctx.strokeStyle='rgba('+C.energy+','+(kf*0.6).toFixed(3)+')'; ctx.lineWidth=2+8*kf;
-      ctx.beginPath(); ctx.arc(cx,cy,R*(1.05+ig*1.6),0,6.2832); ctx.stroke(); } else { window._ringIgnite=0; }
-  }
+  if(window._ringIgnite){ var ig=(performance.now()-window._ringIgnite)/1100;
+    if(ig<1){ var kf=1-ig; ctx.strokeStyle='rgba('+P.hi+','+(kf*0.5).toFixed(3)+')'; ctx.lineWidth=2+7*kf;
+      ctx.beginPath(); ctx.arc(cx,cy,Rb*(1+ig*1.6),0,6.2832); ctx.stroke(); } else { window._ringIgnite=0; } }
 
-  // 2) rotating outer HUD tick-ring (JARVIS)
-  var hudR=R*1.42, seg=48;
-  for(var i=0;i<seg;i++){ var a=t*0.25 + i*(6.2832/seg);
-    var long=(i%4===0); ctx.strokeStyle='rgba('+C.energy+','+(long?0.7:0.28)+')'; ctx.lineWidth=long?1.6:1;
-    var r0=hudR, r1=hudR+(long?7:3.5);
-    ctx.beginPath(); ctx.moveTo(cx+Math.cos(a)*r0,cy+Math.sin(a)*r0); ctx.lineTo(cx+Math.cos(a)*r1,cy+Math.sin(a)*r1); ctx.stroke(); }
-  // two counter-rotating arc brackets
-  ctx.lineCap='round';
-  ctx.strokeStyle='rgba('+C.glow+',0.8)'; ctx.lineWidth=2;
-  var ba=-t*0.5; ctx.beginPath(); ctx.arc(cx,cy,hudR-4,ba,ba+1.1); ctx.stroke();
-  ctx.beginPath(); ctx.arc(cx,cy,hudR-4,ba+3.14159,ba+3.14159+1.1); ctx.stroke();
-  ctx.lineCap='butt';
+  // 2) sphere body — offset radial gradient = 3D roundness
+  var body=ctx.createRadialGradient(cx-R*0.34,cy-R*0.4,R*0.05, cx,cy,Rb*1.06);
+  body.addColorStop(0,'rgba('+P.hi+',0.98)'); body.addColorStop(0.22,'rgba('+P.glow+',0.98)');
+  body.addColorStop(0.55,'rgba('+P.mid+',1)'); body.addColorStop(1,'rgba('+P.deep+',1)');
+  ctx.fillStyle=body; ctx.beginPath(); ctx.arc(cx,cy,Rb,0,6.2832); ctx.fill();
 
-  // 3) metallic housing rings
-  ctx.lineWidth=Math.max(3,R*0.10); ctx.strokeStyle='rgba('+C.metal+',0.55)';
-  ctx.beginPath(); ctx.arc(cx,cy,R*1.12,0,6.2832); ctx.stroke();
-  ctx.lineWidth=1.4; ctx.strokeStyle='rgba('+C.energy+',0.6)';
-  ctx.beginPath(); ctx.arc(cx,cy,R*1.05,0,6.2832); ctx.stroke();
-  ctx.beginPath(); ctx.arc(cx,cy,R*1.19,0,6.2832); ctx.stroke();
-
-  // 4) coil segments — the iconic reactor ring of trapezoids
-  var N=9, rIn=R*0.55, rOut=R*1.0, gap=0.10, base=t*0.06;
-  for(var k=0;k<N;k++){
-    var a0=base+k*(6.2832/N)+gap, a1=base+(k+1)*(6.2832/N)-gap;
-    ctx.beginPath();
-    ctx.arc(cx,cy,rOut,a0,a1); ctx.arc(cx,cy,rIn,a1,a0,true); ctx.closePath();
-    var am=(a0+a1)/2;
-    var gx0=cx+Math.cos(am)*rIn, gy0=cy+Math.sin(am)*rIn, gx1=cx+Math.cos(am)*rOut, gy1=cy+Math.sin(am)*rOut;
-    var cg=ctx.createLinearGradient(gx0,gy0,gx1,gy1);
-    cg.addColorStop(0,'rgba('+C.energy+',0.95)');
-    cg.addColorStop(0.5,'rgba('+C.glow+',0.55)');
-    cg.addColorStop(1,'rgba('+C.glow+',0.12)');
-    ctx.fillStyle=cg; ctx.fill();
-    ctx.lineWidth=1; ctx.strokeStyle='rgba('+C.energy+',0.5)'; ctx.stroke();
-  }
-  // inner bright ring at coil base
-  ctx.lineWidth=Math.max(2,R*0.05); ctx.strokeStyle='rgba('+C.energy+',0.9)';
-  ctx.beginPath(); ctx.arc(cx,cy,rIn,0,6.2832); ctx.stroke();
-
-  // 5) blazing core
-  var rc=R*0.44*pulse;
-  ctx.shadowColor='rgba('+C.glow+',1)'; ctx.shadowBlur=spk?34:22;
-  var core=ctx.createRadialGradient(cx,cy,0,cx,cy,rc);
-  core.addColorStop(0,'rgba(255,255,255,1)');
-  core.addColorStop(0.35,'rgba(255,255,255,0.96)');
-  core.addColorStop(0.6,'rgba('+C.energy+',0.9)');
-  core.addColorStop(1,'rgba('+C.glow+',0.15)');
-  ctx.fillStyle=core; ctx.beginPath(); ctx.arc(cx,cy,rc,0,6.2832); ctx.fill();
-  ctx.shadowBlur=0;
-  // triangular core facets (the reactor's inner geometry)
-  ctx.save(); ctx.translate(cx,cy); ctx.rotate(-t*0.12);
-  for(var tr=0;tr<3;tr++){ ctx.rotate(2.0944);
-    ctx.beginPath(); ctx.moveTo(0,-rc*0.62); ctx.lineTo(rc*0.54,rc*0.36); ctx.lineTo(-rc*0.54,rc*0.36); ctx.closePath();
-    ctx.strokeStyle='rgba(255,255,255,0.5)'; ctx.lineWidth=1.2; ctx.stroke(); }
+  // 3) internal aurora swirl (clipped, additive)
+  ctx.save(); ctx.beginPath(); ctx.arc(cx,cy,Rb*0.98,0,6.2832); ctx.clip();
+  ctx.globalCompositeOperation='lighter';
+  var blobs=[{a:t*0.6,r:0.42,s:0.62,c:P.glow,al:spk?0.5:0.32},{a:-t*0.45+2.1,r:0.5,s:0.5,c:P.hi,al:0.2},{a:t*0.33+4.0,r:0.36,s:0.7,c:P.mid,al:0.4}];
+  for(var bi=0;bi<blobs.length;bi++){ var b=blobs[bi]; var bx=cx+Math.cos(b.a)*Rb*b.r, by=cy+Math.sin(b.a)*Rb*b.r;
+    var bg=ctx.createRadialGradient(bx,by,0,bx,by,Rb*b.s); bg.addColorStop(0,'rgba('+b.c+','+b.al+')'); bg.addColorStop(1,'rgba('+b.c+',0)');
+    ctx.fillStyle=bg; ctx.beginPath(); ctx.arc(bx,by,Rb*b.s,0,6.2832); ctx.fill(); }
+  ctx.globalCompositeOperation='source-over';
+  var shd=ctx.createRadialGradient(cx+R*0.5,cy+R*0.55,R*0.1, cx+R*0.3,cy+R*0.35,Rb*1.2);
+  shd.addColorStop(0,'rgba('+P.deep+',0)'); shd.addColorStop(1,'rgba('+P.deep+',0.5)');
+  ctx.fillStyle=shd; ctx.beginPath(); ctx.arc(cx,cy,Rb,0,6.2832); ctx.fill();
   ctx.restore();
-  // hot white pin-centre
-  var pin=ctx.createRadialGradient(cx,cy,0,cx,cy,rc*0.34);
-  pin.addColorStop(0,'rgba(255,255,255,1)'); pin.addColorStop(1,'rgba('+C.energy+',0)');
-  ctx.fillStyle=pin; ctx.beginPath(); ctx.arc(cx,cy,rc*0.34,0,6.2832); ctx.fill();
+
+  // 4) glossy specular highlight
+  var sp=ctx.createRadialGradient(cx-R*0.34,cy-R*0.42,0, cx-R*0.34,cy-R*0.42,R*0.55);
+  sp.addColorStop(0,'rgba(255,255,255,'+(spk?0.85:0.7)+')'); sp.addColorStop(0.6,'rgba(255,255,255,0.12)'); sp.addColorStop(1,'rgba(255,255,255,0)');
+  ctx.fillStyle=sp; ctx.beginPath(); ctx.ellipse(cx-R*0.32,cy-R*0.4,R*0.34,R*0.24,-0.6,0,6.2832); ctx.fill();
+
+  // 5) rim light
+  ctx.lineWidth=Math.max(1.3,R*0.032); ctx.strokeStyle='rgba('+P.hi+',0.5)';
+  ctx.beginPath(); ctx.arc(cx,cy,Rb,0,6.2832); ctx.stroke();
+  ctx.lineWidth=Math.max(1,R*0.02); ctx.lineCap='round'; ctx.strokeStyle='rgba(255,255,255,0.9)';
+  var hl=t*0.8-1.9; ctx.beginPath(); ctx.arc(cx,cy,Rb*0.985,hl,hl+1.0); ctx.stroke(); ctx.lineCap='butt';
+
+  // 6) gyroscopic orbit rings + a bright particle on each
+  function orbit(rot,rx,ry,spd,col,pcol){ ctx.save(); ctx.translate(cx,cy); ctx.rotate(rot);
+    ctx.lineWidth=Math.max(1,R*0.02); ctx.strokeStyle='rgba('+col+',0.45)'; ctx.beginPath(); ctx.ellipse(0,0,rx,ry,0,0,6.2832); ctx.stroke();
+    var pa=t*spd, px=Math.cos(pa)*rx, py=Math.sin(pa)*ry;
+    var pg=ctx.createRadialGradient(px,py,0,px,py,R*0.16); pg.addColorStop(0,'rgba('+pcol+',1)'); pg.addColorStop(1,'rgba('+pcol+',0)');
+    ctx.fillStyle=pg; ctx.beginPath(); ctx.arc(px,py,R*0.16,0,6.2832); ctx.fill();
+    ctx.fillStyle='rgba(255,255,255,0.95)'; ctx.beginPath(); ctx.arc(px,py,Math.max(1.3,R*0.028),0,6.2832); ctx.fill(); ctx.restore(); }
+  orbit(t*0.25, Rb*1.52, Rb*0.5, 1.05, P.glow, P.hi);
+  orbit(-t*0.18+1.05, Rb*1.4, Rb*0.42, -0.78, P.mid, P.glow);
+
+  // 7) centred wordmark
+  try{ ctx.letterSpacing=(R*0.13)+'px'; }catch(e){}
+  ctx.font='600 '+Math.max(10,R*0.16)+'px "DM Mono",monospace'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.shadowColor='rgba('+P.deep+',0.9)'; ctx.shadowBlur=6; ctx.fillStyle='rgba(255,255,255,0.96)';
+  ctx.fillText('VISION', cx+(R*0.065), cy+R*0.02); ctx.shadowBlur=0;
+  try{ ctx.letterSpacing='0px'; }catch(e){}
 }
 
 function jcoreHTML(closedN,inDelN,queuedN){
