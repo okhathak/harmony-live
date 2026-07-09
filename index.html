@@ -8101,12 +8101,12 @@ function harmonyGlobe(){
              : {main:'217,119,87',   soft:'240,175,140',  glow:'217,119,87'};
 
   // Fibonacci sphere base points (once)
-  var N=460;
+  var N=760;
   var PTS=window._murPts||(window._murPts=(function(){var a=[],ga=Math.PI*(3-Math.sqrt(5));
     for(var i=0;i<N;i++){ var y=1-(i/(N-1))*2, r=Math.sqrt(1-y*y), th=ga*i;
       a.push({x:Math.cos(th)*r,y:y,z:Math.sin(th)*r,ph:(i*12.9898)%6.283}); } return a;})());
 
-  var spin=t*0.32, tiltX=0.42, amp=spk?0.34:0.24;         // flow amount
+  var spin=t*0.34, tiltX=0.42, amp=spk?0.42:0.30;         // flow amount
   var cosT=Math.cos(tiltX), sinT=Math.sin(tiltX);
   var breathe=(spk?1.04:1)+ (spk?0.03:0.015)*Math.sin(t*(spk?7:1.8));
   var Rr=R*breathe;
@@ -8137,11 +8137,11 @@ function harmonyGlobe(){
   dots.sort(function(a,b){return a[2]-b[2];});   // back to front
   for(var d=0;d<dots.length;d++){ var q=dots[d], zz=q[2];
     var depth=(zz+1)/2;                            // 0 back .. 1 front
-    var sz=0.6+depth*1.9, al=(0.14+depth*0.72)*(0.7+0.3*Math.sin(t*2+q[3]));
-    var col=depth>0.55?C.soft:C.main;
+    var sz=0.45+depth*1.25, al=(0.22+depth*0.72)*(0.78+0.22*Math.sin(t*2.2+q[3]));
+    var col=depth>0.66?C.soft:C.main;
     ctx.fillStyle='rgba('+col+','+al.toFixed(3)+')';
     ctx.beginPath(); ctx.arc(q[0],q[1],sz,0,6.2832); ctx.fill();
-    if(depth>0.8){ ctx.fillStyle='rgba('+C.soft+','+(al*0.5).toFixed(3)+')'; ctx.beginPath(); ctx.arc(q[0],q[1],sz*2.4,0,6.2832); ctx.fill(); }
+    if(depth>0.9){ ctx.fillStyle='rgba('+C.soft+','+(al*0.32).toFixed(3)+')'; ctx.beginPath(); ctx.arc(q[0],q[1],sz*1.9,0,6.2832); ctx.fill(); }
   }
   ctx.globalCompositeOperation='source-over';
 }
