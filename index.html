@@ -568,43 +568,48 @@ select.fi{cursor:pointer;appearance:none;
   #role-chevron { display: none !important; }
   #topbar { gap: 6px !important; padding: 0 10px !important; }
 }
-/* ═══ MOBILE UI HARDENING (2026-07) ═══ */
+/* ═══ MOBILE UI HARDENING (2026-07) — scoped to #content-el so it covers
+   EVERY screen (many render straight into #content-el, not a .page wrapper).
+   Entirely inside mobile media queries; desktop rendering is untouched. ═══ */
 @media (max-width:760px){
   html,body{overflow-x:hidden}
-  #main,#content-el,.page{max-width:100%;min-width:0}
-  #content-el .card,.page .card{max-width:100%}
+  #main,#content-el{max-width:100%;min-width:0}
+  #content-el .card{max-width:100%}
   /* collapse ALL multi-column grids (nested too) to a single column */
-  .page [style*="grid-template-columns:repeat(2"],
-  .page [style*="grid-template-columns:repeat(3"],
-  .page [style*="grid-template-columns:repeat(4"],
-  .page [style*="grid-template-columns:repeat(5"],
-  .page [style*="grid-template-columns:repeat(6"],
-  .page [style*="grid-template-columns:1fr 1fr"],
-  .page [style*="grid-template-columns:3fr 2fr"],
-  .page [style*="grid-template-columns:2fr 1fr"],
-  .page [style*="grid-template-columns:1fr 2fr"]{grid-template-columns:1fr !important}
-  .page [style*="minmax("]{min-width:0}
+  #content-el [style*="grid-template-columns:repeat(2"],
+  #content-el [style*="grid-template-columns:repeat(3"],
+  #content-el [style*="grid-template-columns:repeat(4"],
+  #content-el [style*="grid-template-columns:repeat(5"],
+  #content-el [style*="grid-template-columns:repeat(6"],
+  #content-el [style*="grid-template-columns:1fr 1fr"],
+  #content-el [style*="grid-template-columns:3fr 2fr"],
+  #content-el [style*="grid-template-columns:2fr 1fr"],
+  #content-el [style*="grid-template-columns:1fr 2fr"]{grid-template-columns:1fr !important}
+  #content-el [style*="minmax("]{min-width:0}
   /* the classic overflow cause: grid/flex children default to min-width:auto,
      so a wide table forces its card past the viewport and it gets clipped.
      Letting children shrink lets the table's own overflow-x:auto engage. */
-  .page [style*="display:grid"] > *{min-width:0}
-  .page [style*="display:flex"] > *{min-width:0}
+  #content-el [style*="display:grid"] > *{min-width:0}
+  #content-el [style*="display:flex"] > *{min-width:0}
   /* header action clusters wrap; buttons/pills never squish into blobs.
      flex-wrap only engages on overflow, so single-line rows are unaffected. */
-  .page > div[style*="justify-content:space-between"]{flex-wrap:wrap; gap:12px}
-  .page div[style*="display:flex"][style*="gap"]{flex-wrap:wrap}
+  #content-el > div[style*="justify-content:space-between"]{flex-wrap:wrap; gap:12px}
+  #content-el div[style*="display:flex"][style*="gap"]{flex-wrap:wrap}
   #main button, #main .btn, #main .t5-pill{flex-shrink:0}
-  /* segmented pipeline strip: scroll instead of clipping segments */
+  /* segmented pipeline strip: even wrap instead of clipping segments */
   .ou-pipestrip{flex-wrap:wrap}
   .ou-pipestrip > button{flex:1 0 24% !important; min-width:84px}
   /* wide tables scroll within their card rather than clipping the page */
-  #content-el table,.page table{display:block; overflow-x:auto; -webkit-overflow-scrolling:touch; white-space:nowrap; max-width:100%}
+  #content-el table{display:block; overflow-x:auto; -webkit-overflow-scrolling:touch; white-space:nowrap; max-width:100%}
+  /* create-wizard stepper: keep all circles + connectors, but show only the
+     active step's label so the row fits (the others would clip) */
+  .s-item .s-txt.todo, .s-item .s-txt.done{display:none}
   /* hero type scales down */
   .t5-greet{font-size:clamp(30px,9vw,46px)}
 }
 @media (max-width:430px){
   #content-el{padding:10px !important}
-  #content-el .card,.page .card{border-radius:14px}
+  #content-el .card{border-radius:14px}
   .t5-stats{gap:10px 16px}
   .ptitle{font-size:17px !important}
 }
@@ -859,9 +864,11 @@ body[data-role="it"] [style*="background:#fff"]{background:#0E1A2F!important}
 body[data-role="it"] [style*="background:#F8FAFC"], body[data-role="it"] [style*="background:#F1F5F9"], body[data-role="it"] [style*="background:#F4F7FB"]{background:#0A1424!important}
 body[data-role="it"] [style*="background:#EFF6FF"], body[data-role="it"] [style*="background:#DBEAFE"], body[data-role="it"] [style*="background:#E0F2FE"], body[data-role="it"] [style*="background:#E8F0FF"], body[data-role="it"] [style*="background:#F0F7FF"], body[data-role="it"] [style*="background:#EFF3FF"]{background:rgba(76,141,255,.13)!important}
 body[data-role="it"] [style*="background:#ECFEFF"], body[data-role="it"] [style*="background:#E0F7FA"], body[data-role="it"] [style*="background:#CFFAFE"]{background:rgba(34,211,238,.12)!important}
-body[data-role="it"] [style*="background:#EEF2FF"], body[data-role="it"] [style*="background:#F5F3FF"], body[data-role="it"] [style*="background:#FDF4FF"]{background:rgba(167,139,250,.14)!important}
-body[data-role="it"] [style*="background:#FFFBEB"], body[data-role="it"] [style*="background:#FEF3C7"]{background:rgba(245,165,36,.13)!important}
-body[data-role="it"] [style*="background:#F0FDF4"], body[data-role="it"] [style*="background:#DCFCE7"]{background:rgba(59,227,138,.12)!important}
+body[data-role="it"] [style*="background:#EEF2FF"], body[data-role="it"] [style*="background:#F5F3FF"], body[data-role="it"] [style*="background:#FDF4FF"], body[data-role="it"] [style*="background:#DDD6FE"], body[data-role="it"] [style*="background:#EDE9FE"], body[data-role="it"] [style*="background:#E0E7FF"]{background:rgba(167,139,250,.15)!important}
+body[data-role="it"] [style*="background:#FFFBEB"], body[data-role="it"] [style*="background:#FEF3C7"], body[data-role="it"] [style*="background:#FFEDD5"], body[data-role="it"] [style*="background:#FDE68A"]{background:rgba(245,165,36,.13)!important}
+body[data-role="it"] [style*="background:#F0FDF4"], body[data-role="it"] [style*="background:#DCFCE7"], body[data-role="it"] [style*="background:#D1FAE5"], body[data-role="it"] [style*="background:#ECFDF5"]{background:rgba(59,227,138,.12)!important}
+body[data-role="it"] [style*="background:#EFF6FF"], body[data-role="it"] [style*="background:#DBEAFE"], body[data-role="it"] [style*="background:#E0F2FE"], body[data-role="it"] [style*="background:#ECFEFF"], body[data-role="it"] [style*="background:#CFFAFE"]{background:rgba(76,141,255,.14)!important}
+body[data-role="it"] [style*="background:#FEF2F2"], body[data-role="it"] [style*="background:#FEE2E2"], body[data-role="it"] [style*="background:#FECACA"]{background:rgba(255,107,107,.13)!important}
 body[data-role="it"] [style*="background:#FEF2F2"], body[data-role="it"] [style*="background:#FEE2E2"]{background:rgba(255,107,107,.13)!important}
 body[data-role="it"] [style*="#ECFDF5"]{background:rgba(59,227,138,.10)!important}
 body[data-role="it"] [style*="background:#F0F9FF"]{background:rgba(34,211,238,.10)!important}
