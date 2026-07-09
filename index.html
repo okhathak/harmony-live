@@ -6586,6 +6586,38 @@ function harmonyAsk(raw){
   return null;
 }
 var HARMONY_AI = { on:true };
+// Ownership + aging + SLA analysis so Vision can REASON about bottlenecks
+// ("who is delaying tasks") from real data instead of restating a count.
+function harmonyPipelineAnalysis(){
+  // who must act NEXT at each stage (the ball-holder)
+  var OWN={
+    'Draft':'BU','Submitted':'OU','Under Review':'OU','Awaiting Your Input':'BU',
+    'Department Approvals':'Dept','OU Approved':'IT','Queued for IT':'IT',
+    'Under Analysis':'IT','Scope Confirmed':'IT','Awaiting BU Confirmation':'BU','Returned to BU':'BU',
+    'Planned':'IT','In Delivery':'IT','Acceptance Testing':'BU','UAT Approved':'IT',
+    'Deployed — Pending Closure':'BU'
+  };
+  var active=REQUESTS.filter(function(r){return ['Closed','Rejected','Deployed'].indexOf(r.status)<0;});
+  var byOwner={IT:[],BU:[],OU:[],Dept:[]};
+  active.forEach(function(r){ var o=OWN[r.status]||'IT'; (byOwner[o]||byOwner.IT).push(r); });
+  var lines=active
+    .slice().sort(function(a,b){ return (b.submittedDays||0)-(a.submittedDays||0); })
+    .map(function(r){
+      var o=OWN[r.status]||'IT', dl=agentDaysLeft(r);
+      var age=(r.submittedDays!=null?r.submittedDays+'d in pipeline':'age n/a');
+      var sla=(dl===99999?'no SLA date':(dl<0?('SLA OVERDUE '+Math.abs(dl)+'d'):(dl<=14?('SLA due in '+dl+'d'):(dl+'d to SLA'))));
+      var blk=(r.status==='Department Approvals'&&r.deptApprovals)?(' · '+(Object.keys(r.deptApprovals).filter(function(k){return r.deptApprovals[k]==='objected';}).join(',')||'')):'';
+      return r.id+' · '+r.sector+' · "'+(r.title||'').slice(0,42)+'" · '+r.status+' · HELD BY '+o+' · '+age+' · K='+getK(r)+' · '+sla+(r.urgent?' · URGENT':'')+blk;
+    });
+  function summ(o){
+    var a=byOwner[o]; if(!a.length) return o+' holds 0';
+    var oldest=a.slice().sort(function(x,y){return (y.submittedDays||0)-(x.submittedDays||0);})[0];
+    var breach=a.filter(function(r){var d=agentDaysLeft(r);return d!==99999&&d<0;}).length;
+    var risk=a.filter(function(r){var d=agentDaysLeft(r);return d!==99999&&d>=0&&d<=14;}).length;
+    return o+' holds '+a.length+' (oldest '+oldest.id+' '+(oldest.submittedDays||'?')+'d'+(breach?', '+breach+' SLA-breached':'')+(risk?', '+risk+' at risk':'')+')';
+  }
+  return { lines:lines, summary:['IT','OU','BU','Dept'].map(summ).join('; ') };
+}
 function harmonySystemPrompt(){
   var recs=agentRecommendations();
   var atrisk=recs.filter(function(x){var dl=agentDaysLeft(x.r);return dl!==99999&&dl<=14;}).slice(0,6).map(function(x){return x.r.id+' ('+x.r.sector+', K='+getK(x.r)+(x.r.urgent?', urgent':'')+')';}).join('; ')||'none';
@@ -6594,6 +6626,7 @@ function harmonySystemPrompt(){
   var safe=recs.filter(function(x){return x.direct;}).length;
   var waiting=recs.filter(function(x){return !x.actionable;}).length;
   var active=REQUESTS.filter(function(r){return r.status!=='Closed'&&r.status!=='Rejected';}).slice(0,14).map(function(r){return r.id+' ('+r.sector+', '+r.status+')';}).join('; ')||'none';
+  var an=harmonyPipelineAnalysis();
   var P=(typeof HARMONY_PERSONAS!=='undefined'&&HARMONY_PERSONAS[currentRole])||{name:'Omar Al Ahrari',role:'IT Delivery Lead'};
   var AUTH={
     it:"You can ACT by calling the provided tools \u2014 run pipeline actions, advance or create requests, assign partners and cycles, file Jira, add to sprint, filter or open any screen, switch role, and send notifications. Compose several tool calls when a request needs multiple steps, and resolve references like \u2018the health portal one\u2019 or \u2018REQ 14\u2019 to an ID from the list below. After acting, confirm briefly what you did. For questions or chat, just answer \u2014 no tool needed.",
@@ -6606,7 +6639,12 @@ function harmonySystemPrompt(){
     +(AUTH[currentRole]||AUTH.it)+"\n\n"
     +"GOVERNANCE (hard rules): never approve, sign off, or confirm a change on behalf of BU or OU \u2014 those approvals are theirs. The advance and deploy tools enforce the delivery guards (a partner is required before delivery; UAT approval is required before deploy); if a step is blocked, say so rather than forcing it.\n\n"
     +"GROUNDING (hard rules): every number, ID, and status you state must come from the live pipeline data below \u2014 it reflects the app\u2019s state at this exact moment (data refreshed "+new Date().toTimeString().slice(0,8)+"). If the data doesn\u2019t contain what\u2019s asked, say so plainly instead of estimating or inventing. No filler, no pleasantries padding, no invented history.\n\n"
-    +"Live pipeline:\n- In active delivery: "+inDel+"\n- In UAT with BU: "+inUAT+"\n- Safe to auto-advance now: "+safe+"\n- Waiting on BU/OU: "+waiting+"\n- At SLA risk: "+atrisk+"\n\nActive requests (id, sector, status): "+active+".";
+    +"HOW TO THINK (this is your core job — reason, don’t recite): treat the data below as evidence, not as your answer. For any question, work it out: figure out which requests the question is about, who currently holds each one, how long it has sat, and whether its SLA is breached or near — then draw the conclusion and state it with the specific IDs, owners and day-counts that prove it. Never answer a ‘who/why/what’s delaying’ question by repeating a total (e.g. ‘N are waiting on BU/OU’); that is the input, not the analysis. Name the actual bottleneck: which owner holds the most, the oldest, or the most-overdue items, and the single request that most needs action. If asked about IT specifically, look at the IT-held rows (OU Approved, Under Analysis, Scope Confirmed, Planned, In Delivery, UAT-Approved) and reason about which of THOSE is stalled and why. When causes are mixed, say what IT owns vs what sits with BU/OU/Departments, with evidence.\n\n"
+    +"ANSWERING SCOPE: you may ALWAYS analyse and answer questions about ANY part of the pipeline — including IT delivery — regardless of the current role. Role limits apply ONLY to ACTIONS (advancing, deploying, approving, assigning, notifying); they never restrict analysis or explanation. Do not deflect a question with ‘that’s not in your workspace’.\n\n"
+    +"Pipeline counts: in active delivery "+inDel+"; in UAT with BU "+inUAT+"; safe to auto-advance "+safe+"; waiting on BU/OU "+waiting+".\n"
+    +"WHO HOLDS THE WORK (bottleneck summary): "+an.summary+".\n"
+    +"Active requests — id · sector · title · stage · current owner · time in pipeline · K-score · SLA (sorted oldest-first):\n"+an.lines.join('\n')+"\n\n"
+    +"Deliver the conclusion concisely (spoken: 1–2 sentences), but make sure it is the product of the reasoning above — the specific bottleneck with its evidence, then at most one next-step offer.";
 }
 // Which tools each role may use — the widget is scoped to the role's real authority.
 var HARMONY_ROLE_TOOLS={ it:null, bu:['create_request','notify','navigate'], ou:['create_request','notify','navigate'], dept:['notify','navigate'], exec:['notify','navigate'] };
