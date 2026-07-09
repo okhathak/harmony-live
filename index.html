@@ -8078,10 +8078,10 @@ function jcoreSet(state){
   var s=document.getElementById('jc-state');
   if(s) s.textContent=({speaking:'SPEAKING',listening:'LISTENING',working:'EXECUTING'})[state]||'STANDBY';
 }
-// ── VISION ORB — soft morphing "voice" blob (Claude style) on jc-globe-cv ──
-// A warm cream→coral sphere that gently breathes and morphs, with a soft glow
-// and subtle internal light drift. Minimal: no rings, particles or HUD. Tuned
-// to read on a white background. State-reactive (coral / peach / rose / amber).
+// ── VISION MURMURATION — flowing particle sphere (Claude style) on jc-globe-cv ──
+// A swarm of particles streams and shimmers around a rotating globe (starling-
+// murmuration feel), warm Claude palette, tuned to read on white. Depth drives
+// size/opacity for real 3D. State-reactive (coral / peach / rose / amber).
 function harmonyGlobe(){
   window._globeRAF=requestAnimationFrame(harmonyGlobe);
   var cv=document.getElementById('jc-globe-cv'); if(!cv) return;
@@ -8093,74 +8093,57 @@ function harmonyGlobe(){
       spk=wrap&&wrap.classList.contains('speaking'),
       lst=wrap&&wrap.classList.contains('listening'),
       wrk=wrap&&wrap.classList.contains('working');
-  window._globeT=(window._globeT||0)+(spk?0.02:wrk?0.013:0.008);
-  var t=window._globeT, cx=w/2, cy=h/2, R=Math.min(w,h)*0.32;
-  // warm Claude palette (idle); rose listening; amber working; brighter speaking
-  var C = lst ? {hi:'255,240,244', a:'250,180,200', b:'238,120,150', deep:'196,60,100', glow:'244,63,94'}
-       : wrk ? {hi:'255,248,235', a:'250,214,150', b:'238,168,70',  deep:'196,128,30', glow:'245,158,11'}
-       : spk ? {hi:'255,249,244', a:'255,201,172', b:'240,150,110', deep:'205,104,66', glow:'232,142,106'}
-             : {hi:'255,246,239', a:'243,183,155', b:'224,138,99',  deep:'201,106,68', glow:'217,119,87'};
-  // gentle breathing + morph amount
-  var breathe = spk ? (1+0.05*Math.sin(t*7)) : (1+0.028*Math.sin(t*1.9));
-  var Rb = R*breathe, morph = spk?0.10:0.065;
+  window._globeT=(window._globeT||0)+(spk?0.016:wrk?0.011:0.007);
+  var t=window._globeT, cx=w/2, cy=h/2, R=Math.min(w,h)*0.36;
+  var C = lst ? {main:'225,29,72',   soft:'251,113,133', glow:'244,63,94'}
+       : wrk ? {main:'217,119,6',    soft:'245,180,80',  glow:'245,158,11'}
+       : spk ? {main:'232,142,106',  soft:'255,201,172', glow:'232,142,106'}
+             : {main:'217,119,87',   soft:'240,175,140',  glow:'217,119,87'};
 
-  // 1) soft outer glow (breathes)
-  var bl=ctx.createRadialGradient(cx,cy,Rb*0.55,cx,cy,Rb*1.9);
-  bl.addColorStop(0,'rgba('+C.glow+','+(spk?0.34:0.24)+')');
-  bl.addColorStop(0.55,'rgba('+C.glow+',0.07)'); bl.addColorStop(1,'rgba('+C.glow+',0)');
-  ctx.fillStyle=bl; ctx.beginPath(); ctx.arc(cx,cy,Rb*1.9,0,6.2832); ctx.fill();
+  // Fibonacci sphere base points (once)
+  var N=460;
+  var PTS=window._murPts||(window._murPts=(function(){var a=[],ga=Math.PI*(3-Math.sqrt(5));
+    for(var i=0;i<N;i++){ var y=1-(i/(N-1))*2, r=Math.sqrt(1-y*y), th=ga*i;
+      a.push({x:Math.cos(th)*r,y:y,z:Math.sin(th)*r,ph:(i*12.9898)%6.283}); } return a;})());
+
+  var spin=t*0.32, tiltX=0.42, amp=spk?0.34:0.24;         // flow amount
+  var cosT=Math.cos(tiltX), sinT=Math.sin(tiltX);
+  var breathe=(spk?1.04:1)+ (spk?0.03:0.015)*Math.sin(t*(spk?7:1.8));
+  var Rr=R*breathe;
+
+  // soft warm bloom behind the swarm
+  var bl=ctx.createRadialGradient(cx,cy,Rr*0.2,cx,cy,Rr*1.5);
+  bl.addColorStop(0,'rgba('+C.glow+','+(spk?0.16:0.1)+')'); bl.addColorStop(1,'rgba('+C.glow+',0)');
+  ctx.fillStyle=bl; ctx.beginPath(); ctx.arc(cx,cy,Rr*1.5,0,6.2832); ctx.fill();
 
   if(window._ringIgnite){ var ig=(performance.now()-window._ringIgnite)/1100;
-    if(ig<1){ var kf=1-ig; ctx.strokeStyle='rgba('+C.hi+','+(kf*0.5).toFixed(3)+')'; ctx.lineWidth=2+7*kf;
-      ctx.beginPath(); ctx.arc(cx,cy,Rb*(1+ig*1.5),0,6.2832); ctx.stroke(); } else { window._ringIgnite=0; } }
+    if(ig<1){ var kf=1-ig; ctx.fillStyle='rgba('+C.soft+','+(kf*0.25).toFixed(3)+')';
+      ctx.beginPath(); ctx.arc(cx,cy,Rr*(0.6+ig*0.8),0,6.2832); ctx.fill(); } else { window._ringIgnite=0; } }
 
-  // 2) build the organic morphing outline (layered sines = a living blob)
-  function blobPath(rad, ph){ ctx.beginPath();
-    var STEPS=80;
-    for(var i=0;i<=STEPS;i++){ var ang=i/STEPS*6.2832;
-      var wob=1 + morph*Math.sin(ang*3+t*1.05+ph) + morph*0.6*Math.sin(ang*5-t*0.8+ph) + morph*0.4*Math.sin(ang*2+t*1.5);
-      var r=rad*wob, x=cx+Math.cos(ang)*r, y=cy+Math.sin(ang)*r*0.985;
-      if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y); }
-    ctx.closePath();
-  }
-
-  // 3) fill the blob with a soft cream→coral gradient (offset highlight = roundness)
-  blobPath(Rb,0);
-  var body=ctx.createRadialGradient(cx-R*0.3,cy-R*0.34,R*0.06, cx,cy,Rb*1.08);
-  body.addColorStop(0,'rgba('+C.hi+',1)');
-  body.addColorStop(0.34,'rgba('+C.a+',1)');
-  body.addColorStop(0.72,'rgba('+C.b+',1)');
-  body.addColorStop(1,'rgba('+C.deep+',1)');
-  ctx.fillStyle=body; ctx.fill();
-
-  // 4) internal light drift — soft blooms that slowly wander inside the blob
-  ctx.save(); blobPath(Rb*0.99,0); ctx.clip();
   ctx.globalCompositeOperation='lighter';
-  var d1x=cx+Math.cos(t*0.5)*R*0.32, d1y=cy+Math.sin(t*0.5)*R*0.28;
-  var g1=ctx.createRadialGradient(d1x,d1y,0,d1x,d1y,R*0.8);
-  g1.addColorStop(0,'rgba('+C.hi+',0.5)'); g1.addColorStop(1,'rgba('+C.hi+',0)');
-  ctx.fillStyle=g1; ctx.fillRect(cx-Rb,cy-Rb,Rb*2,Rb*2);
-  var d2x=cx+Math.cos(-t*0.4+2.4)*R*0.36, d2y=cy+Math.sin(-t*0.4+2.4)*R*0.3;
-  var g2=ctx.createRadialGradient(d2x,d2y,0,d2x,d2y,R*0.6);
-  g2.addColorStop(0,'rgba('+C.a+',0.45)'); g2.addColorStop(1,'rgba('+C.a+',0)');
-  ctx.fillStyle=g2; ctx.fillRect(cx-Rb,cy-Rb,Rb*2,Rb*2);
-  // gentle terminator shade (bottom-right) for softness/depth
+  var dots=[];
+  for(var i=0;i<N;i++){ var pt=PTS[i];
+    // spherical of base
+    var th=Math.acos(Math.max(-1,Math.min(1,pt.y))), ph=Math.atan2(pt.z,pt.x);
+    // murmuration flow: streams drift in phi + gentle theta sway
+    ph += spin + amp*Math.sin(t*0.8 + th*3.0 + pt.ph);
+    th += amp*0.5*Math.sin(t*0.6 + ph*2.0 + pt.ph);
+    var st=Math.sin(th);
+    var x=st*Math.cos(ph), y=Math.cos(th), z=st*Math.sin(ph);
+    // view tilt around X
+    var y2=y*cosT - z*sinT, z2=y*sinT + z*cosT;
+    dots.push([cx+x*Rr, cy+y2*Rr, z2, pt.ph]);
+  }
+  dots.sort(function(a,b){return a[2]-b[2];});   // back to front
+  for(var d=0;d<dots.length;d++){ var q=dots[d], zz=q[2];
+    var depth=(zz+1)/2;                            // 0 back .. 1 front
+    var sz=0.6+depth*1.9, al=(0.14+depth*0.72)*(0.7+0.3*Math.sin(t*2+q[3]));
+    var col=depth>0.55?C.soft:C.main;
+    ctx.fillStyle='rgba('+col+','+al.toFixed(3)+')';
+    ctx.beginPath(); ctx.arc(q[0],q[1],sz,0,6.2832); ctx.fill();
+    if(depth>0.8){ ctx.fillStyle='rgba('+C.soft+','+(al*0.5).toFixed(3)+')'; ctx.beginPath(); ctx.arc(q[0],q[1],sz*2.4,0,6.2832); ctx.fill(); }
+  }
   ctx.globalCompositeOperation='source-over';
-  var sh=ctx.createRadialGradient(cx+R*0.42,cy+R*0.5,R*0.1, cx+R*0.25,cy+R*0.3,Rb*1.15);
-  sh.addColorStop(0,'rgba('+C.deep+',0)'); sh.addColorStop(1,'rgba('+C.deep+',0.4)');
-  ctx.fillStyle=sh; ctx.fillRect(cx-Rb,cy-Rb,Rb*2,Rb*2);
-  ctx.restore();
-
-  // 5) soft specular sheen (top-left)
-  var sp=ctx.createRadialGradient(cx-R*0.3,cy-R*0.36,0, cx-R*0.3,cy-R*0.36,R*0.5);
-  sp.addColorStop(0,'rgba(255,255,255,'+(spk?0.7:0.55)+')'); sp.addColorStop(0.55,'rgba(255,255,255,0.1)'); sp.addColorStop(1,'rgba(255,255,255,0)');
-  ctx.save(); blobPath(Rb*0.99,0); ctx.clip();
-  ctx.fillStyle=sp; ctx.beginPath(); ctx.ellipse(cx-R*0.28,cy-R*0.34,R*0.3,R*0.2,-0.6,0,6.2832); ctx.fill();
-  ctx.restore();
-
-  // 6) whisper-soft rim for definition on white
-  blobPath(Rb,0);
-  ctx.lineWidth=Math.max(1,R*0.02); ctx.strokeStyle='rgba('+C.deep+',0.22)'; ctx.stroke();
 }
 
 function jcoreHTML(closedN,inDelN,queuedN){
