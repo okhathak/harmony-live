@@ -8078,10 +8078,10 @@ function jcoreSet(state){
   var s=document.getElementById('jc-state');
   if(s) s.textContent=({speaking:'SPEAKING',listening:'LISTENING',working:'EXECUTING'})[state]||'STANDBY';
 }
-// ── VISION MURMURATION — flowing particle sphere (Claude style) on jc-globe-cv ──
-// A swarm of particles streams and shimmers around a rotating globe (starling-
-// murmuration feel), warm Claude palette, tuned to read on white. Depth drives
-// size/opacity for real 3D. State-reactive (coral / peach / rose / amber).
+// ── VISION MURMURATION — GDRFA edition (royal blue + identity-network links + gold tips) ──
+// A flock of particles streams around a rotating globe; a stable neighbour-mesh
+// (precomputed once) deforms with the flow = a living "network of identities".
+// Gold accents the brightest leading particles. State-reactive; tuned for white.
 function harmonyGlobe(){
   window._globeRAF=requestAnimationFrame(harmonyGlobe);
   var cv=document.getElementById('jc-globe-cv'); if(!cv) return;
@@ -8095,53 +8095,62 @@ function harmonyGlobe(){
       wrk=wrap&&wrap.classList.contains('working');
   window._globeT=(window._globeT||0)+(spk?0.016:wrk?0.011:0.007);
   var t=window._globeT, cx=w/2, cy=h/2, R=Math.min(w,h)*0.36;
-  var C = lst ? {main:'225,29,72',   soft:'251,113,133', glow:'244,63,94'}
-       : wrk ? {main:'217,119,6',    soft:'245,180,80',  glow:'245,158,11'}
-       : spk ? {main:'232,142,106',  soft:'255,201,172', glow:'232,142,106'}
-             : {main:'217,119,87',   soft:'240,175,140',  glow:'217,119,87'};
+  var C = lst ? {main:[225,29,72], soft:[251,150,175], deep:[136,19,55], tip:[245,185,80], glow:'244,63,94'}
+       : wrk ? {main:[217,119,6], soft:[245,190,110], deep:[146,80,10], tip:[255,215,120], glow:'245,158,11'}
+       : spk ? {main:[59,130,246], soft:[150,196,255], deep:[30,58,138], tip:[245,190,90], glow:'59,130,246'}
+             : {main:[37,99,235], soft:[120,170,255], deep:[30,58,138], tip:[240,180,70], glow:'37,99,235'};
 
-  // Fibonacci sphere base points (once)
-  var N=760;
+  var N=620;
   var PTS=window._murPts||(window._murPts=(function(){var a=[],ga=Math.PI*(3-Math.sqrt(5));
     for(var i=0;i<N;i++){ var y=1-(i/(N-1))*2, r=Math.sqrt(1-y*y), th=ga*i;
       a.push({x:Math.cos(th)*r,y:y,z:Math.sin(th)*r,ph:(i*12.9898)%6.283}); } return a;})());
+  // precompute a stable neighbour mesh once (each point → its 2 nearest)
+  var EDGES=window._murEdges||(window._murEdges=(function(){var E=[],seen={};
+    for(var i=0;i<N;i++){ var b0={d:1e9,j:-1}, b1={d:1e9,j:-1};
+      for(var j=0;j<N;j++){ if(j===i)continue; var dx=PTS[i].x-PTS[j].x,dy=PTS[i].y-PTS[j].y,dz=PTS[i].z-PTS[j].z,d=dx*dx+dy*dy+dz*dz;
+        if(d<b0.d){b1=b0;b0={d:d,j:j};} else if(d<b1.d){b1={d:d,j:j};} }
+      [b0.j,b1.j].forEach(function(j){ if(j<0)return; var k=i<j?i+'_'+j:j+'_'+i; if(!seen[k]){seen[k]=1;E.push([i,j]);} }); }
+    return E;})());
 
-  var spin=t*0.34, tiltX=0.42, amp=spk?0.42:0.30;         // flow amount
-  var cosT=Math.cos(tiltX), sinT=Math.sin(tiltX);
-  var breathe=(spk?1.04:1)+ (spk?0.03:0.015)*Math.sin(t*(spk?7:1.8));
-  var Rr=R*breathe;
+  var spin=t*0.32, tiltX=0.42, amp=spk?0.36:0.28, cosT=Math.cos(tiltX), sinT=Math.sin(tiltX);
+  var breathe=(spk?1.03:1)+(spk?0.03:0.015)*Math.sin(t*(spk?7:1.8)), Rr=R*breathe;
 
-  // soft warm bloom behind the swarm
+  // soft bloom
   var bl=ctx.createRadialGradient(cx,cy,Rr*0.2,cx,cy,Rr*1.5);
-  bl.addColorStop(0,'rgba('+C.glow+','+(spk?0.16:0.1)+')'); bl.addColorStop(1,'rgba('+C.glow+',0)');
+  bl.addColorStop(0,'rgba('+C.glow+','+(spk?0.14:0.09)+')'); bl.addColorStop(1,'rgba('+C.glow+',0)');
   ctx.fillStyle=bl; ctx.beginPath(); ctx.arc(cx,cy,Rr*1.5,0,6.2832); ctx.fill();
 
   if(window._ringIgnite){ var ig=(performance.now()-window._ringIgnite)/1100;
-    if(ig<1){ var kf=1-ig; ctx.fillStyle='rgba('+C.soft+','+(kf*0.25).toFixed(3)+')';
+    if(ig<1){ var kf=1-ig; ctx.fillStyle='rgba('+C.soft.join(',')+','+(kf*0.22).toFixed(3)+')';
       ctx.beginPath(); ctx.arc(cx,cy,Rr*(0.6+ig*0.8),0,6.2832); ctx.fill(); } else { window._ringIgnite=0; } }
 
-  ctx.globalCompositeOperation='lighter';
-  var dots=[];
+  // animate + project all points (indexed, so edges can reference them)
+  var pos=new Array(N);
   for(var i=0;i<N;i++){ var pt=PTS[i];
-    // spherical of base
     var th=Math.acos(Math.max(-1,Math.min(1,pt.y))), ph=Math.atan2(pt.z,pt.x);
-    // murmuration flow: streams drift in phi + gentle theta sway
     ph += spin + amp*Math.sin(t*0.8 + th*3.0 + pt.ph);
     th += amp*0.5*Math.sin(t*0.6 + ph*2.0 + pt.ph);
-    var st=Math.sin(th);
-    var x=st*Math.cos(ph), y=Math.cos(th), z=st*Math.sin(ph);
-    // view tilt around X
+    var st=Math.sin(th), x=st*Math.cos(ph), y=Math.cos(th), z=st*Math.sin(ph);
     var y2=y*cosT - z*sinT, z2=y*sinT + z*cosT;
-    dots.push([cx+x*Rr, cy+y2*Rr, z2, pt.ph]);
+    pos[i]=[cx+x*Rr, cy+y2*Rr, z2, pt.ph];
   }
-  dots.sort(function(a,b){return a[2]-b[2];});   // back to front
-  for(var d=0;d<dots.length;d++){ var q=dots[d], zz=q[2];
-    var depth=(zz+1)/2;                            // 0 back .. 1 front
-    var sz=0.45+depth*1.25, al=(0.22+depth*0.72)*(0.78+0.22*Math.sin(t*2.2+q[3]));
-    var col=depth>0.66?C.soft:C.main;
-    ctx.fillStyle='rgba('+col+','+al.toFixed(3)+')';
+
+  // 1) identity-network links (stable mesh, depth-faded)
+  ctx.lineWidth=0.6;
+  for(var e=0;e<EDGES.length;e++){ var A=pos[EDGES[e][0]], B=pos[EDGES[e][1]];
+    var dp=((A[2]+B[2])/2+1)/2; if(dp<0.32) continue;
+    ctx.strokeStyle='rgba('+C.main.join(',')+','+(0.10*dp).toFixed(3)+')';
+    ctx.beginPath(); ctx.moveTo(A[0],A[1]); ctx.lineTo(B[0],B[1]); ctx.stroke(); }
+
+  // 2) particles (painter's order, additive)
+  var order=pos.map(function(_,i){return i;}).sort(function(a,b){return pos[a][2]-pos[b][2];});
+  ctx.globalCompositeOperation='lighter';
+  for(var o=0;o<N;o++){ var q=pos[order[o]], dp=(q[2]+1)/2;
+    var sz=0.5+dp*1.35, al=(0.24+dp*0.72)*(0.82+0.18*Math.sin(t*2.2+q[3]));
+    var col = dp<0.35?C.deep : dp>0.9?C.tip : dp>0.7?C.soft : C.main;
+    ctx.fillStyle='rgba('+col.join(',')+','+al.toFixed(3)+')';
     ctx.beginPath(); ctx.arc(q[0],q[1],sz,0,6.2832); ctx.fill();
-    if(depth>0.9){ ctx.fillStyle='rgba('+C.soft+','+(al*0.32).toFixed(3)+')'; ctx.beginPath(); ctx.arc(q[0],q[1],sz*1.9,0,6.2832); ctx.fill(); }
+    if(dp>0.9){ ctx.fillStyle='rgba('+C.tip.join(',')+','+(al*0.42).toFixed(3)+')'; ctx.beginPath(); ctx.arc(q[0],q[1],sz*2.1,0,6.2832); ctx.fill(); }
   }
   ctx.globalCompositeOperation='source-over';
 }
