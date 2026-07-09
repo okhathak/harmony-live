@@ -1496,7 +1496,7 @@ body[data-role="it"] [style*="background:#fff"],body[data-role="it"] [style*="ba
         </button>
         <div id="role-dropdown"></div>
       </div>
-      <button id="btn-demo" onclick="openDemoPicker()" style="display:flex;align-items:center;gap:6px;background:#1D4ED8;color:#fff;border:none;border-radius:99px;padding:5px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;margin-left:8px">&#127916; Demo</button><button id="btn-reset" onclick="resetDemo()" title="Reset demo data" style="display:flex;align-items:center;gap:5px;background:#fff;color:#64748B;border:1.5px solid #E2E8F0;border-radius:99px;padding:5px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;margin-left:6px">&#8635; Reset</button>
+      <button id="btn-demo" onclick="openDemoPicker()" style="display:flex;align-items:center;gap:6px;background:#1D4ED8;color:#fff;border:none;border-radius:99px;padding:5px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;margin-left:8px">&#127916; Demo</button><button id="btn-reset" onclick="resetDemo()" title="Reset demo data" style="display:flex;align-items:center;gap:5px;background:#fff;color:#64748B;border:1.5px solid #E2E8F0;border-radius:99px;padding:5px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;margin-left:6px">&#8635; Reset</button><button id="btn-download" onclick="harmonyDownloadHTML()" title="Download this app as a standalone HTML file you can open on any device" style="display:flex;align-items:center;gap:5px;background:#fff;color:#1D4ED8;border:1.5px solid #C7D2FE;border-radius:99px;padding:5px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;margin-left:6px">&#11015; HTML</button>
     </div>
     <div id="content-el"></div>
   </div>
@@ -7330,6 +7330,25 @@ ANTHROPIC.base=(function(){ try{ if(location.protocol==='file:') return 'https:/
 function aiReady(){ return !!(ANTHROPIC.key||ANTHROPIC.serverKey); }
 // Live host = a public deployment (not file:// and not localhost). Presenter-only demo
 // controls (Reset) are hidden there so a visitor can't wipe the working pipeline state.
+// Save the whole app as one standalone harmony.html the user can open anywhere / host on their own PC.
+function harmonyDownloadHTML(){
+  function save(txt){
+    try{
+      var blob=new Blob([txt],{type:'text/html;charset=utf-8'});
+      var a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+      a.download='harmony.html'; document.body.appendChild(a); a.click();
+      setTimeout(function(){ try{ URL.revokeObjectURL(a.href); }catch(e){} a.remove(); },1500);
+      try{ toast('Downloaded harmony.html — open it on any device, offline.','ok'); }catch(e){}
+    }catch(e){ try{ toast('Download failed: '+((e&&e.message)||e),'warn'); }catch(_){} }
+  }
+  // Prefer the pristine on-disk source; fall back to a live DOM snapshot (e.g. file://).
+  try{
+    fetch(location.href,{cache:'no-store'})
+      .then(function(r){ if(!r.ok) throw 0; return r.text(); })
+      .then(function(t){ save((/^\s*<!doctype/i.test(t)?'':'<!DOCTYPE html>\n')+t); })
+      .catch(function(){ save('<!DOCTYPE html>\n'+document.documentElement.outerHTML); });
+  }catch(e){ save('<!DOCTYPE html>\n'+document.documentElement.outerHTML); }
+}
 function harmonyIsLiveHost(){ try{ var h=location.hostname; return !!h && h!=='localhost' && h!=='127.0.0.1' && location.protocol!=='file:'; }catch(e){ return false; } }
 function harmonyApplyLiveMode(){ if(!harmonyIsLiveHost()) return; var r=document.getElementById('btn-reset'); if(r) r.style.display='none'; }
 try{ if(document.readyState!=='loading') harmonyApplyLiveMode(); else document.addEventListener('DOMContentLoaded',harmonyApplyLiveMode); }catch(e){}
