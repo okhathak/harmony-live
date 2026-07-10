@@ -1427,6 +1427,19 @@ body[data-role="it"] .hud-tog{background:rgba(67,56,202,.08)!important;border:1p
 body[data-role="it"] .hud-tog:hover{border-color:var(--accent)!important;color:var(--accent)!important;box-shadow:none!important}
 body[data-role="it"] .jcore-panel.speaking{box-shadow:0 0 0 1px rgba(67,56,202,.25),0 0 34px -6px rgba(67,56,202,.4)!important}
 body[data-role="it"] .jc-halo{display:none!important} /* canvas orb draws its own glow — no CSS halo ring */
+/* ── SPHERE FREED (2026-07-09): no placeholder box — the orb floats on the hero ── */
+body[data-role="it"] .jcore-panel{background:transparent!important;border:none!important;box-shadow:none!important;overflow:visible!important}
+body[data-role="it"] .jcore-panel::before{display:none!important}
+body[data-role="it"] .jcore-panel .hud-fx,body[data-role="it"] .jcore-panel .hud-scan{display:none!important}
+body[data-role="it"] .jc-top{display:none!important}
+body[data-role="it"] .jcore-panel.speaking{box-shadow:none!important}
+body[data-role="it"] .jcore{width:176px;height:176px}
+/* waveform is a voice visualizer — only present while the agent is active */
+body[data-role="it"] .jc-wave{opacity:0;transition:opacity .4s;height:20px;margin:0 0 4px}
+body[data-role="it"] .jc-caption{margin:0 0 4px}
+body[data-role="it"] .jcore-panel.speaking .jc-wave,body[data-role="it"] .jcore-panel.listening .jc-wave,body[data-role="it"] .jcore-panel.working .jc-wave{opacity:1}
+/* stat plate de-boxed: clean floating text under the orb */
+body[data-role="it"] .jc-plate{background:transparent!important;border:none!important;box-shadow:none!important}
 /* boot splash → cohesive branded navy (sidebar-matching) with blue accents, not coral */
 body[data-role="it"] #ops-boot{background:#0A1628!important}
 body[data-role="it"] .ob-grid{background-image:linear-gradient(rgba(76,141,255,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(76,141,255,.07) 1px,transparent 1px)!important}
