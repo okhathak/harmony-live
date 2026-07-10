@@ -1434,10 +1434,12 @@ body[data-role="it"] .jcore-panel .hud-fx,body[data-role="it"] .jcore-panel .hud
 body[data-role="it"] .jc-top{display:none!important}
 body[data-role="it"] .jcore-panel.speaking{box-shadow:none!important}
 body[data-role="it"] .jcore{width:176px;height:176px}
-/* waveform is a voice visualizer — only present while the agent is active */
-body[data-role="it"] .jc-wave{opacity:0;transition:opacity .4s;height:20px;margin:0 0 4px}
-body[data-role="it"] .jc-caption{margin:0 0 4px}
-body[data-role="it"] .jcore-panel.speaking .jc-wave,body[data-role="it"] .jcore-panel.listening .jc-wave,body[data-role="it"] .jcore-panel.working .jc-wave{opacity:1}
+/* waveform + caption are voice visualizers — fully collapsed at idle (no dead
+   gap between orb and stats) and expanding smoothly when the agent is active */
+body[data-role="it"] .jc-wave{opacity:0;height:20px;max-height:0;margin:0;overflow:hidden;transition:opacity .35s,max-height .3s ease,margin .3s ease}
+body[data-role="it"] .jc-caption{min-height:0;max-height:0;overflow:hidden;margin:0;transition:max-height .3s ease,margin .3s ease}
+body[data-role="it"] .jcore-panel.speaking .jc-wave,body[data-role="it"] .jcore-panel.listening .jc-wave,body[data-role="it"] .jcore-panel.working .jc-wave{opacity:1;max-height:20px;margin:0 0 4px}
+body[data-role="it"] .jcore-panel.speaking .jc-caption,body[data-role="it"] .jcore-panel.listening .jc-caption,body[data-role="it"] .jcore-panel.working .jc-caption{max-height:15px;margin:0 0 4px}
 /* stat plate de-boxed: clean floating text under the orb */
 body[data-role="it"] .jc-plate{background:transparent!important;border:none!important;box-shadow:none!important}
 /* boot splash → cohesive branded navy (sidebar-matching) with blue accents, not coral */
