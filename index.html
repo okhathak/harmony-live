@@ -1508,8 +1508,8 @@ body[data-role="it"] [style*="background:#fff"],body[data-role="it"] [style*="ba
       <div class="sb-cl">Active Sprint</div>
       <div class="sb-cn">Cycle 18</div>
       <div class="sb-cd">12 May &mdash; 01 Jun 2026</div>
-      <div class="sb-cbar"><div class="sb-cf"></div></div>
-      <div class="sb-ci"><span>43/60 hrs</span><span>18 days left</span></div>
+      <div class="sb-cbar"><div class="sb-cf" id="sb-cf"></div></div>
+      <div class="sb-ci"><span id="sb-hrs">&hellip;</span><span id="sb-pct"></span></div>
     </div>
   </div>
   <div id="sb-backdrop" onclick="toggleSidebar()"></div>
@@ -1633,6 +1633,12 @@ function getBadges(){
 }
 // ─── SIDEBAR ──────────────────────────────────────────────────────
 function renderSidebar(){
+  // live cycle-load figures (was hardcoded 43/60 + "18 days left", contradicting the 56/60 shown app-wide)
+  try{ var _ch=harmonyC18Hours(); var _cp=Math.min(100,Math.round(_ch/60*100));
+    var _e1=document.getElementById('sb-hrs'); if(_e1)_e1.textContent=_ch+'/60 hrs';
+    var _e2=document.getElementById('sb-pct'); if(_e2)_e2.textContent=_cp+'% committed';
+    var _e3=document.getElementById('sb-cf'); if(_e3)_e3.style.width=_cp+'%';
+  }catch(e){}
   var rc  = currentRole==="dept" ? Object.assign({},ROLES_CONFIG.dept) : ROLES_CONFIG[currentRole];
   if(currentRole==="dept"&&currentDept){
     var dr = DEPT_ROLES.find(function(d){return d.dept===currentDept;})||DEPT_ROLES[0];
@@ -3416,7 +3422,7 @@ function renderDashboard(){
   var _uqInits=[]; REQUESTS.forEach(function(r){(r.linkedInitiatives||[]).forEach(function(id){if(_uqInits.indexOf(id)===-1)_uqInits.push(id);});});
   var _lkReqs=REQUESTS.filter(function(r){return r.linkedInitiatives&&r.linkedInitiatives.length>0;}).length;
   if(_uqInits.length>0){
-    var _initNames={"UAE-DS-2025":"Digital Gov 2025","UAE-AI-2031":"AI Strategy 2031","UAE-PDPL":"PDPL","ICP-FS":"ICP Strategy","UAE-OPEN-FINANCE":"Open Finance","DubaiPaperless":"Dubai Paperless","SmartDubai":"Smart Dubai","Dubai10X":"Dubai 10X","UAE-DIFC-GDPR":"UAE PDPL","UAE-NDS":"Natl Data Strategy","UAE-CYBERSEC":"Cybersecurity","DubaiProcure":"Digital Gov 2025","UAE-MOHRE-Digital":"Digital Dubai","UAE-CUSTOMER-EXP":"CX Index","ADGM-DIGITAL":"D33 Agenda"};
+    var _initNames={"UAE-DS-2025":"Digital Gov 2025","UAE-AI-2031":"AI Strategy 2031","UAE-PDPL":"PDPL","ICP-FS":"ICP Strategy","UAE-OPEN-FINANCE":"Open Finance","DubaiPaperless":"Dubai Paperless","SmartDubai":"Smart Dubai","Dubai10X":"Dubai 10X","UAE-DIFC-GDPR":"UAE PDPL","UAE-NDS":"Natl Data Strategy","UAE-CYBERSEC":"Cybersecurity","DubaiProcure":"E-Licensing","UAE-MOHRE-Digital":"Digital Dubai","UAE-CUSTOMER-EXP":"CX Index","ADGM-DIGITAL":"D33 Agenda"};
     h+='<div style="background:#EFF6FF;border:1.5px solid #BFDBFE;border-radius:11px;padding:10px 16px;margin-bottom:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">';
     h+='<span style="font-size:18px">&#127462;&#127466;</span>';
     h+='<div style="flex:1;min-width:0"><div style="font-size:12.5px;font-weight:800;color:#1E40AF">'+_uqInits.length+' UAE &amp; Dubai Government Initiatives linked</div>';
@@ -3664,7 +3670,7 @@ function renderWizard(){
         {id:'UAE-DIFC-GDPR',  name:'UAE PDPL — Federal Data Protection',           body:'Dubai Int\'l Financial Centre'},
         {id:'UAE-NDS',        name:'UAE National Data Strategy',              body:'UAE Data Office'},
         {id:'UAE-CYBERSEC',   name:'UAE Cybersecurity Strategy 2023–2026',    body:'UAE Cybersecurity Council'},
-        {id:'DubaiProcure',   name:'UAE Digital Government Strategy 2025',   body:'Dubai Dept. of Finance'},
+        {id:'DubaiProcure',   name:'Dubai Government E-Licensing Programme',   body:'Dubai Dept. of Finance'},
         {id:'UAE-MOHRE-Digital',name:'Smart Dubai — Happiness Agenda',body:'Digital Dubai Authority'},
         {id:'UAE-CUSTOMER-EXP',name:'UAE Customer Experience Index',          body:'UAE Prime Minister Office'},
         {id:'ADGM-DIGITAL',   name:'D33 — Dubai Economic Agenda',           body:'Abu Dhabi Global Market'},
@@ -8701,7 +8707,7 @@ var GOV_INITIATIVES = {
   "REQ-007": [
     {id:"UAE-DIFC-GDPR",name:"UAE PDPL — Federal Data Protection",body:"Dubai International Financial Centre",url:"https://www.u.ae/business/laws-regulations/data-protection/",desc:"UAE PDPL federal data-protection regulation applicable to financial and legal operations in the centre."},
     {id:"ADGM-DIGITAL",name:"D33 — Dubai Economic Agenda",body:"Government of Dubai",url:"https://www.dubaieconomicagenda.ae",desc:"Comprehensive regulatory framework for digital assets, tokenisation, and virtual asset service providers."},
-    {id:"DubaiProcure",name:"UAE Digital Government Strategy 2025",body:"Dubai Department of Finance",url:"https://dof.gov.ae",desc:"Mandatory e-licensing framework for all Dubai government Amer partner and typing center management."}
+    {id:"DubaiProcure",name:"Dubai Government E-Licensing Programme",body:"Dubai Department of Finance",url:"https://dof.gov.ae",desc:"Mandatory e-licensing framework for all Dubai government Amer partner and typing center management."}
   ],
   "REQ-008": [
     {id:"ICP-FS",name:"Zero Government Bureaucracy Programme",body:"Central Bank of UAE",url:"https://u.ae",desc:"ICP blueprint for a resilient, inclusive, and innovative financial sector with digital payment rails."},
@@ -8734,12 +8740,12 @@ var GOV_INITIATIVES = {
     {id:"SmartDubai",name:"Smart Dubai 2021 Strategy",body:"Smart Dubai Office",url:"https://www.smartdubai.ae",desc:"Making Dubai the world's smartest and happiest city through seamless digital city experiences."}
   ],
   "REQ-014": [
-    {id:"DubaiProcure",name:"UAE Digital Government Strategy 2025",body:"Dubai Department of Finance",url:"https://dof.gov.ae",desc:"Mandatory e-licensing framework for all Dubai government Amer partner and typing center management."},
+    {id:"DubaiProcure",name:"Dubai Government E-Licensing Programme",body:"Dubai Department of Finance",url:"https://dof.gov.ae",desc:"Mandatory e-licensing framework for all Dubai government Amer partner and typing center management."},
     {id:"UAE-DIFC-GDPR",name:"UAE PDPL — Federal Data Protection",body:"Dubai International Financial Centre",url:"https://www.u.ae/business/laws-regulations/data-protection/",desc:"UAE PDPL federal data-protection regulation applicable to financial and legal operations in the centre."},
     {id:"ADGM-DIGITAL",name:"D33 — Dubai Economic Agenda",body:"Government of Dubai",url:"https://www.dubaieconomicagenda.ae",desc:"Comprehensive regulatory framework for digital assets, tokenisation, and virtual asset service providers."}
   ],
   "REQ-015": [
-    {id:"DubaiProcure",name:"UAE Digital Government Strategy 2025",body:"Dubai Department of Finance",url:"https://dof.gov.ae",desc:"Mandatory e-licensing framework for all Dubai government Amer partner and typing center management."},
+    {id:"DubaiProcure",name:"Dubai Government E-Licensing Programme",body:"Dubai Department of Finance",url:"https://dof.gov.ae",desc:"Mandatory e-licensing framework for all Dubai government Amer partner and typing center management."},
     {id:"UAE-NDS",name:"UAE National Data Strategy",body:"UAE Data Office",url:"https://nds.gov.ae",desc:"Unified national framework for data governance, quality, and value creation across UAE entities."}
   ],
   "REQ-016": [
@@ -8778,13 +8784,13 @@ var GOV_INITIATIVES = {
     {id:"UAE-NDS",name:"UAE National Data Strategy",body:"UAE Data Office",url:"https://nds.gov.ae",desc:"Unified national framework for data governance, quality, and value creation across UAE entities."}
   ],
   "REQ-023": [
-    {id:"DubaiProcure",name:"UAE Digital Government Strategy 2025",body:"Dubai Department of Finance",url:"https://dof.gov.ae",desc:"Mandatory e-licensing framework for all Dubai government Amer partner and typing center management."},
+    {id:"DubaiProcure",name:"Dubai Government E-Licensing Programme",body:"Dubai Department of Finance",url:"https://dof.gov.ae",desc:"Mandatory e-licensing framework for all Dubai government Amer partner and typing center management."},
     {id:"DubaiPaperless",name:"Dubai Paperless Strategy",body:"Dubai Government",url:"https://www.dubai.ae/en/aboutdubai/Pages/DubaiPaperlessStrategy.aspx",desc:"Eliminates paper-based transactions across all Dubai government entities — 100% digital by 2024."}
   ],
   "REQ-024": [
     {id:"UAE-DIFC-GDPR",name:"UAE PDPL — Federal Data Protection",body:"Dubai International Financial Centre",url:"https://www.u.ae/business/laws-regulations/data-protection/",desc:"UAE PDPL federal data-protection regulation applicable to financial and legal operations in the centre."},
     {id:"ADGM-DIGITAL",name:"D33 — Dubai Economic Agenda",body:"Government of Dubai",url:"https://www.dubaieconomicagenda.ae",desc:"Comprehensive regulatory framework for digital assets, tokenisation, and virtual asset service providers."},
-    {id:"DubaiProcure",name:"UAE Digital Government Strategy 2025",body:"Dubai Department of Finance",url:"https://dof.gov.ae",desc:"Mandatory e-licensing framework for all Dubai government Amer partner and typing center management."}
+    {id:"DubaiProcure",name:"Dubai Government E-Licensing Programme",body:"Dubai Department of Finance",url:"https://dof.gov.ae",desc:"Mandatory e-licensing framework for all Dubai government Amer partner and typing center management."}
   ],
   "REQ-025": [
     {id:"UAE-CUSTOMER-EXP",name:"UAE Customer Experience Index",body:"UAE Prime Minister Office",url:"https://government.ae",desc:"Annual national benchmark measuring citizen happiness across all government service touchpoints."},
