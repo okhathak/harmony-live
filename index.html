@@ -8496,9 +8496,9 @@ function harmonyGlobe(){
   for(var o=0;o<N;o++){ var q=pos[order[o]], dp=(q[2]+1)/2;
     var fl=(0.82+0.18*Math.sin(t*2.2+q[3])), sz, col, al;
     if(_MER){
-      sz=0.6+dp*1.5;
+      sz=0.4+dp*1.7;                       // far = tiny specks, near = crisp points
       col = dp>0.9?C.tip : dp>0.62?C.deep : dp>0.4?C.main : C.soft;
-      al=(0.30+dp*0.66)*fl;
+      al=(0.14+dp*0.82)*fl;                // deep depth fade: back recedes into limestone
     } else {
       sz=0.5+dp*1.35;
       col = dp<0.35?C.deep : dp>0.9?C.tip : dp>0.7?C.soft : C.main;
@@ -8506,7 +8506,7 @@ function harmonyGlobe(){
     }
     ctx.fillStyle='rgba('+col.join(',')+','+al.toFixed(3)+')';
     ctx.beginPath(); ctx.arc(q[0],q[1],sz,0,6.2832); ctx.fill();
-    if(dp>0.9){ ctx.fillStyle='rgba('+C.tip.join(',')+','+(al*(_MER?0.3:0.42)).toFixed(3)+')'; ctx.beginPath(); ctx.arc(q[0],q[1],sz*(_MER?1.7:2.1),0,6.2832); ctx.fill(); }
+    if(dp>0.9){ ctx.fillStyle='rgba('+C.tip.join(',')+','+(al*(_MER?0.22:0.42)).toFixed(3)+')'; ctx.beginPath(); ctx.arc(q[0],q[1],sz*(_MER?1.45:2.1),0,6.2832); ctx.fill(); }
   }
   ctx.globalCompositeOperation='source-over';
   // Meridian: a whisper-thin brass ring gives the orb a defined, "sealed" edge on light.
