@@ -8485,20 +8485,32 @@ function harmonyGlobe(){
   ctx.lineWidth=0.6;
   for(var e=0;e<EDGES.length;e++){ var A=pos[EDGES[e][0]], B=pos[EDGES[e][1]];
     var dp=((A[2]+B[2])/2+1)/2; if(dp<0.32) continue;
-    ctx.strokeStyle='rgba('+C.main.join(',')+','+(0.10*dp).toFixed(3)+')';
+    ctx.strokeStyle='rgba('+C.main.join(',')+','+((_MER?0.18:0.10)*dp).toFixed(3)+')';
     ctx.beginPath(); ctx.moveTo(A[0],A[1]); ctx.lineTo(B[0],B[1]); ctx.stroke(); }
 
-  // 2) particles (painter's order, additive)
+  // 2) particles — additive glow on the dark theme; "ink on limestone" on Meridian
+  // (normal compositing + inverted depth shading: near = saturated brass/emerald ink,
+  //  far = pale, receding into the paper).
   var order=pos.map(function(_,i){return i;}).sort(function(a,b){return pos[a][2]-pos[b][2];});
-  ctx.globalCompositeOperation='lighter';
+  ctx.globalCompositeOperation=_MER?'source-over':'lighter';
   for(var o=0;o<N;o++){ var q=pos[order[o]], dp=(q[2]+1)/2;
-    var sz=0.5+dp*1.35, al=(0.24+dp*0.72)*(0.82+0.18*Math.sin(t*2.2+q[3]));
-    var col = dp<0.35?C.deep : dp>0.9?C.tip : dp>0.7?C.soft : C.main;
+    var fl=(0.82+0.18*Math.sin(t*2.2+q[3])), sz, col, al;
+    if(_MER){
+      sz=0.6+dp*1.5;
+      col = dp>0.9?C.tip : dp>0.62?C.deep : dp>0.4?C.main : C.soft;
+      al=(0.30+dp*0.66)*fl;
+    } else {
+      sz=0.5+dp*1.35;
+      col = dp<0.35?C.deep : dp>0.9?C.tip : dp>0.7?C.soft : C.main;
+      al=(0.24+dp*0.72)*fl;
+    }
     ctx.fillStyle='rgba('+col.join(',')+','+al.toFixed(3)+')';
     ctx.beginPath(); ctx.arc(q[0],q[1],sz,0,6.2832); ctx.fill();
-    if(dp>0.9){ ctx.fillStyle='rgba('+C.tip.join(',')+','+(al*0.42).toFixed(3)+')'; ctx.beginPath(); ctx.arc(q[0],q[1],sz*2.1,0,6.2832); ctx.fill(); }
+    if(dp>0.9){ ctx.fillStyle='rgba('+C.tip.join(',')+','+(al*(_MER?0.3:0.42)).toFixed(3)+')'; ctx.beginPath(); ctx.arc(q[0],q[1],sz*(_MER?1.7:2.1),0,6.2832); ctx.fill(); }
   }
   ctx.globalCompositeOperation='source-over';
+  // Meridian: a whisper-thin brass ring gives the orb a defined, "sealed" edge on light.
+  if(_MER){ ctx.strokeStyle='rgba(166,119,46,0.22)'; ctx.lineWidth=1; ctx.beginPath(); ctx.arc(cx,cy,Rr*1.12,0,6.2832); ctx.stroke(); }
 }
 
 function jcoreHTML(closedN,inDelN,queuedN){
@@ -8599,26 +8611,13 @@ function renderAgent(){
   if(!window._harmonyBooted && !window._bootT){
     window._bootT=setTimeout(function(){
       window._harmonyBooted=true;
-      harmonySound('boot');
       window._ringIgnite=performance.now(); // core ignition flare as the overlay lifts
       var b=document.getElementById('ops-boot');
       if(b){ b.classList.add('off'); setTimeout(function(){ if(b.parentNode) b.parentNode.removeChild(b); },480); }
       var nodes=document.querySelectorAll('#harmony-chat .hbot');
       if(nodes.length===1 && HARMONY_CHAT.length && HARMONY_CHAT[0].who==='harmony'){ harmonyStreamLast(HARMONY_CHAT[0].text); }
-      if(HARMONY_VOICE.on){
-        // Don't speak until the voice engine has settled — otherwise the opening starts in
-        // one voice (browser fallback) and switches to another (loaded/neural) mid-intro.
-        var _spoke=false, _sp0=Date.now();
-        var _speakOpen=function(){ if(_spoke) return; _spoke=true; harmonySpeak(harmonyOpeningSpoken()); };
-        var _waitVoice=function(){
-          if(_spoke) return;
-          var voicesReady=harmonyVoiceList().length>0;
-          var engineSettled=PIPER.ready || elevenReady() || voicesReady; // a neural engine or the browser list is decided
-          if(engineSettled || Date.now()-_sp0>1400) _speakOpen();
-          else setTimeout(_waitVoice,150);
-        };
-        _waitVoice();
-      }
+      // Boot is silent by user preference — no chime and no spoken greeting on open.
+      // Voice is still available on demand (mic / Hey Vision).
       if(HARMONY_WAKE.saved && !HARMONY_WAKE.on && !(navigator&&navigator.webdriver)){ HARMONY_WAKE.on=true; _wakeStart(); _wakeUI(); }
       if(!window._speakUnlock){
         window._speakUnlock=true;
