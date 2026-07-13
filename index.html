@@ -1488,9 +1488,166 @@ body[data-role="it"] [style*="background:#EFF6FF"],body[data-role="it"] [style*=
 body[data-role="it"] [style*="background:#FEF2F2"],body[data-role="it"] [style*="background:#FEE2E2"],body[data-role="it"] [style*="background:#FECACA"]{background:#FEF2F2!important}
 body[data-role="it"] [style*="background:#fff"],body[data-role="it"] [style*="background:#FFFFFF"],body[data-role="it"] [style*="background:#FFF"]{background:#fff!important}
 
+/* ═══════════════════════════════════════════════════════════════════════
+   MERIDIAN THEME LAYER — Phase 1: foundation + chrome.
+   Warm Emirati-modern reskin: limestone + deep emerald + brass, editorial
+   serif. Gated on body.meridian and appended last so it wins the cascade
+   (same-specificity rules beat the earlier IT !important walls by source
+   order; #id chrome rules out-specify the role blocks). Behaviour untouched.
+   To revert: remove the "meridian" class from <body>.
+   ═══════════════════════════════════════════════════════════════════════ */
+body.meridian{
+  --mer-serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+  --grn:#0C5A45;--grn-d:#073E30;--grn-l:#12735A;
+  --brass:#A6772E;--brass-l:#C08F3E;--brass-pale:#EDE0C6;--paper-2:#E6E0D2;
+  /* remap the app's own tokens to Meridian — propagates everywhere they're used */
+  --bg:#EFEBE1;--card:#FBFAF5;--border:#E1DACB;--border2:#ECE7DA;
+  --text:#231F16;--text2:#5E574A;--text3:#928979;
+  --accent:#0C5A45;--accent-pale:#EDE0C6;--accent-rgb:12,90,69;
+  --navy:#231F16;--blue:#5C6A84;--teal:#12735A;--gold:#A6772E;--green:#0B6B4B;--red:#A6372A;--purple:#5E756A;
+  background:var(--bg);
+}
+body.meridian #content-el{background:var(--bg)!important}
+
+/* ---- SIDEBAR → Meridian emerald masthead band ---- */
+body.meridian #sidebar{background:linear-gradient(180deg,var(--grn) 0%,var(--grn-d) 100%)!important;border-right:3px solid var(--brass)!important;box-shadow:4px 0 24px -14px rgba(7,40,30,.6)!important}
+body.meridian .sb-brand{border-bottom:1px solid rgba(243,238,223,.14)}
+body.meridian .sb-mark{background:transparent!important;border-radius:0!important;width:34px!important;height:34px!important}
+body.meridian .sb-mark svg{display:block}
+body.meridian .sb-name{font-family:var(--mer-serif);font-size:19px;font-weight:600;letter-spacing:.01em;color:#F6F1E3}
+body.meridian .sb-subt{color:#A6BCAF;letter-spacing:.22em}
+body.meridian .sb-role{background:rgba(166,119,46,.13)!important;border:1px solid rgba(166,119,46,.4)!important}
+body.meridian .sb-rl{color:var(--brass-l)}
+body.meridian .sb-rn{font-family:var(--mer-serif);font-weight:600;color:#F6F1E3}
+body.meridian .sb-rs{color:#C4D2C7}
+body.meridian .sb-role #sb-user-id{color:rgba(243,238,223,.5)!important;border-top-color:rgba(243,238,223,.14)!important}
+body.meridian .sbi{color:#CBD9CE;border-radius:6px}
+body.meridian .sbi:hover{background:rgba(243,238,223,.09);color:#F6F1E3}
+body.meridian .sbi.act{background:rgba(166,119,46,.22)!important;box-shadow:inset 3px 0 0 var(--brass)!important;color:#F6F1E3!important}
+body.meridian .sbi.act .sbi-bdg{background:rgba(243,238,223,.25)}
+body.meridian .sb-cyc{background:rgba(166,119,46,.1)!important;border:1px solid rgba(166,119,46,.3)!important}
+body.meridian .sb-cl{color:var(--brass-l)}
+body.meridian .sb-cn{font-family:var(--mer-serif);font-weight:600;color:#F6F1E3}
+body.meridian .sb-cf{background:var(--brass)!important}
+
+/* ---- TOPBAR → limestone ---- */
+body.meridian #topbar{background:rgba(251,250,245,.88)!important;border-bottom:1px solid var(--border)!important;box-shadow:none!important}
+body.meridian .tb-ttl{font-family:var(--mer-serif)!important;font-weight:600!important;font-size:17px!important;letter-spacing:0!important;text-transform:none!important;color:var(--text)!important}
+body.meridian .tb-cyc{background:var(--card)!important;border:1px solid var(--border)!important;color:var(--text2)!important}
+body.meridian .tb-cyc b{color:var(--grn)!important}
+body.meridian #role-btn{background:var(--card)!important;border:1px solid var(--border)!important}
+body.meridian #role-btn:hover{background:var(--bg)!important}
+body.meridian #role-name{color:var(--text)!important}
+body.meridian #role-sub,body.meridian #role-chevron{color:var(--text3)!important}
+body.meridian #role-av,body.meridian .role-av2,body.meridian .tb-av{background:var(--brass-pale)!important;color:var(--grn-d)!important;border:1.5px solid var(--brass)!important}
+body.meridian #role-dropdown{background:var(--card)!important;border:1px solid var(--border)!important}
+body.meridian .role-opt{border-bottom:1px solid var(--border2)!important}
+body.meridian .role-opt:hover{background:var(--bg)!important}
+body.meridian .role-nm{color:var(--text)!important}
+body.meridian .role-group{background:var(--bg)!important;color:var(--text3)!important}
+body.meridian .role-check{color:var(--brass)!important}
+body.meridian #notif-btn{background:var(--card)!important;border:1.5px solid var(--border)!important}
+body.meridian #notif-dropdown{background:var(--card)!important;border:1px solid var(--border)!important}
+body.meridian #btn-demo{background:var(--grn)!important;color:#F3EEDF!important}
+body.meridian #btn-reset{background:var(--card)!important;color:var(--text2)!important;border:1.5px solid var(--border)!important}
+body.meridian #btn-download{background:var(--card)!important;color:var(--grn)!important;border:1.5px solid var(--brass-pale)!important}
+
+/* ---- HEADINGS → serif ---- */
+body.meridian .ptitle{font-family:var(--mer-serif)!important;font-weight:600!important;letter-spacing:-.01em!important;text-transform:none!important;color:var(--text)!important}
+body.meridian .psub{color:var(--text2)!important}
+
+/* ---- CARDS ---- */
+body.meridian .card{background:var(--card)!important;border:1px solid var(--border)!important;border-radius:9px!important;box-shadow:0 1px 2px rgba(35,31,22,.05)!important}
+body.meridian .ch{border-bottom:1px solid var(--border2)!important}
+body.meridian .ct{font-weight:700!important;color:var(--text)!important}
+
+/* ---- STAT CARDS → record cells with brass left edge ---- */
+body.meridian .sc{background:var(--card)!important;border:1px solid var(--border)!important;border-radius:8px!important;box-shadow:none!important}
+body.meridian .sc::before{width:2px!important;left:0!important;top:15px!important;bottom:15px!important;height:auto!important;border-radius:2px!important;background:var(--brass)!important}
+body.meridian .sc.b::before,body.meridian .sc.o::before,body.meridian .sc.g::before,body.meridian .sc.r::before,body.meridian .sc.p::before,body.meridian .sc.t::before{background:var(--brass)!important}
+body.meridian .sv{font-family:var(--mer-serif)!important;font-weight:600!important;letter-spacing:0!important;color:var(--text)!important;font-variant-numeric:tabular-nums}
+body.meridian .sl{color:var(--text3)!important}
+
+/* ---- STATUS PILLS → Meridian soft (semantic only) ---- */
+body.meridian .pill{border-radius:20px;font-weight:700}
+body.meridian .p-critical,body.meridian .p-blocked,body.meridian .p-returned{background:color-mix(in srgb,var(--red) 13%,transparent)!important;color:var(--red)!important}
+body.meridian .p-high{background:color-mix(in srgb,var(--red) 11%,transparent)!important;color:#8E3423!important}
+body.meridian .p-medium,body.meridian .p-waiting,body.meridian .p-pending,body.meridian .p-ou,body.meridian .p-review,body.meridian .p-uat,body.meridian .p-testing{background:color-mix(in srgb,var(--brass) 16%,transparent)!important;color:#8A5E1E!important}
+body.meridian .p-low,body.meridian .p-approved,body.meridian .p-ready,body.meridian .p-deployed{background:color-mix(in srgb,var(--green) 14%,transparent)!important;color:var(--green)!important}
+body.meridian .p-building,body.meridian .p-delivery{background:color-mix(in srgb,var(--grn-l) 16%,transparent)!important;color:var(--grn)!important}
+body.meridian .p-submitted,body.meridian .p-new,body.meridian .p-planned,body.meridian .p-estimated,body.meridian .p-estimation,body.meridian .p-queued,body.meridian .p-ba,body.meridian .p-analysis,body.meridian .p-jira{background:color-mix(in srgb,var(--blue) 15%,transparent)!important;color:#4A5878!important}
+body.meridian .p-closed{background:color-mix(in srgb,var(--purple) 15%,transparent)!important;color:#4E6359!important}
+body.meridian .p-dept{background:color-mix(in srgb,var(--purple) 14%,transparent)!important;color:#5E756A!important}
+
+/* ---- BUTTONS ---- */
+body.meridian .btn{border-radius:20px}
+body.meridian .btn-p,body.meridian .btn-t,body.meridian .btn-pu{background:var(--grn)!important;border-color:var(--grn)!important;color:#F3EEDF!important;box-shadow:none!important}
+body.meridian .btn-p:hover,body.meridian .btn-t:hover,body.meridian .btn-pu:hover{background:var(--grn-d)!important;border-color:var(--grn-d)!important}
+body.meridian .btn-ok{background:var(--green)!important;border-color:var(--green)!important;color:#fff!important}
+body.meridian .btn-warn{background:var(--brass)!important;border-color:var(--brass)!important;color:#fff!important}
+body.meridian .btn-danger{background:var(--red)!important;border-color:var(--red)!important;color:#fff!important}
+body.meridian .btn-s,body.meridian .btn-g{background:var(--card)!important;color:var(--text)!important;border:1px solid var(--border)!important}
+body.meridian .btn-s:hover,body.meridian .btn-g:hover{background:var(--bg)!important;border-color:var(--brass)!important}
+body.meridian .btn-lk{color:var(--grn)!important}
+
+/* ---- INPUTS ---- */
+body.meridian .fi{background:var(--card)!important;border:1px solid var(--border)!important;color:var(--text)!important;border-radius:8px!important}
+body.meridian .fi:focus{border-color:var(--brass)!important;box-shadow:0 0 0 3px rgba(166,119,46,.16)!important;outline:none!important}
+
+/* ---- TABLES → register ---- */
+body.meridian .tbl{background:var(--card)!important;border:1px solid var(--border)!important;border-radius:9px}
+body.meridian .tbl th{background:var(--paper-2)!important;color:var(--text3)!important;text-transform:uppercase;letter-spacing:.1em;font-size:10px;border-bottom:1px solid var(--border)!important}
+body.meridian .tbl td{border-top:1px solid var(--border2)!important;color:var(--text)!important}
+
+/* ---- MODALS ---- */
+body.meridian .modal{background:var(--card)!important;border:1px solid var(--border)!important;border-radius:12px!important}
+body.meridian .mttl{font-family:var(--mer-serif)!important;font-weight:600!important;color:var(--text)!important}
+
+/* ---- IT Command Center chrome (Phase 2) ---- */
+body.meridian .hact{background:var(--card)!important;border:1px solid var(--border)!important;color:var(--grn)!important;font-family:inherit!important;font-size:11px!important;letter-spacing:0!important;text-transform:none!important;border-radius:20px!important;padding:5px 13px!important;box-shadow:none!important}
+body.meridian .hact:hover{background:var(--bg)!important;border-color:var(--brass)!important;box-shadow:none!important}
+body.meridian .ops-clock{color:var(--grn)!important;background:rgba(166,119,46,.1)!important;border:1px solid var(--border)!important}
+body.meridian .ops-clock b{color:var(--brass)!important}
+body.meridian .hbot{background:var(--card)!important;border:1px solid var(--border)!important;color:var(--text)!important}
+body.meridian .huser{background:linear-gradient(135deg,var(--grn-l),var(--grn))!important;color:#F3EEDF!important;box-shadow:none!important}
+
+/* ---- misc ---- */
+body.meridian ::selection{background:var(--brass-pale);color:var(--grn-d)}
+body.meridian :focus-visible{outline:2px solid var(--brass)}
+
+/* ═══ MERIDIAN Phase 3 — inline-colour remap (content bodies) ═══
+   The app builds most screen markup with hardcoded inline hex. Remap the
+   government palette to Meridian by attribute (same technique the IT role
+   already uses); appended last so it also overrides the IT remaps. Semantics
+   preserved: success→emerald, risk→terracotta, work→brass, structure→emerald/slate. */
+/* --- TEXT colours --- */
+body.meridian [style*="color:#0A1628"],body.meridian [style*="color:#0F172A"],body.meridian [style*="color:#111"],body.meridian [style*="color:#1E293B"],body.meridian [style*="color:#0B1220"]{color:var(--text)!important}
+body.meridian [style*="color:#64748B"],body.meridian [style*="color:#475569"],body.meridian [style*="color:#94A3B8"],body.meridian [style*="color:#334155"],body.meridian [style*="color:#3D4759"],body.meridian [style*="color:#5E6B80"],body.meridian [style*="color:#647A9C"],body.meridian [style*="color:#9FB2C8"],body.meridian [style*="color:#526581"]{color:var(--text2)!important}
+body.meridian [style*="color:#1D4ED8"],body.meridian [style*="color:#1E40AF"],body.meridian [style*="color:#2563EB"],body.meridian [style*="color:#0052CC"],body.meridian [style*="color:#1E3A8A"],body.meridian [style*="color:#3B82F6"],body.meridian [style*="color:#4C8DFF"],body.meridian [style*="color:#2B6CB0"]{color:var(--grn)!important}
+body.meridian [style*="color:#0F766E"],body.meridian [style*="color:#0891B2"],body.meridian [style*="color:#155E75"],body.meridian [style*="color:#0369A1"],body.meridian [style*="color:#0E7490"],body.meridian [style*="color:#06B6D4"],body.meridian [style*="color:#22D3EE"]{color:var(--grn-l)!important}
+body.meridian [style*="color:#4338CA"],body.meridian [style*="color:#3730A3"],body.meridian [style*="color:#4F46E5"],body.meridian [style*="color:#6366F1"],body.meridian [style*="color:#7C3AED"],body.meridian [style*="color:#6D28D9"],body.meridian [style*="color:#5B21B6"],body.meridian [style*="color:#8B5CF6"],body.meridian [style*="color:#A78BFA"]{color:#5C6A84!important}
+body.meridian [style*="color:#B45309"],body.meridian [style*="color:#D97706"],body.meridian [style*="color:#92400E"],body.meridian [style*="color:#F59E0B"],body.meridian [style*="color:#EA580C"],body.meridian [style*="color:#9A3412"],body.meridian [style*="color:#854D0E"],body.meridian [style*="color:#713F12"]{color:var(--brass)!important}
+body.meridian [style*="color:#16A34A"],body.meridian [style*="color:#15803D"],body.meridian [style*="color:#166534"],body.meridian [style*="color:#14532D"],body.meridian [style*="color:#065F46"],body.meridian [style*="color:#047857"],body.meridian [style*="color:#064E3B"],body.meridian [style*="color:#059669"],body.meridian [style*="color:#10B981"],body.meridian [style*="color:#22C55E"]{color:var(--green)!important}
+body.meridian [style*="color:#DC2626"],body.meridian [style*="color:#B91C1C"],body.meridian [style*="color:#991B1B"],body.meridian [style*="color:#EF4444"],body.meridian [style*="color:#F87171"],body.meridian [style*="color:#7F1D1D"]{color:var(--red)!important}
+/* --- BACKGROUND tints --- */
+body.meridian [style*="background:#fff"],body.meridian [style*="background:#FFFFFF"],body.meridian [style*="background:#FFF"],body.meridian [style*="background:#FEFEFE"]{background:var(--card)!important}
+body.meridian [style*="background:#F8FAFC"],body.meridian [style*="background:#F1F5F9"],body.meridian [style*="background:#F4F7FB"],body.meridian [style*="background:#F9FAFB"],body.meridian [style*="background:#FAFAFA"],body.meridian [style*="background:#F3F6FE"],body.meridian [style*="background:#EBEFFA"],body.meridian [style*="background:#F8FAFF"]{background:var(--bg)!important}
+body.meridian [style*="background:#EFF6FF"],body.meridian [style*="background:#DBEAFE"],body.meridian [style*="background:#E0F2FE"],body.meridian [style*="background:#EEF2FF"],body.meridian [style*="background:#E0E7FF"],body.meridian [style*="background:#F5F3FF"],body.meridian [style*="background:#EDE9FE"],body.meridian [style*="background:#DDD6FE"],body.meridian [style*="background:#ECFEFF"],body.meridian [style*="background:#CFFAFE"],body.meridian [style*="background:#F0F9FF"],body.meridian [style*="background:#E8F0FF"]{background:#F1EBDD!important}
+body.meridian [style*="background:#FFFBEB"],body.meridian [style*="background:#FEF3C7"],body.meridian [style*="background:#FFEDD5"],body.meridian [style*="background:#FDE68A"],body.meridian [style*="background:#FEF9C3"]{background:#F4EAD6!important}
+body.meridian [style*="background:#F0FDF4"],body.meridian [style*="background:#DCFCE7"],body.meridian [style*="background:#D1FAE5"],body.meridian [style*="background:#ECFDF5"]{background:#E7F1EA!important}
+body.meridian [style*="background:#FEF2F2"],body.meridian [style*="background:#FEE2E2"],body.meridian [style*="background:#FECACA"]{background:#F4E5E1!important}
+/* --- SATURATED accent backgrounds (bars, segments, solid badges) → Meridian --- */
+body.meridian [style*="background:#1D4ED8"],body.meridian [style*="background:#2563EB"],body.meridian [style*="background:#3B82F6"],body.meridian [style*="background:#1E40AF"],body.meridian [style*="background:#60A5FA"],body.meridian [style*="background:#2B6CB0"]{background:var(--grn)!important}
+body.meridian [style*="background:#0891B2"],body.meridian [style*="background:#14B8A6"],body.meridian [style*="background:#06B6D4"],body.meridian [style*="background:#0E7490"],body.meridian [style*="background:#22D3EE"],body.meridian [style*="background:#0F766E"]{background:var(--grn-l)!important}
+body.meridian [style*="background:#7C3AED"],body.meridian [style*="background:#6D28D9"],body.meridian [style*="background:#8B5CF6"],body.meridian [style*="background:#A78BFA"],body.meridian [style*="background:#6366F1"],body.meridian [style*="background:#4338CA"],body.meridian [style*="background:#4F46E5"]{background:#5C6A84!important}
+body.meridian [style*="background:#D97706"],body.meridian [style*="background:#F59E0B"],body.meridian [style*="background:#F97316"],body.meridian [style*="background:#FB923C"],body.meridian [style*="background:#B45309"],body.meridian [style*="background:#EA580C"]{background:var(--brass)!important}
+body.meridian [style*="background:#16A34A"],body.meridian [style*="background:#22C55E"],body.meridian [style*="background:#10B981"],body.meridian [style*="background:#059669"],body.meridian [style*="background:#15803D"]{background:var(--green)!important}
+body.meridian [style*="background:#DC2626"],body.meridian [style*="background:#EF4444"],body.meridian [style*="background:#F87171"],body.meridian [style*="background:#B91C1C"]{background:var(--red)!important}
+body.meridian [style*="background:#E2E8F0"],body.meridian [style*="background:#CBD5E1"],body.meridian [style*="background:#94A3B8"],body.meridian [style*="background:#E5E7EB"]{background:var(--paper-2)!important}
+
 </style>
 </head>
-<body data-role="bu">
+<body class="meridian" data-role="bu">
 <div id="shell">
   <div id="sidebar">
     <div class="sb-brand">
@@ -1519,7 +1676,7 @@ body[data-role="it"] [style*="background:#fff"],body[data-role="it"] [style*="ba
       <div class="tb-ttl" id="tb-ttl-el">Dashboard</div>
       <div class="tb-cyc">&#128197; <b>Cycle 18</b>&nbsp;<span id="tb-cyc-dates">&hellip;</span></div>
       <div id="notif-wrap" style="position:relative;margin-left:auto">
-        <button id="notif-btn" onclick="toggleNotif()" style="position:relative;background:#fff;border:1.5px solid #E2E8F0;border-radius:99px;width:38px;height:38px;cursor:pointer;font-size:17px;display:flex;align-items:center;justify-content:center">&#128276;<span id="notif-badge" style="display:none;position:absolute;top:-3px;right:-3px;background:#DC2626;color:#fff;font-size:9px;font-weight:800;min-width:16px;height:16px;border-radius:99px;align-items:center;justify-content:center;padding:0 3px"></span></button>
+        <button id="notif-btn" onclick="toggleNotif()" style="position:relative;background:#fff;border:1.5px solid #E2E8F0;border-radius:99px;width:38px;height:38px;cursor:pointer;font-size:17px;display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 16 16" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.4 6.8a3.6 3.6 0 017.2 0c0 3 1.2 3.9 1.2 3.9H3.2s1.2-.9 1.2-3.9z"/><path d="M6.6 12.9a1.5 1.5 0 002.8 0"/></svg><span id="notif-badge" style="display:none;position:absolute;top:-3px;right:-3px;background:#DC2626;color:#fff;font-size:9px;font-weight:800;min-width:16px;height:16px;border-radius:99px;align-items:center;justify-content:center;padding:0 3px"></span></button>
         <div id="notif-dropdown" style="display:none;position:absolute;top:46px;right:0;width:340px;background:#fff;border:1px solid #E2E8F0;border-radius:12px;box-shadow:0 8px 30px rgba(10,22,40,.15);z-index:300;overflow:hidden"></div>
       </div>
       <div id="role-switcher-wrap">
@@ -1530,7 +1687,7 @@ body[data-role="it"] [style*="background:#fff"],body[data-role="it"] [style*="ba
         </button>
         <div id="role-dropdown"></div>
       </div>
-      <button id="btn-demo" onclick="openDemoPicker()" style="display:flex;align-items:center;gap:6px;background:#1D4ED8;color:#fff;border:none;border-radius:99px;padding:5px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;margin-left:8px">&#127916; Demo</button><button id="btn-reset" onclick="resetDemo()" title="Reset demo data" style="display:flex;align-items:center;gap:5px;background:#fff;color:#64748B;border:1.5px solid #E2E8F0;border-radius:99px;padding:5px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;margin-left:6px">&#8635; Reset</button><button id="btn-download" onclick="harmonyDownloadHTML()" title="Download this app as a standalone HTML file you can open on any device" style="display:flex;align-items:center;gap:5px;background:#fff;color:#1D4ED8;border:1.5px solid #C7D2FE;border-radius:99px;padding:5px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;margin-left:6px">&#11015; HTML</button>
+      <button id="btn-demo" onclick="openDemoPicker()" style="display:flex;align-items:center;gap:6px;background:#1D4ED8;color:#fff;border:none;border-radius:99px;padding:5px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;margin-left:8px"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px"><rect x="2.5" y="3.5" width="11" height="9" rx="1.5"/><path d="M6.8 6.4l3 1.6-3 1.6z" fill="currentColor" stroke="none"/></svg> Demo</button><button id="btn-reset" onclick="resetDemo()" title="Reset demo data" style="display:flex;align-items:center;gap:5px;background:#fff;color:#64748B;border:1.5px solid #E2E8F0;border-radius:99px;padding:5px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;margin-left:6px">&#8635; Reset</button><button id="btn-download" onclick="harmonyDownloadHTML()" title="Download this app as a standalone HTML file you can open on any device" style="display:flex;align-items:center;gap:5px;background:#fff;color:#1D4ED8;border:1.5px solid #C7D2FE;border-radius:99px;padding:5px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;margin-left:6px">&#11015; HTML</button>
     </div>
     <div id="content-el"></div>
   </div>
@@ -1605,6 +1762,46 @@ var ROLES_CONFIG = {
     defaultScreen:"exec-overview"
   }
 }
+/* Meridian monoline nav icons (brass-weight, currentColor) — replace the emoji
+   entities in the sidebar when body.meridian. One SVG per screen id. */
+function _mi(p){return '<svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;display:inline-block">'+p+'</svg>';}
+var MER_NAV_ICONS=(function(){
+  var grid='<rect x="2.5" y="2.5" width="4.5" height="4.5" rx="1"/><rect x="9" y="2.5" width="4.5" height="4.5" rx="1"/><rect x="2.5" y="9" width="4.5" height="4.5" rx="1"/><rect x="9" y="9" width="4.5" height="4.5" rx="1"/>';
+  var doc='<rect x="3.5" y="2.5" width="9" height="11" rx="1"/><path d="M5.8 5.8h4.4M5.8 8h4.4M5.8 10.2h2.6"/>';
+  var kanban='<rect x="2.5" y="3" width="3" height="10" rx="1"/><rect x="6.5" y="3" width="3" height="7" rx="1"/><rect x="10.5" y="3" width="3" height="5" rx="1"/>';
+  var glass='<circle cx="7" cy="7" r="4"/><path d="M10 10l3.2 3.2"/>';
+  return {
+    dashboard:_mi(grid),'ou-dashboard':_mi(grid),'it-dashboard':_mi(grid),
+    'dept-dashboard':_mi('<path d="M3 13V7.5M6.5 13V4M10 13V9M13.5 13V6"/>'),
+    'exec-overview':_mi('<circle cx="8" cy="8" r="5.5"/><path d="M2.5 8h11M8 2.5c2.2 2 2.2 9 0 11M8 2.5c-2.2 2-2.2 9 0 11"/>'),
+    create:_mi('<circle cx="8" cy="8" r="5.5"/><path d="M8 5.3v5.4M5.3 8h5.4"/>'),
+    'my-requests':_mi(doc),'ou-audit':_mi(doc),'dept-history':_mi(doc),'exec-report':_mi(doc),
+    shuffle:_mi(kanban),'it-sprint':_mi(kanban),
+    timeline:_mi('<circle cx="8" cy="8" r="5.5"/><path d="M8 5v3l2.2 1.3"/>'),
+    'ou-incoming':_mi(glass),'it-queue':_mi(glass),
+    'ou-approvals':_mi('<path d="M8 2.5l4.5 1.7v3.3c0 3-2 4.9-4.5 5.9-2.5-1-4.5-2.9-4.5-5.9V4.2z"/><path d="M6 7.9l1.5 1.5 2.8-3"/>'),
+    'ou-itcoord':_mi('<path d="M2.5 8h8.5M7.5 4.5L11.5 8 7.5 11.5"/>'),
+    'it-agent':_mi('<path d="M8 2.5l4.7 2.7v5.6L8 13.5 3.3 10.8V5.2z"/><circle cx="8" cy="8" r="2"/>'),
+    'it-planning':_mi('<rect x="3" y="3.5" width="10" height="9.5" rx="1"/><path d="M3 6.3h10M6 2.5v2.4M10 2.5v2.4"/>'),
+    'it-jira':_mi('<path d="M6.6 9.4l2.8-2.8M7.2 5.2l1-1a2.5 2.5 0 013.6 3.6l-1 1M8.8 10.8l-1 1a2.5 2.5 0 01-3.6-3.6l1-1"/>'),
+    'dept-inbox':_mi('<path d="M2.6 8.6l1.7-5h7.4l1.7 5v4H2.6zM2.6 8.6H6l1 1.5h2l1-1.5h3.4"/>'),
+    'exec-accountability':_mi('<path d="M2.5 13.5h11M4 13.5V5.2l4-2.4 4 2.4v8.3M6.5 8.2v2.8M9.5 8.2v2.8"/>'),
+    'exec-flow':_mi('<path d="M2.7 13.3h10.6M3.7 11l3-3 2.4 2 3.5-4.4"/>')
+  };
+})();
+/* Meridian service-tile icon — brass monoline, chosen by keyword from the service name. */
+function merSvcIcon(svc){
+  var s=((svc&&(svc.id+' '+svc.name))||'').toLowerCase(), P;
+  if(/onboard|resident|customer|traveller|crew|worker|happiness|sentiment/.test(s)) P='<circle cx="8" cy="5.4" r="2.3"/><path d="M3.6 13c0-2.5 2-4 4.4-4s4.4 1.5 4.4 4"/>';
+  else if(/typing|center|portal|self|kiosk|knowledge|faq/.test(s)) P='<rect x="3" y="3" width="10" height="7.5" rx="1"/><path d="M6 13.3h4M8 10.5v2.8"/>';
+  else if(/privacy|security|compliance|fraud|watchlist|violation/.test(s)) P='<path d="M8 2.5l4.4 1.7v3.2c0 3-2 4.9-4.4 5.9-2.4-1-4.4-2.9-4.4-5.9V4.2z"/><path d="M6.1 7.9l1.4 1.4 2.7-2.9"/>';
+  else if(/pay|fee|financ|reconcil|refund|gateway/.test(s)) P='<rect x="2.4" y="4" width="11.2" height="8" rx="1.2"/><path d="M2.4 6.9h11.2"/>';
+  else if(/report|analytic|dashboard|volume|forecast|escalation|complaint|status|alert|notif/.test(s)) P='<path d="M2.7 13.3h10.6M3.7 11l3-3 2.4 2 3.5-4.4"/>';
+  else if(/contract|sponsor|file|document|federal|regulat|permit|establishment|appointment|medical|expiry|reminder/.test(s)) P='<rect x="3.5" y="2.5" width="9" height="11" rx="1"/><path d="M5.8 5.8h4.4M5.8 8h4.4M5.8 10.2h2.6"/>';
+  else if(/identity|biometric|verif|ekyc|gate/.test(s)) P='<circle cx="8" cy="8" r="5.5"/><circle cx="8" cy="8" r="2"/>';
+  else P='<rect x="2.5" y="2.5" width="4.5" height="4.5" rx="1"/><rect x="9" y="2.5" width="4.5" height="4.5" rx="1"/><rect x="2.5" y="9" width="4.5" height="4.5" rx="1"/><rect x="9" y="9" width="4.5" height="4.5" rx="1"/>';
+  return '<svg viewBox="0 0 16 16" width="19" height="19" fill="none" stroke="var(--brass)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle">'+P+'</svg>';
+}
 var DEPT_ROLES = [
   {key:"dept-finance", dept:"Entry Permits",    user:"Sultan Al Dhaheri",  initials:"SD", title:"Entry Permits Director",  accentHex:"#D97706"},
   {key:"dept-legal",   dept:"Ports Affairs",      user:"Rashed Al Shamsi",   initials:"RS", title:"Legal Counsel",     accentHex:"#7C3AED"},
@@ -1660,7 +1857,7 @@ function renderSidebar(){
     var cnt = _awaitCnt || (sc.badge?bc[sc.badge]||0:0);
     var bdg = cnt>0?'<span class="sbi-bdg">'+cnt+"</span>":"";
     h+='<button class="sbi '+a+'" onclick="nav(\''+sc.id+'\')">'
-      +'<span class="sbi-ico">'+sc.icon+"</span><span>"+sc.label+"</span>"+bdg+"</button>";
+      +'<span class="sbi-ico">'+((document.body.classList.contains('meridian')&&MER_NAV_ICONS[sc.id])?MER_NAV_ICONS[sc.id]:sc.icon)+"</span><span>"+sc.label+"</span>"+bdg+"</button>";
   });
   document.getElementById("sb-nav-el").innerHTML=h;
   // Update sidebar header
@@ -2388,10 +2585,10 @@ function getServiceStatus(svc){
 
 // ── Canonical DX status vocabulary (single source of truth for BU + DG) ──
 var DX_STATUS = {
-  digitalized:  {label:"Digitalized",       short:"Live",       color:"#16A34A", bg:"#F0FDF4", bdr:"#BBF7D0", icon:"&#9989;"},
-  transforming: {label:"In Transformation", short:"Building",   color:"#0891B2", bg:"#E0F2FE", bdr:"#7DD3FC", icon:"&#9889;"},
-  initiated:    {label:"Initiated",         short:"Initiated",  color:"#D97706", bg:"#FFFBEB", bdr:"#FDE68A", icon:"&#128336;"},
-  manual:       {label:"Not Started",       short:"Not started",color:"#94A3B8", bg:"#F8FAFC", bdr:"#E2E8F0", icon:"&#9711;"}
+  digitalized:  {label:"Digitalized",       short:"Live",       color:"#16A34A", bg:"#F0FDF4", bdr:"#BBF7D0", icon:(document.body.classList.contains('meridian')?_mi('<path d="M3.5 8.5l3 3 6-7"/>'):"&#9989;")},
+  transforming: {label:"In Transformation", short:"Building",   color:"#0891B2", bg:"#E0F2FE", bdr:"#7DD3FC", icon:(document.body.classList.contains('meridian')?_mi('<path d="M9 2.5L4 9h3.4l-1 4.5L12 6.8H8.3z"/>'):"&#9889;")},
+  initiated:    {label:"Initiated",         short:"Initiated",  color:"#D97706", bg:"#FFFBEB", bdr:"#FDE68A", icon:(document.body.classList.contains('meridian')?_mi('<circle cx="8" cy="8" r="5.5"/><path d="M8 5v3l2 1.3"/>'):"&#128336;")},
+  manual:       {label:"Not Started",       short:"Not started",color:"#94A3B8", bg:"#F8FAFC", bdr:"#E2E8F0", icon:(document.body.classList.contains('meridian')?_mi('<circle cx="8" cy="8" r="5.5" stroke-dasharray="2.2 2.2"/>'):"&#9711;")}
 };
 function dxStatusMeta(s){return DX_STATUS[s]||DX_STATUS.manual;}
 
@@ -3018,7 +3215,7 @@ function renderDashboard(){
 
   // ── Header ─────────────────────────────────────────────────
   h+='<div class="ph"><div>'
-    +'<div class="ptitle">'+greeting+', '+userName+' &#128075;</div>'
+    +'<div class="ptitle">'+greeting+', '+userName+'</div>'
     +'<div class="psub">'+mySector+' &mdash; Change Portfolio Overview</div>'
     +'</div>'
     +'<div style="display:flex;gap:8px">'
@@ -3083,7 +3280,7 @@ function renderDashboard(){
     var ringBdr=sm.bdr;
     var statusLabel=p.status==="digitalized"?(sm.label+" &#10003;"):sm.label;
     h+='<div class="dx-svc" style="background:'+ringBg+';border:1px solid '+ringBdr+';border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:6px;box-shadow:var(--sh-sm)">'
-      +'<div style="font-size:20px">'+svc.icon+'</div>'
+      +'<div style="font-size:20px">'+(document.body.classList.contains('meridian')?merSvcIcon(svc):svc.icon)+'</div>'
       +'<div style="font-size:12px;font-weight:700;color:var(--text);line-height:1.35">'+svc.name+'</div>'
       +'<div style="font-size:36px;font-weight:900;color:'+dotColor+';font-family:monospace;letter-spacing:-2px;line-height:1">'+p.pct+'<span style="font-size:18px;font-weight:700">%</span></div>'
       +'<div style="height:6px;background:rgba(255,255,255,.7);border-radius:99px;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(0,0,0,.03)">'
@@ -4861,7 +5058,7 @@ function renderOUDashboard(){
     sdx.services.forEach(function(svc){
       var p=svc.progress; var sst=SVC_STATUS[p.status];
       h+='<div style="padding:8px 10px;background:'+sst.bg+';border:1.5px solid '+sst.border+';border-radius:9px">';
-      h+='<div style="font-size:13px;margin-bottom:3px">'+svc.icon+'</div>';
+      h+='<div style="font-size:13px;margin-bottom:3px">'+(document.body.classList.contains('meridian')?merSvcIcon(svc):svc.icon)+'</div>';
       h+='<div style="font-size:10.5px;font-weight:700;color:'+sst.color+';margin-bottom:4px;line-height:1.3">'+svc.name+'</div>';
       h+='<div style="font-size:16px;font-weight:900;color:'+sst.color+';font-family:monospace;line-height:1;margin-bottom:4px">'+p.pct+'%</div>';
       h+='<div style="height:4px;background:#fff;border-radius:99px;overflow:hidden;margin-bottom:4px">';
@@ -7031,7 +7228,14 @@ async function harmonyAICall(){
     // injects the server-held key, so the browser sends neither.
     if(ANTHROPIC.key){ _h["x-api-key"]=ANTHROPIC.key; if(ANTHROPIC.base!=='/claude') _h["anthropic-dangerous-direct-browser-access"]="true"; }
     var resp=await fetch(ANTHROPIC.base+"/v1/messages",{method:"POST",headers:_h,body:JSON.stringify({model:"claude-opus-4-8",max_tokens:1024,stream:true,system:sys,tools:harmonyToolsFor(currentRole),messages:msgs})});
-    if(!resp.ok) throw new Error('http '+resp.status);
+    if(!resp.ok){
+      var _errBody=''; try{ _errBody=await resp.text(); }catch(_e){}
+      var _isCredit=(resp.status===402)||/credit balance/i.test(_errBody); // valid key, unfunded account
+      if(resp.status===401||resp.status===403){ ANTHROPIC.authOk=false; }
+      else if(_isCredit){ ANTHROPIC.authOk=true; ANTHROPIC.credit=false; }
+      throw new Error('http '+resp.status+(_isCredit?' credit balance':''));
+    }
+    ANTHROPIC.authOk=true; ANTHROPIC.credit=true; // a 200 proves the effective key is good AND funded
     // Real token streaming when the wire gives us SSE; plain JSON otherwise (proxy variants, tests).
     var _ct=(resp.headers&&resp.headers.get)?(resp.headers.get('content-type')||''):'';
     var data=(/text\/event-stream/.test(_ct)&&resp.body&&resp.body.getReader)?await harmonyReadStream(resp):await resp.json();
@@ -7132,7 +7336,7 @@ async function harmonyGetReply(t){
 }
 function harmonyAIErrorText(e){
   var m=(e&&e.message)||'';
-  if(/http 401/.test(m)) return 'Claude rejected the API key (401) — re-enter it in Voice Lab.';
+  if(/http 401/.test(m)) return 'Claude rejected the API key (401) — the key is invalid, revoked or mistyped, not a HARMONY fault. Paste a fresh key in Voice Lab (the engine badge turns green once it verifies).';
   if(/http 402|credit balance/i.test(m)) return 'The Anthropic account is out of credits (402) — top up at console.anthropic.com.';
   if(/http 403/.test(m)) return 'The Claude API refused the request (403) — check the key’s permissions.';
   if(/http 429/.test(m)) return 'Rate-limited by the Claude API (429) — give it a moment and retry.';
@@ -7165,7 +7369,7 @@ function agentCommand(text){
     jcoreTopic(harmonyTopicOf(t,reply,_mv));
     var extra={ cards:harmonyContextCards(t), actions:harmonySuggested() };
     showChatLive(''); harmonyStreamReply(reply, extra);
-    refreshAgentStats();
+    refreshAgentStats(); updateEngineBadge(); // a successful reply means auth just verified — flip the badge green in place
   });
 }
 function harmonyStreamLast(full){
@@ -7394,7 +7598,11 @@ if(ELEVEN.base==='/eleven'){ try{ fetch('/eleven-status',{cache:'no-store'}).the
   if(!window._srvKeyToast){ window._srvKeyToast=1; toast('Studio voice active (server key) — George ready on this device.','info'); } }
   else if(!j){ ELEVEN.base='https://api.elevenlabs.io'; } // relay absent → allow direct browser-key path
 }).catch(function(){ ELEVEN.base='https://api.elevenlabs.io'; }); }catch(e){} }
-var ANTHROPIC=(function(){ try{ return { key:localStorage.getItem('hv_anthropic_key')||'', serverKey:false }; }catch(e){ return {key:'',serverKey:false}; } })();
+// authOk: null = untested, true = last call authenticated, false = key rejected (401/403).
+// This is what keeps the engine badge honest — a present-but-rejected key never shows green.
+// credit: true = funded (or unknown), false = key authenticated but the account is out of credit.
+// Kept separate from authOk so an unfunded-but-valid key is never mislabelled "rejected".
+var ANTHROPIC=(function(){ try{ return { key:localStorage.getItem('hv_anthropic_key')||'', serverKey:false, authOk:null, credit:true }; }catch(e){ return {key:'',serverKey:false,authOk:null,credit:true}; } })();
 // One-tap key install: open <site>#akey=sk-ant-... once and the key persists in THIS browser.
 // The fragment never reaches any server (unlike ?query) and is wiped from the bar immediately.
 try{ var _akm=location.hash.match(/[#&]akey=([^&]+)/); if(_akm){ var _ak=decodeURIComponent(_akm[1]);
@@ -7908,13 +8116,36 @@ function elevenSectionHTML(){
   h+='</div>';
   return h;
 }
+// Lightweight, one-shot key check: fire the cheapest possible Messages call (max_tokens:1,
+// no tools, no system) so a bad key is caught the moment it's pasted — not on stage. Mirrors
+// harmonyAICall's effective path exactly (same base + header rules).
+async function harmonyValidateKey(key){
+  var _h={"Content-Type":"application/json","anthropic-version":"2023-06-01"};
+  if(key){ _h["x-api-key"]=key; if(ANTHROPIC.base!=='/claude') _h["anthropic-dangerous-direct-browser-access"]="true"; }
+  try{
+    var resp=await fetch(ANTHROPIC.base+"/v1/messages",{method:"POST",headers:_h,body:JSON.stringify({model:"claude-opus-4-8",max_tokens:1,messages:[{role:"user",content:"hi"}]})});
+    var msg=''; if(!resp.ok){ try{ var j=await resp.json(); msg=(j&&j.error&&j.error.message)||''; }catch(e){} }
+    return { ok:resp.ok, status:resp.status, msg:msg };
+  }catch(e){ return { ok:false, status:0, network:true }; }
+}
 function anthropicSaveKey(){
   var el=document.getElementById('ak-key'); if(!el) return;
-  ANTHROPIC.key=(el.value||'').trim(); try{localStorage.setItem('hv_anthropic_key',ANTHROPIC.key);}catch(_e){}
-  window._aiWarned=0;
-  toast(ANTHROPIC.key?'Live AI on — Claude is now answering.':'Key cleared — using the offline engine.','info');
-  if(document.getElementById('vlab-body')) voiceLabRender();
-  updateEngineBadge();
+  var k=(el.value||'').trim();
+  ANTHROPIC.key=k; try{localStorage.setItem('hv_anthropic_key',k);}catch(_e){}
+  window._aiWarned=0; ANTHROPIC.authOk=null; ANTHROPIC.credit=true;
+  if(!k){ toast('Key cleared — using the offline engine.','info'); if(document.getElementById('vlab-body')) voiceLabRender(); updateEngineBadge(); return; }
+  toast('Checking the key with Claude…','info'); updateEngineBadge();
+  harmonyValidateKey(k).then(function(v){
+    if(ANTHROPIC.key!==k) return; // a newer key was entered while this was in flight — ignore the stale result
+    if(v.ok){ ANTHROPIC.authOk=true; ANTHROPIC.credit=true; toast('Key verified — Vision is live.','ok'); }
+    else if(v.network){ ANTHROPIC.authOk=null; toast('Saved, but couldn’t reach Claude to verify — Vision will try on your next question.','warn'); }
+    else if(v.status===401||v.status===403){ ANTHROPIC.authOk=false; toast('Claude rejected this key ('+v.status+') — check it’s active and not revoked.','warn'); }
+    else if(/credit balance/i.test(v.msg||'')||v.status===402){ ANTHROPIC.authOk=true; ANTHROPIC.credit=false; toast('Key is valid but the account is out of credit — top up at console.anthropic.com.','warn'); }
+    else if(v.status===429){ ANTHROPIC.authOk=null; toast('Key saved — Claude is rate-limiting right now (429); it should work shortly.','warn'); }
+    else { ANTHROPIC.authOk=null; toast('Key saved — verification returned '+v.status+'; Vision will try it on your next question.','warn'); }
+    if(document.getElementById('vlab-body')) voiceLabRender();
+    updateEngineBadge();
+  });
 }
 function anthropicSectionHTML(){
   var live=aiReady(), srv=!!ANTHROPIC.serverKey;
@@ -8067,10 +8298,21 @@ function visionConnect(){
   if(!/^sk-ant-/.test(k)){ toast(TT('That does not look like an Anthropic key (starts with sk-ant-).','\u0627\u0644\u0645\u0641\u062a\u0627\u062d \u063a\u064a\u0631 \u0635\u0627\u0644\u062d'),'warn'); return; }
   ANTHROPIC.key=k; try{ localStorage.setItem('hv_anthropic_key',k); }catch(e){}
   try{ if(ANTHROPIC.base==='/claude') ANTHROPIC.base='https://api.anthropic.com'; }catch(e){}
-  updateEngineBadge();
+  ANTHROPIC.authOk=null; ANTHROPIC.credit=true; updateEngineBadge();
   var eng=document.getElementById('vw-engine'); if(eng) eng.innerHTML=harmonyEngineBadgeHTML();
-  toast(TT('Claude connected \u2014 Vision is live on this device.','\u062a\u0645 \u0631\u0628\u0637 Claude'),'info');
-  chatPush({who:'harmony',text:TT('Connected. Say that again and I\u2019ll act on it.','\u062a\u0645 \u0627\u0644\u0631\u0628\u0637. \u0623\u0639\u062f \u0627\u0644\u0623\u0645\u0631 \u0648\u0633\u0623\u0646\u0641\u0651\u0630\u0647.')});
+  toast(TT('Checking the key with Claude\u2026','\u062c\u0627\u0631\u064d \u0627\u0644\u062a\u062d\u0642\u0642 \u0645\u0646 \u0627\u0644\u0645\u0641\u062a\u0627\u062d'),'info');
+  harmonyValidateKey(k).then(function(v){
+    if(ANTHROPIC.key!==k) return; // a newer key was entered while this was in flight \u2014 ignore the stale result
+    if(v.ok){ ANTHROPIC.authOk=true; ANTHROPIC.credit=true;
+      toast(TT('Claude connected \u2014 Vision is live on this device.','\u062a\u0645 \u0631\u0628\u0637 Claude'),'info');
+      chatPush({who:'harmony',text:TT('Connected. Say that again and I\u2019ll act on it.','\u062a\u0645 \u0627\u0644\u0631\u0628\u0637. \u0623\u0639\u062f \u0627\u0644\u0623\u0645\u0631 \u0648\u0633\u0623\u0646\u0641\u0651\u0630\u0647.')});
+    }
+    else if(v.status===401||v.status===403){ ANTHROPIC.authOk=false; toast(TT('Claude rejected that key ('+v.status+') \u2014 check it\u2019s active.','\u062a\u0645 \u0631\u0641\u0636 \u0627\u0644\u0645\u0641\u062a\u0627\u062d'),'warn'); }
+    else if(/credit balance/i.test(v.msg||'')||v.status===402){ ANTHROPIC.authOk=true; ANTHROPIC.credit=false; toast(TT('Key is valid but the account is out of credit.','\u0627\u0644\u0631\u0635\u064a\u062f \u063a\u064a\u0631 \u0643\u0627\u0641\u064d'),'warn'); }
+    else { toast(TT('Key saved \u2014 Vision will try it on your next question.','\u062a\u0645 \u0627\u0644\u062d\u0641\u0638'),'info'); }
+    updateEngineBadge();
+    var eng2=document.getElementById('vw-engine'); if(eng2) eng2.innerHTML=harmonyEngineBadgeHTML();
+  });
 }
 function visionSend(){ var inp=document.getElementById('vw-input'); if(!inp) return; var t=inp.value.trim(); if(!t) return; agentCommand(t); }
 function harmonyMic(){
@@ -8193,10 +8435,16 @@ function harmonyGlobe(){
       wrk=wrap&&wrap.classList.contains('working');
   window._globeT=(window._globeT||0)+(spk?0.016:wrk?0.011:0.007);
   var t=window._globeT, cx=w/2, cy=h/2, R=Math.min(w,h)*0.36;
-  var C = lst ? {main:[225,29,72], soft:[251,150,175], deep:[136,19,55], tip:[245,185,80], glow:'244,63,94'}
+  var _MER=document.body.classList.contains('meridian');
+  var C = _MER
+    ? ( lst ? {main:[166,55,42], soft:[212,150,135], deep:[110,32,24], tip:[214,178,120], glow:'166,55,42'}
+       : wrk ? {main:[166,119,46], soft:[214,178,120], deep:[120,84,26], tip:[240,214,160], glow:'166,119,46'}
+       : spk ? {main:[18,115,90], soft:[150,205,180], deep:[12,90,69], tip:[192,143,62], glow:'18,115,90'}
+             : {main:[12,90,69], soft:[122,182,152], deep:[7,62,48], tip:[166,119,46], glow:'12,90,69'} )
+    : ( lst ? {main:[225,29,72], soft:[251,150,175], deep:[136,19,55], tip:[245,185,80], glow:'244,63,94'}
        : wrk ? {main:[217,119,6], soft:[245,190,110], deep:[146,80,10], tip:[255,215,120], glow:'245,158,11'}
        : spk ? {main:[59,130,246], soft:[150,196,255], deep:[30,58,138], tip:[245,190,90], glow:'59,130,246'}
-             : {main:[37,99,235], soft:[120,170,255], deep:[30,58,138], tip:[240,180,70], glow:'37,99,235'};
+             : {main:[37,99,235], soft:[120,170,255], deep:[30,58,138], tip:[240,180,70], glow:'37,99,235'} );
 
   var N=620;
   var PTS=window._murPts||(window._murPts=(function(){var a=[],ga=Math.PI*(3-Math.sqrt(5));
@@ -8483,6 +8731,13 @@ function harmonyEngineBadgeHTML(){
   var brain = live
     ? '<span title="'+TT('Vision is reasoning with real Claude \u2014 every reply is a live call','فيجن يفكّر باستخدام Claude الحقيقي')+'" style="display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:800;padding:3px 9px;border-radius:99px;background:rgba(34,197,94,.16);color:#16A34A;border:1px solid rgba(34,197,94,.35)"><span class="live-dot"></span>'+TT('Claude \u00b7 live','Claude \u00b7 مباشر')+'</span>'
     : '<span onclick="voiceLabOpen()" title="'+TT('Not connected \u2014 add your Anthropic key or start the proxy','غير متصل — أضف مفتاح Anthropic')+'" style="cursor:pointer;display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:800;padding:3px 9px;border-radius:99px;background:rgba(220,38,38,.12);color:#DC2626;border:1px solid rgba(220,38,38,.4)">\u26A0 '+TT('Claude \u00b7 not connected','Claude \u00b7 غير متصل')+'</span>';
+  // Honest state: a key IS present but Claude rejected it (401/403) — never show green "live".
+  if(live && ANTHROPIC.authOk===false){
+    brain = '<span onclick="voiceLabOpen()" title="'+TT('The API key was rejected — re-enter a valid, funded key in Voice Lab','تم رفض المفتاح — أدخل مفتاحًا صالحًا في مختبر الصوت')+'" style="cursor:pointer;display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:800;padding:3px 9px;border-radius:99px;background:rgba(217,119,6,.14);color:#B45309;border:1px solid rgba(217,119,6,.4)">⚠ '+TT('Claude · key rejected','Claude · رُفض المفتاح')+'</span>';
+  } else if(live && ANTHROPIC.credit===false){
+    // The key is VALID but the account is out of credit — not a rejection; say so plainly.
+    brain = '<span onclick="voiceLabOpen()" title="'+TT('Key is valid but the account is out of credit — top up at console.anthropic.com','المفتاح صالح لكن الرصيد غير كافٍ')+'" style="cursor:pointer;display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:800;padding:3px 9px;border-radius:99px;background:rgba(217,119,6,.14);color:#B45309;border:1px solid rgba(217,119,6,.4)">⚠ '+TT('Claude · no credit','Claude · لا رصيد')+'</span>';
+  }
   var vl=harmonyVoiceLabel();
   var vt=(vl.t||'').replace(/ \u00b7 auto$/,'').split(' \u00b7 ')[0];
   // one loud voice warning is enough (the orb label carries it) — header shows a quiet setup chip
@@ -8491,7 +8746,10 @@ function harmonyEngineBadgeHTML(){
     : '<span title="'+TT('Speaking voice','صوت النطق')+'" style="display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:3px 9px;border-radius:99px;background:rgba(37,99,235,.10);color:#2563EB;border:1px solid rgba(37,99,235,.25)">&#128266; '+escH(vt||'voice')+'</span>';
   return brain+voice;
 }
-function updateEngineBadge(){ var e=document.getElementById('chat-engine'); if(e) e.innerHTML=harmonyEngineBadgeHTML(); }
+function updateEngineBadge(){ var html=harmonyEngineBadgeHTML();
+  var e=document.getElementById('chat-engine'); if(e) e.innerHTML=html;
+  var v=document.getElementById('vw-engine'); if(v) v.innerHTML=html; // keep the floating vision-widget badge in sync
+}
 function renderChatMsgHTML(m,idx,arr){
   var h='';
   if(m.who==='user'){
@@ -8586,10 +8844,10 @@ function renderSprintBoard(){
   var pColMap={'DSP':'#4338CA','CORE':'#0891B2','DATA':'#7C3AED'};
 
   var LANES=[
-    {id:'build',   label:'Building',     icon:'&#9889;',   sts:['In Delivery'],                col:'#1D4ED8', bg:'#EFF6FF', next:'Acceptance Testing',       nextLabel:'Send to UAT &#9654;'},
-    {id:'uat',     label:'In UAT (BU)',  icon:'&#128269;', sts:['Acceptance Testing'],         col:'#D97706', bg:'#FFFBEB', next:null,                       nextLabel:null, wait:'Waiting on BU to approve UAT'},
-    {id:'approved',label:'UAT Approved', icon:'&#128640;', sts:['UAT Approved'],               col:'#059669', bg:'#ECFDF5', next:'Deployed — Pending Closure',nextLabel:'Deploy &#128640;'},
-    {id:'done',    label:'Done',         icon:'&#9989;',   sts:['Deployed — Pending Closure','Deployed','Closed'],col:'#16A34A',bg:'#F0FDF4', next:null, nextLabel:null, wait:'Waiting on BU to record outcome'},
+    {id:'build',   label:'Building',     icon:(document.body.classList.contains('meridian')?_mi('<path d="M9 2.5L4 9h3.4l-1 4.5L12 6.8H8.3z"/>'):'&#9889;'),   sts:['In Delivery'],                col:'#1D4ED8', bg:'#EFF6FF', next:'Acceptance Testing',       nextLabel:'Send to UAT &#9654;'},
+    {id:'uat',     label:'In UAT (BU)',  icon:(document.body.classList.contains('meridian')?_mi('<circle cx="7" cy="7" r="4"/><path d="M10 10l3.2 3.2"/>'):'&#128269;'), sts:['Acceptance Testing'],         col:'#D97706', bg:'#FFFBEB', next:null,                       nextLabel:null, wait:'Waiting on BU to approve UAT'},
+    {id:'approved',label:'UAT Approved', icon:(document.body.classList.contains('meridian')?_mi('<circle cx="8" cy="8" r="5.5"/><path d="M5.5 8l1.8 1.8 3.2-3.6"/>'):'&#128640;'), sts:['UAT Approved'],               col:'#059669', bg:'#ECFDF5', next:'Deployed — Pending Closure',nextLabel:'Deploy &#128640;'},
+    {id:'done',    label:'Done',         icon:(document.body.classList.contains('meridian')?_mi('<path d="M3.5 8.5l3 3 6-7"/>'):'&#9989;'),   sts:['Deployed — Pending Closure','Deployed','Closed'],col:'#16A34A',bg:'#F0FDF4', next:null, nextLabel:null, wait:'Waiting on BU to record outcome'},
   ];
 
   function sprintCard(r, lane){
@@ -8648,7 +8906,7 @@ function renderSprintBoard(){
   h+='<div class="ptitle">&#9642;&#9642; Sprint Board';
   h+='<span style="margin-left:10px;font-size:12px;font-weight:700;background:'+(capPct>=90?'#FEF2F2':capPct>=75?'#FFFBEB':'#F0FDF4')+';color:'+capCol+';padding:3px 11px;border-radius:99px">'+health+'</span>';
   h+='</div>';
-  h+='<div class="psub">Cycle 18 &mdash; 12 May to 01 Jun 2026 &middot; '+c18.length+' requests</div>';
+  h+='<div class="psub">Cycle 18 &mdash; '+harmonyCycleWindow()+' &middot; '+c18.length+' requests</div>';
   h+='</div>';
   h+='<div style="display:flex;gap:8px">';
   h+='<button onclick="openCycleManager()" class="btn btn-sm" style="background:#7C3AED;color:#fff;font-size:11px">&#128197; Manage Cycles</button>';
@@ -14279,6 +14537,10 @@ function openCycleManager(){
   document.body.insertAdjacentHTML('beforeend',h);
 }
 try{ visionDockEnsure(); }catch(e){}
+/* Meridian: swap the "H" logo tile for the brass khatam (rub-el-hizb) seal. */
+try{ if(document.body.classList.contains('meridian')){ var _mk=document.getElementById('sb-mark-el');
+  if(_mk) _mk.innerHTML='<svg viewBox="0 0 34 34" width="34" height="34" aria-label="GDRFA seal" role="img"><circle cx="17" cy="17" r="15.2" fill="none" stroke="#A6772E" stroke-width="1.6"/><circle cx="17" cy="17" r="11.4" fill="none" stroke="#A6772E" stroke-width=".6" opacity=".5"/><rect x="9.2" y="9.2" width="15.6" height="15.6" fill="none" stroke="#C08F3E" stroke-width="1.4"/><rect x="9.2" y="9.2" width="15.6" height="15.6" transform="rotate(45 17 17)" fill="none" stroke="#C08F3E" stroke-width="1.4"/></svg>';
+} }catch(e){}
 </script>
 </body>
 </html>
