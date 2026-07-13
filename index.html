@@ -8319,6 +8319,7 @@ function harmonyMic(){
   if(!harmonySupportsSTT()){ toast('Voice input needs Chrome, Edge or Safari with a microphone.','warn'); return; }
   var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   if(HARMONY_VOICE.listening && HARMONY_VOICE.rec){ try{HARMONY_VOICE.rec.stop();}catch(e){} return; }
+  try{ harmonyStopSpeech(); }catch(e){} // barge-in: silence Vision before we listen, so the mic can't catch its own voice
   _wakeSuspend(); // hands-free and push-to-talk can't share the recognizer
   var rec; try{ rec=new SR(); }catch(e){ _wakeResume(); toast('Could not access voice input.','warn'); return; }
   // interimResults on: live transcript in the input while speaking (essential feedback on mobile).
@@ -8412,6 +8413,11 @@ function harmonyInitiativeCount(){
   try{ var s={}; Object.keys(GOV_INITIATIVES).forEach(function(k){ (GOV_INITIATIVES[k]||[]).forEach(function(i){ s[i.id]=1; }); }); return Object.keys(s).length; }catch(e){ return 15; }
 }
 function jcoreSet(state){
+  // Barge-in guard: fully pause hands-free listening while Vision speaks so the mic never
+  // transcribes Vision's own voice (the recognizer is stopped, not just ignoring results —
+  // closes the Piper + between-chunk gaps _wakeBusy() misses). Resume once speech ends.
+  try{ if(state==='speaking'){ if(typeof _wakeSuspend==='function') _wakeSuspend(); }
+       else if(state==='idle'){ if(typeof _wakeResume==='function') _wakeResume(); } }catch(e){}
   var w=document.getElementById('jcore-wrap'); if(!w) return;
   w.classList.remove('speaking','listening','working');
   if(state&&state!=='idle') w.classList.add(state);
